@@ -1,0 +1,32 @@
+{
+  "strength_grammar_correlation": 0.0002916797943220204,
+  "strength_grammar_pval": 0.9895418247509427,
+  "quartile_stats": {
+    "Q1_weak": {
+      "mean_spacing_sens": 1.2196471686456718,
+      "mean_orient_sens": 1.3815207592704717,
+      "mean_fold_change": 1.7478422506182802,
+      "n_rules": 510
+    },
+    "Q2": {
+      "mean_spacing_sens": 1.2565285412424025,
+      "mean_orient_sens": 1.4022270915103934,
+      "mean_fold_change": 1.7395632885120533,
+      "n_rules": 513
+    },
+    "Q3": {
+      "mean_spacing_sens": 1.227512717817935,
+      "mean_orient_sens": 1.5237166268957987,
+      "mean_fold_change": 1.7244859470261469,
+      "n_rules": 522
+    },
+    "Q4_strong": {
+      "mean_spacing_sens": 1.2391424857595432,
+      "mean_orient_sens": 1.389392978615231,
+      "mean_fold_change": 1.7381190573894252,
+      "n_rules": 477
+    }
+  },
+  "n_rules": 2022,
+  "interpretation": "No strong tradeoff detected"
+}

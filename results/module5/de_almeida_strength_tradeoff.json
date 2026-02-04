@@ -1,0 +1,32 @@
+{
+  "strength_grammar_correlation": -0.012070154520904569,
+  "strength_grammar_pval": 0.3268719496517637,
+  "quartile_stats": {
+    "Q1_weak": {
+      "mean_spacing_sens": 1.0856237280834187,
+      "mean_orient_sens": 1.239202415155577,
+      "mean_fold_change": 1.5743085893424782,
+      "n_rules": 1665
+    },
+    "Q2": {
+      "mean_spacing_sens": 1.0663081613493577,
+      "mean_orient_sens": 1.2092076881512281,
+      "mean_fold_change": 1.588853015687537,
+      "n_rules": 1641
+    },
+    "Q3": {
+      "mean_spacing_sens": 1.0700436042259083,
+      "mean_orient_sens": 1.240891500319466,
+      "mean_fold_change": 1.604262837665206,
+      "n_rules": 1659
+    },
+    "Q4_strong": {
+      "mean_spacing_sens": 1.0748539959618804,
+      "mean_orient_sens": 1.2346767847144275,
+      "mean_fold_change": 1.582908385025981,
+      "n_rules": 1635
+    }
+  },
+  "n_rules": 6600,
+  "interpretation": "Negative correlation = weak sites need more grammar"
+}

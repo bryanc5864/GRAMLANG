@@ -1,0 +1,32 @@
+{
+  "agarwal": {
+    "n_enhancers": 200,
+    "mean_gsi": 0.07135920168521503,
+    "median_gsi": 0.07111620530486107,
+    "frac_significant": 1.0
+  },
+  "de_almeida": {
+    "n_enhancers": 200,
+    "mean_gsi": 0.0661859753758957,
+    "median_gsi": 0.06519144400954247,
+    "frac_significant": 1.0
+  },
+  "vaishnav": {
+    "n_enhancers": 200,
+    "mean_gsi": 0.07941882294292252,
+    "median_gsi": 0.08081647381186485,
+    "frac_significant": 1.0
+  },
+  "jores": {
+    "n_enhancers": 200,
+    "mean_gsi": 0.0710682048307111,
+    "median_gsi": 0.06879835948348045,
+    "frac_significant": 1.0
+  },
+  "klein": {
+    "n_enhancers": 200,
+    "mean_gsi": 0.07650914218276739,
+    "median_gsi": 0.0737319216132164,
+    "frac_significant": 1.0
+  }
+}

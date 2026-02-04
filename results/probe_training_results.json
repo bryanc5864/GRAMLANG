@@ -1,0 +1,38 @@
+[
+  {
+    "model": "dnabert2",
+    "dataset": "vaishnav2022",
+    "n_sequences": 5000,
+    "embedding_dim": 768,
+    "pearson_r": 0.47216669365414093,
+    "spearman_rho": 0.4760292598955486,
+    "r_squared": 0.22294138659628338,
+    "viable": true,
+    "date": "2026-02-03T00:41:16.505834",
+    "probe_path": "/home/bcheng/grammar/data/probes/dnabert2_vaishnav2022_probe.pt"
+  },
+  {
+    "model": "nt",
+    "dataset": "vaishnav2022",
+    "n_sequences": 5000,
+    "embedding_dim": 1024,
+    "pearson_r": 0.5512529678465812,
+    "spearman_rho": 0.5595278995992664,
+    "r_squared": 0.3038798345596639,
+    "viable": true,
+    "date": "2026-02-03T00:41:25.300978",
+    "probe_path": "/home/bcheng/grammar/data/probes/nt_vaishnav2022_probe.pt"
+  },
+  {
+    "model": "hyenadna",
+    "dataset": "vaishnav2022",
+    "n_sequences": 5000,
+    "embedding_dim": 256,
+    "pearson_r": 0.41805992299582734,
+    "spearman_rho": 0.41196609179114796,
+    "r_squared": 0.1747740992152771,
+    "viable": true,
+    "date": "2026-02-03T00:41:34.496273",
+    "probe_path": "/home/bcheng/grammar/data/probes/hyenadna_vaishnav2022_probe.pt"
+  }
+]

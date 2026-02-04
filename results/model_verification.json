@@ -1,0 +1,31 @@
+{
+  "DNABERT-2": {
+    "status": "OK",
+    "params": 117068544,
+    "size_mb": 446.6,
+    "test_result": "last_hidden_state shape=torch.Size([1, 34, 768]), pooled shape=torch.Size([1, 768])",
+    "note": "Loaded via custom model class (bert_layers.BertModel) with PyTorch attention fallback"
+  },
+  "Nucleotide Transformer v2-500M": {
+    "status": "OK",
+    "params": 498345436,
+    "size_mb": 1901.0369720458984,
+    "test_result": "hidden_states layers=30, shape=torch.Size([1, 21, 1024])"
+  },
+  "Caduceus": {
+    "status": "FAILED",
+    "error": "This modeling file requires the following packages that were not found in your environment: mamba_ssm. Run `pip install mamba_ssm`"
+  },
+  "HyenaDNA": {
+    "status": "OK",
+    "params": 6550528,
+    "size_mb": 24.98828125,
+    "test_result": "hidden_states layers=10, shape=torch.Size([1, 121, 256])"
+  },
+  "Enformer": {
+    "status": "OK",
+    "params": 251221292,
+    "size_mb": 958.3331756591797,
+    "test_result": "human shape=torch.Size([1, 896, 5313])"
+  }
+}

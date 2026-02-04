@@ -1,0 +1,26 @@
+{
+  "accuracy": 0.44026191752208976,
+  "accuracy_std": 0.01126248516925969,
+  "baseline_accuracy": 0.4528301886792453,
+  "improvement": -0.01256827115715553,
+  "n_rules": 1908,
+  "grammar_type_dist": {
+    "orientation_dependent": 864,
+    "spacing_dependent": 375,
+    "mixed": 391,
+    "insensitive": 178,
+    "helical_phased": 100
+  },
+  "structural_classes": [
+    "Homeodomain",
+    "bZIP",
+    "Nuclear_receptor",
+    "HMG",
+    "ETS",
+    "bHLH",
+    "Rel",
+    "Zinc_finger_C2H2",
+    "GATA",
+    "Forkhead"
+  ]
+}
