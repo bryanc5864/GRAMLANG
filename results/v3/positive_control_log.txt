@@ -1,0 +1,47 @@
+
+============================================================
+POSITIVE CONTROL EXPERIMENT — dnabert2
+============================================================
+Testing if models detect grammar when spacers are controlled
+
+Loading Georgakopoulos-Soares MPRA library...
+  Loaded 209440 sequences from library
+
+Finding controlled pair comparisons...
+  Found 500 orientation-variant pairs
+  Found 0 order-variant pairs
+
+Loading model dnabert2...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_klein
+
+  Testing 500 orientation pairs...
+
+  Orientation sensitivity:
+    Mean |Δpred|: 0.0620
+    Frac |Δpred| > 0.1: 17.0%
+    t-test vs 0: t=30.86, p=9.54e-118
+
+  Interpretation:
+    Model IS sensitive to grammar (mean |Δ| > 0.05)
+    → Models CAN detect orientation/order effects
+    → Our negative v3 results are due to spacer confound
+
+  Saved to results/v3/positive_control/
+
+============================================================
+POSITIVE CONTROL COMPLETE
+============================================================
+
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+

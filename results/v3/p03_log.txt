@@ -1,0 +1,77 @@
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+
+
+############################################################
+# PHASE P0.3
+############################################################
+
+============================================================
+P0.3: POWER ANALYSIS — agarwal / dnabert2
+============================================================
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_agarwal
+  Enhancers: 100, Shuffles: 1000
+  [0/100] Processing enhancer peak25640...
+  [10/100] Processing enhancer ENSG00000153406...
+  [20/100] Processing enhancer peak79280...
+  [30/100] Processing enhancer peak29981...
+  [40/100] Processing enhancer peak14161...
+  [50/100] Processing enhancer peak18708...
+  [60/100] Processing enhancer peak52474...
+  [70/100] Processing enhancer ENSG00000178187...
+  [80/100] Processing enhancer peak15627...
+  [90/100] Processing enhancer peak20886...
+  100 shuffles: 10.0% significant (median z=0.971, median GES=0.958)
+  250 shuffles: 11.0% significant (median z=0.978, median GES=0.947)
+  500 shuffles: 11.0% significant (median z=0.951, median GES=0.962)
+  750 shuffles: 12.0% significant (median z=0.978, median GES=0.971)
+  1000 shuffles: 11.0% significant (median z=0.975, median GES=0.966)
+  Saved to results/v3/power_analysis/
+
+============================================================
+P0.3: POWER ANALYSIS — jores / dnabert2
+============================================================
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_jores
+  Enhancers: 100, Shuffles: 1000
+  [0/100] Processing enhancer jores_26779...
+  [10/100] Processing enhancer jores_65996...
+  [20/100] Processing enhancer jores_36325...
+  [30/100] Processing enhancer jores_74104...
+  [40/100] Processing enhancer jores_25137...
+  [50/100] Processing enhancer jores_33889...
+  [60/100] Processing enhancer jores_42251...
+  [70/100] Processing enhancer jores_37076...
+  [80/100] Processing enhancer jores_76119...
+  [90/100] Processing enhancer jores_26749...
+  100 shuffles: 10.0% significant (median z=0.925, median GES=0.842)
+  250 shuffles: 9.0% significant (median z=0.919, median GES=0.886)
+  500 shuffles: 9.0% significant (median z=0.944, median GES=0.919)
+  750 shuffles: 9.0% significant (median z=0.952, median GES=0.935)
+  1000 shuffles: 9.0% significant (median z=0.953, median GES=0.948)
+  Saved to results/v3/power_analysis/
+
+============================================================
+ALL PHASES COMPLETE in 4.9 minutes
+============================================================
+Master summary saved to results/v3/v3_analysis_summary.json
+

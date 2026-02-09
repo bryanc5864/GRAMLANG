@@ -1,0 +1,146 @@
+
+============================================================
+FEATURE DECOMPOSITION — agarwal / dnabert2
+============================================================
+  Samples: 500
+  Loading model dnabert2...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_agarwal
+  Extracting sequence features...
+  Fitting regression models...
+    GC only: R² = 0.4002
+    Dinuc only: R² = 0.4736
+    DNA shape only: R² = 0.4518
+    Trinuc only: R² = 0.4770
+    All features: R² = 0.4833
+
+  Top 5 features:
+    dinuc_CG: 0.2168
+    gc_content: 0.0893
+    at_content: 0.0859
+    twist_std: 0.0471
+    roll_std: 0.0310
+
+  Feature-prediction correlations:
+    gc_content: r = 0.632
+    dinuc_CG: r = 0.585
+    dinuc_GC: r = 0.503
+    roll_mean: r = 0.110
+    twist_std: r = 0.596
+
+  Saved to results/v3/feature_decomposition/
+
+============================================================
+FEATURE DECOMPOSITION — jores / dnabert2
+============================================================
+  Samples: 500
+  Loading model dnabert2...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_jores
+  Extracting sequence features...
+  Fitting regression models...
+    GC only: R² = 0.5884
+    Dinuc only: R² = 0.7449
+    DNA shape only: R² = 0.5334
+    Trinuc only: R² = 0.7988
+    All features: R² = 0.8045
+
+  Top 5 features:
+    dinuc_TA: 0.4599
+    gc_content: 0.0508
+    kmer_ATA: 0.0461
+    at_content: 0.0352
+    kmer_TAT: 0.0338
+
+  Feature-prediction correlations:
+    gc_content: r = -0.758
+    dinuc_CG: r = -0.572
+    dinuc_GC: r = -0.705
+    roll_mean: r = -0.499
+    twist_std: r = -0.670
+
+  Saved to results/v3/feature_decomposition/
+
+============================================================
+FEATURE DECOMPOSITION — de_almeida / dnabert2
+============================================================
+  Samples: 500
+  Loading model dnabert2...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_de_almeida
+  Extracting sequence features...
+  Fitting regression models...
+    GC only: R² = 0.0819
+    Dinuc only: R² = 0.1148
+    DNA shape only: R² = 0.0914
+    Trinuc only: R² = 0.1656
+    All features: R² = 0.1635
+
+  Top 5 features:
+    kmer_CGC: 0.0693
+    dinuc_AG: 0.0518
+    roll_mean: 0.0393
+    kmer_TTA: 0.0353
+    roll_std: 0.0317
+
+  Feature-prediction correlations:
+    gc_content: r = 0.303
+    dinuc_CG: r = 0.319
+    dinuc_GC: r = 0.270
+    roll_mean: r = -0.167
+    twist_std: r = 0.284
+
+  Saved to results/v3/feature_decomposition/
+
+============================================================
+FEATURE DECOMPOSITION SUMMARY
+============================================================
+
+agarwal:
+  gc_only: R² = 0.4002
+  dinuc_only: R² = 0.4736
+  shape_only: R² = 0.4518
+  all_features: R² = 0.4833
+
+jores:
+  gc_only: R² = 0.5884
+  dinuc_only: R² = 0.7449
+  shape_only: R² = 0.5334
+  all_features: R² = 0.8045
+
+de_almeida:
+  gc_only: R² = 0.0819
+  dinuc_only: R² = 0.1148
+  shape_only: R² = 0.0914
+  all_features: R² = 0.1635
+
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+

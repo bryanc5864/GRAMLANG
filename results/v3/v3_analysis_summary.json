@@ -1,0 +1,89 @@
+{
+  "variance_agarwal_dnabert2": {
+    "dataset": "agarwal",
+    "model": "dnabert2",
+    "n_enhancers": 500,
+    "n_vocab_features": 141,
+    "n_grammar_features": 148,
+    "n_embed_features": 768,
+    "vocab_r2": {
+      "mean": -0.03750554456524069,
+      "std": 0.11615778226173099
+    },
+    "grammar_r2": {
+      "mean": -0.0833955392574917,
+      "std": 0.10554335537866627
+    },
+    "embedding_r2": {
+      "mean": 0.0789975898852135,
+      "std": 0.07308856320664753
+    },
+    "combined_r2": {
+      "mean": -0.025589076411148583,
+      "std": 0.15369175503729948
+    },
+    "grammar_increment": -0.04588999469225101,
+    "embedding_increment_over_grammar": 0.1623931291427052,
+    "unexplained_by_grammar": 1.0833955392574917,
+    "unexplained_by_embedding": 0.9210024101147865,
+    "grammar_captures_fraction_of_embedding": -1.0556719436462376
+  },
+  "variance_jores_dnabert2": {
+    "dataset": "jores",
+    "model": "dnabert2",
+    "n_enhancers": 500,
+    "n_vocab_features": 124,
+    "n_grammar_features": 131,
+    "n_embed_features": 768,
+    "vocab_r2": {
+      "mean": -0.1524124188114234,
+      "std": 0.20612061328025774
+    },
+    "grammar_r2": {
+      "mean": -0.15287525275578684,
+      "std": 0.21657303522300947
+    },
+    "embedding_r2": {
+      "mean": 0.2651226599358828,
+      "std": 0.08117158311747352
+    },
+    "combined_r2": {
+      "mean": 0.04547220845442268,
+      "std": 0.144949683165281
+    },
+    "grammar_increment": -0.0004628339443634444,
+    "embedding_increment_over_grammar": 0.41799791269166964,
+    "unexplained_by_grammar": 1.1528752527557868,
+    "unexplained_by_embedding": 0.7348773400641172,
+    "grammar_captures_fraction_of_embedding": -0.576620847093033
+  },
+  "variance_de_almeida_dnabert2": {
+    "dataset": "de_almeida",
+    "model": "dnabert2",
+    "n_enhancers": 500,
+    "n_vocab_features": 141,
+    "n_grammar_features": 148,
+    "n_embed_features": 768,
+    "vocab_r2": {
+      "mean": -0.2265452297141492,
+      "std": 0.1419351404258484
+    },
+    "grammar_r2": {
+      "mean": -0.22320083361765977,
+      "std": 0.14379873020378778
+    },
+    "embedding_r2": {
+      "mean": 0.02595635840255739,
+      "std": 0.046498323588215866
+    },
+    "combined_r2": {
+      "mean": -0.19947748661451162,
+      "std": 0.16108452241124044
+    },
+    "grammar_increment": 0.003344396096489427,
+    "embedding_increment_over_grammar": 0.24915719202021716,
+    "unexplained_by_grammar": 1.2232008336176599,
+    "unexplained_by_embedding": 0.9740436415974426,
+    "grammar_captures_fraction_of_embedding": -8.599081202225523
+  }
+}

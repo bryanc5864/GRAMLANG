@@ -1,0 +1,100 @@
+
+############################################################
+# PHASE P1.1
+############################################################
+
+============================================================
+P1.1: FACTORIAL DECOMPOSITION — agarwal / dnabert2
+============================================================
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_agarwal
+  Enhancers: 100, Shuffles per type: 100
+  [0/100] Processing enhancer peak25640...
+  [20/100] Processing enhancer peak79280...
+  [40/100] Processing enhancer peak14161...
+  [60/100] Processing enhancer peak52474...
+  [80/100] Processing enhancer peak15627...
+  position    : median variance=0.002602, median z=0.904, median GSI=0.3114
+  orientation : median variance=0.001537, median z=0.973, median GSI=0.2368
+  spacer      : median variance=0.005341, median z=0.899, median GSI=0.4083
+  full        : median variance=0.006557, median z=0.969, median GSI=0.4471
+  position     / full: median=0.425, mean=0.463
+  orientation  / full: median=0.256, mean=0.311
+  spacer       / full: median=0.828, mean=0.839
+  Saved to results/v3/factorial_decomposition/
+
+============================================================
+P1.1: FACTORIAL DECOMPOSITION — jores / dnabert2
+============================================================
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_jores
+  Enhancers: 100, Shuffles per type: 100
+  [0/100] Processing enhancer jores_26779...
+  [20/100] Processing enhancer jores_36325...
+  [40/100] Processing enhancer jores_25137...
+  [60/100] Processing enhancer jores_42251...
+  [80/100] Processing enhancer jores_76119...
+  position    : median variance=0.037294, median z=0.847, median GSI=0.0798
+  orientation : median variance=0.021385, median z=0.950, median GSI=0.0599
+  spacer      : median variance=0.104263, median z=0.863, median GSI=0.1377
+  full        : median variance=0.129581, median z=0.918, median GSI=0.1574
+  position     / full: median=0.283, mean=0.312
+  orientation  / full: median=0.186, mean=0.261
+  spacer       / full: median=0.784, mean=0.832
+  Saved to results/v3/factorial_decomposition/
+
+============================================================
+P1.1: FACTORIAL DECOMPOSITION — de_almeida / dnabert2
+============================================================
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_de_almeida
+  Enhancers: 100, Shuffles per type: 100
+  [0/100] Processing enhancer chr8_127623598_127623768...
+  [20/100] Processing enhancer chr12_130255973_130256143...
+  [40/100] Processing enhancer chr18_48274877_48275047...
+  [60/100] Processing enhancer chr2_151592583_151592753...
+  [80/100] Processing enhancer chr8_93107442_93107612...
+  position    : median variance=0.008820, median z=0.733, median GSI=0.0967
+  orientation : median variance=0.004475, median z=0.841, median GSI=0.0658
+  spacer      : median variance=0.016552, median z=0.614, median GSI=0.1339
+  full        : median variance=0.018958, median z=0.675, median GSI=0.1446
+  position     / full: median=0.472, mean=0.502
+  orientation  / full: median=0.242, mean=0.282
+  spacer       / full: median=0.857, mean=0.888
+  Saved to results/v3/factorial_decomposition/
+
+============================================================
+ALL PHASES COMPLETE in 2.2 minutes
+============================================================
+Master summary saved to results/v3/v3_analysis_summary.json
+
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+

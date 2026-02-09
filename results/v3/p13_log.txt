@@ -1,0 +1,91 @@
+
+############################################################
+# PHASE P1.3
+############################################################
+
+============================================================
+P1.3: VARIANCE DECOMPOSITION — agarwal / dnabert2
+============================================================
+  Loading model dnabert2 for embedding extraction...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  Loaded expression probe from /home/bcheng/grammar/data/probes/dnabert2_vaishnav2022_probe.pt
+  Extracting embeddings for 500 sequences...
+  Embedding shape: (500, 768)
+
+  Results:
+  Vocabulary:   R² = -0.0375 ± 0.1162
+  Grammar:      R² = -0.0834 ± 0.1055
+  Embeddings:   R² = 0.0790 ± 0.0731
+  Combined:     R² = -0.0256 ± 0.1537
+  Grammar increment over vocab: -0.0459
+  Embedding increment over grammar: +0.1624
+  Grammar captures -105.6% of embedding signal
+  Saved to results/v3/variance_decomposition/
+
+============================================================
+P1.3: VARIANCE DECOMPOSITION — jores / dnabert2
+============================================================
+  Loading model dnabert2 for embedding extraction...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  Loaded expression probe from /home/bcheng/grammar/data/probes/dnabert2_vaishnav2022_probe.pt
+  Extracting embeddings for 500 sequences...
+  Embedding shape: (500, 768)
+
+  Results:
+  Vocabulary:   R² = -0.1524 ± 0.2061
+  Grammar:      R² = -0.1529 ± 0.2166
+  Embeddings:   R² = 0.2651 ± 0.0812
+  Combined:     R² = 0.0455 ± 0.1449
+  Grammar increment over vocab: -0.0005
+  Embedding increment over grammar: +0.4180
+  Grammar captures -57.7% of embedding signal
+  Saved to results/v3/variance_decomposition/
+
+============================================================
+P1.3: VARIANCE DECOMPOSITION — de_almeida / dnabert2
+============================================================
+  Loading model dnabert2 for embedding extraction...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  Loaded expression probe from /home/bcheng/grammar/data/probes/dnabert2_vaishnav2022_probe.pt
+  Extracting embeddings for 500 sequences...
+  Embedding shape: (500, 768)
+
+  Results:
+  Vocabulary:   R² = -0.2265 ± 0.1419
+  Grammar:      R² = -0.2232 ± 0.1438
+  Embeddings:   R² = 0.0260 ± 0.0465
+  Combined:     R² = -0.1995 ± 0.1611
+  Grammar increment over vocab: +0.0033
+  Embedding increment over grammar: +0.2492
+  Grammar captures -859.9% of embedding signal
+  Saved to results/v3/variance_decomposition/
+
+============================================================
+ALL PHASES COMPLETE in 0.1 minutes
+============================================================
+Master summary saved to results/v3/v3_analysis_summary.json
+
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+

@@ -1,0 +1,52 @@
+{
+  "dataset": "de_almeida",
+  "model": "dnabert2",
+  "n_enhancers": 100,
+  "n_variants": 50,
+  "variant_effects": {
+    "gc_shift": {
+      "median_delta": 0.12098416686058044,
+      "mean_delta": 0.13683510363101958,
+      "median_range": 0.6107807755470276,
+      "median_z": 0.8725745293591051
+    },
+    "dinuc_shuffle": {
+      "median_delta": 0.11304304003715515,
+      "mean_delta": 0.12701011657714845,
+      "median_range": 0.5764789879322052,
+      "median_z": 0.8559088712631624
+    },
+    "random_replace": {
+      "median_delta": 0.11455214023590088,
+      "mean_delta": 0.1375279438495636,
+      "median_range": 0.6098171174526215,
+      "median_z": 0.8091108942335274
+    },
+    "motif_only": {
+      "median_delta": 0.062336623668670654,
+      "mean_delta": 0.07159924447536468,
+      "median_range": 0.3076168894767761,
+      "median_z": 0.9526960035293781
+    }
+  },
+  "dominant_factor": "gc_shift",
+  "effect_ranking": [
+    [
+      "gc_shift",
+      0.12098416686058044
+    ],
+    [
+      "random_replace",
+      0.11455214023590088
+    ],
+    [
+      "dinuc_shuffle",
+      0.11304304003715515
+    ],
+    [
+      "motif_only",
+      0.062336623668670654
+    ]
+  ],
+  "gc_expression_correlation": 0.2148129660192157
+}

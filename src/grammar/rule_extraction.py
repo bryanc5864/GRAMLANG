@@ -52,76 +52,116 @@ class GrammarRuleExtractor:
             if not seq_a or not seq_b:
                 continue
 
-            # Spacing scan
+            # --- v3 FIX: Optimize spacing INDEPENDENTLY per orientation ---
             spacings = list(range(spacing_range[0], spacing_range[1] + 1, spacing_step))
-            spacing_seqs = []
-
-            for sp in spacings:
-                constructed = self._build_pair_sequence(
-                    seq_a, seq_b, sp, seq_len, seq_gc
-                )
-                if constructed:
-                    spacing_seqs.append(constructed)
-
-            if not spacing_seqs:
-                continue
-
-            # Batch predict
-            spacing_exprs = self.model.predict_expression(
-                spacing_seqs, cell_type=self.cell_type
-            )
-
-            # Orientation scan at optimal spacing
-            optimal_sp_idx = np.argmax(spacing_exprs)
-            optimal_sp = spacings[min(optimal_sp_idx, len(spacings) - 1)]
-
             orientations = ['+/+', '+/-', '-/+', '-/-']
-            orient_seqs = []
-            for orient in orientations:
-                a_strand, b_strand = orient.split('/')
-                a_seq = seq_a if a_strand == '+' else reverse_complement(seq_a)
-                b_seq = seq_b if b_strand == '+' else reverse_complement(seq_b)
-                constructed = self._build_pair_sequence(
-                    a_seq, b_seq, optimal_sp, seq_len, seq_gc
-                )
-                if constructed:
-                    orient_seqs.append(constructed)
 
-            if orient_seqs:
+            # Randomize orientation testing order to eliminate first-element bias
+            rng = np.random.default_rng(hash(pair_key) % (2**32))
+            orient_order = rng.permutation(len(orientations)).tolist()
+            orientations_shuffled = [orientations[k] for k in orient_order]
+
+            # Scan spacing for EACH orientation independently
+            orient_spacing_profiles = {}
+            orient_optimal_spacings = {}
+            orient_optimal_exprs = {}
+
+            for orient in orientations_shuffled:
+                a_strand, b_strand = orient.split('/')
+                a_seq_o = seq_a if a_strand == '+' else reverse_complement(seq_a)
+                b_seq_o = seq_b if b_strand == '+' else reverse_complement(seq_b)
+
+                orient_seqs = []
+                valid_spacings = []
+                for sp in spacings:
+                    constructed = self._build_pair_sequence(
+                        a_seq_o, b_seq_o, sp, seq_len, seq_gc
+                    )
+                    if constructed:
+                        orient_seqs.append(constructed)
+                        valid_spacings.append(sp)
+
+                if not orient_seqs:
+                    continue
+
                 orient_exprs = self.model.predict_expression(
                     orient_seqs, cell_type=self.cell_type
                 )
-                orientation_effects = dict(zip(orientations[:len(orient_exprs)],
-                                               orient_exprs.tolist()))
-            else:
-                orientation_effects = {}
+                orient_spacing_profiles[orient] = {
+                    'spacings': valid_spacings[:len(orient_exprs)],
+                    'expressions': orient_exprs.tolist(),
+                }
+                best_idx = int(np.argmax(orient_exprs))
+                orient_optimal_spacings[orient] = valid_spacings[best_idx]
+                orient_optimal_exprs[orient] = float(np.max(orient_exprs))
 
-            # Helical phase score
+            if not orient_optimal_exprs:
+                continue
+
+            # --- v3 FIX: Select optimal orientation via permutation test ---
+            # Use the expression at each orientation's own optimal spacing
+            orient_max_exprs = np.array([orient_optimal_exprs[o] for o in orientations_shuffled
+                                          if o in orient_optimal_exprs])
+            orient_names = [o for o in orientations_shuffled if o in orient_optimal_exprs]
+
+            orient_sensitivity = float(np.std(orient_max_exprs)) if len(orient_max_exprs) > 1 else 0.0
+
+            # v3 FIX: Only assign optimal orientation if sensitivity is above threshold
+            ORIENT_SENSITIVITY_THRESHOLD = 0.01  # minimum std to call a preference
+            if orient_sensitivity >= ORIENT_SENSITIVITY_THRESHOLD and len(orient_names) >= 2:
+                # Use the orientation with highest expression at its optimal spacing
+                best_orient_idx = int(np.argmax(orient_max_exprs))
+                optimal_orientation = orient_names[best_orient_idx]
+            else:
+                # v3 FIX: "undetermined" instead of defaulting to +/+
+                optimal_orientation = 'undetermined'
+
+            # Build orientation effects dict at each orientation's own optimal spacing
+            orientation_effects = {o: orient_optimal_exprs[o] for o in orient_names}
+
+            # Use +/+ spacing profile for the main profile (for backward compatibility)
+            # but also store per-orientation profiles
+            if '+/+' in orient_spacing_profiles:
+                main_profile = orient_spacing_profiles['+/+']
+            else:
+                # Use first available orientation's profile
+                first_orient = orient_names[0]
+                main_profile = orient_spacing_profiles[first_orient]
+
+            main_exprs = np.array(main_profile['expressions'])
+            main_spacings = main_profile['spacings']
+
+            # Global optimal: best expression across ALL orientations and spacings
+            global_best_expr = max(orient_optimal_exprs.values())
+            global_worst_expr = min(
+                min(p['expressions']) for p in orient_spacing_profiles.values()
+            )
+
+            # Helical phase score (from +/+ profile or first available)
             helical_score = self._compute_helical_phase(
-                np.array(spacings[:len(spacing_exprs)]), spacing_exprs
+                np.array(main_spacings[:len(main_exprs)]), main_exprs
             )
 
             # Compile rule
             rules[pair_key] = {
                 'motif_a_name': motif_a.get('motif_name', 'A'),
                 'motif_b_name': motif_b.get('motif_name', 'B'),
-                'spacing_profile': spacing_exprs.tolist(),
-                'spacings': spacings[:len(spacing_exprs)],
-                'optimal_spacing': int(spacings[np.argmax(spacing_exprs)]),
-                'spacing_sensitivity': float(np.std(spacing_exprs)),
+                'spacing_profile': main_exprs.tolist(),
+                'spacings': main_spacings[:len(main_exprs)],
+                'optimal_spacing': int(main_spacings[np.argmax(main_exprs)]),
+                'spacing_sensitivity': float(np.std(main_exprs)),
                 'orientation_effects': orientation_effects,
-                'optimal_orientation': (
-                    orientations[np.argmax(orient_exprs)]
-                    if orient_seqs else '+/+'
-                ),
-                'orientation_sensitivity': (
-                    float(np.std(orient_exprs)) if orient_seqs else 0.0
-                ),
+                'per_orientation_profiles': {
+                    o: p for o, p in orient_spacing_profiles.items()
+                },
+                'per_orientation_optimal_spacings': orient_optimal_spacings,
+                'optimal_orientation': optimal_orientation,
+                'orientation_sensitivity': orient_sensitivity,
                 'helical_phase_score': float(helical_score),
-                'expression_at_optimal': float(np.max(spacing_exprs)),
-                'expression_at_worst': float(np.min(spacing_exprs)),
+                'expression_at_optimal': float(global_best_expr),
+                'expression_at_worst': float(global_worst_expr),
                 'fold_change': float(
-                    np.max(spacing_exprs) / max(np.min(spacing_exprs), 1e-10)
+                    global_best_expr / max(abs(global_worst_expr), 1e-10)
                 ),
             }
 

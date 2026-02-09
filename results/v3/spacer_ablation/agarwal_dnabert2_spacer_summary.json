@@ -1,0 +1,52 @@
+{
+  "dataset": "agarwal",
+  "model": "dnabert2",
+  "n_enhancers": 100,
+  "n_variants": 50,
+  "variant_effects": {
+    "gc_shift": {
+      "median_delta": 0.10160929709672928,
+      "mean_delta": 0.11201333701144904,
+      "median_range": 0.5911546722054482,
+      "median_z": 0.8026503533351275
+    },
+    "dinuc_shuffle": {
+      "median_delta": 0.04537857323884964,
+      "mean_delta": 0.06273959562182427,
+      "median_range": 0.32356514781713486,
+      "median_z": 0.701720316818821
+    },
+    "random_replace": {
+      "median_delta": 0.14859931200749088,
+      "mean_delta": 0.16113874167567246,
+      "median_range": 0.418262355029583,
+      "median_z": 1.651600445875506
+    },
+    "motif_only": {
+      "median_delta": 0.03394269943237305,
+      "mean_delta": 0.04148687206208706,
+      "median_range": 0.15792527049779892,
+      "median_z": 0.9475805261183532
+    }
+  },
+  "dominant_factor": "random_replace",
+  "effect_ranking": [
+    [
+      "random_replace",
+      0.14859931200749088
+    ],
+    [
+      "gc_shift",
+      0.10160929709672928
+    ],
+    [
+      "dinuc_shuffle",
+      0.04537857323884964
+    ],
+    [
+      "motif_only",
+      0.03394269943237305
+    ]
+  ],
+  "gc_expression_correlation": 0.6578810081720072
+}
