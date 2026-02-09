@@ -1,0 +1,29 @@
+{
+  "dataset": "de_almeida",
+  "model": "dnabert2",
+  "n_enhancers": 500,
+  "n_vocab_features": 141,
+  "n_grammar_features": 148,
+  "n_embed_features": 768,
+  "vocab_r2": {
+    "mean": -0.2265452297141492,
+    "std": 0.1419351404258484
+  },
+  "grammar_r2": {
+    "mean": -0.22320083361765977,
+    "std": 0.14379873020378778
+  },
+  "embedding_r2": {
+    "mean": 0.02595635840255739,
+    "std": 0.046498323588215866
+  },
+  "combined_r2": {
+    "mean": -0.19947748661451162,
+    "std": 0.16108452241124044
+  },
+  "grammar_increment": 0.003344396096489427,
+  "embedding_increment_over_grammar": 0.24915719202021716,
+  "unexplained_by_grammar": 1.2232008336176599,
+  "unexplained_by_embedding": 0.9740436415974426,
+  "grammar_captures_fraction_of_embedding": -8.599081202225523
+}

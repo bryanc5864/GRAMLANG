@@ -1,0 +1,12 @@
+{
+  "dataset": "klein",
+  "cell_type": "HepG2",
+  "model": "PARM",
+  "n_enhancers": 100,
+  "n_shuffles": 100,
+  "median_gsi": 0.4482245916325668,
+  "mean_gsi": 0.4520351779374026,
+  "median_z": 0.6190273213610857,
+  "frac_significant": 0.07,
+  "frac_gsi_gt_0.1": 1.0
+}

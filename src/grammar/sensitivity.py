@@ -73,37 +73,53 @@ def compute_gsi(
         max_disruption = 0.0
         mean_disruption = 0.0
 
-    # P-value: F-test comparing shuffle variance to prediction noise
-    # Estimate prediction noise by running original multiple times
-    # (model is deterministic, so noise comes from padding randomness)
-    noise_preds = []
-    for s in range(min(20, n_shuffles)):
-        noise_preds.append(
-            model.predict_expression([sequence], cell_type=cell_type)[0]
-        )
-    noise_var = np.var(noise_preds) if len(noise_preds) > 1 else 1e-10
+    # P-value: permutation-based test
+    # Models are deterministic at inference, so repeated predictions of the same
+    # sequence give identical results (noise_var = 0). Instead of wasting 20
+    # redundant forward passes, use a permutation p-value: where does the
+    # original expression rank among the shuffled expressions?
+    n_above = np.sum(np.abs(shuffle_exprs - shuffle_mean) >= np.abs(original_expr - shuffle_mean))
+    p_value = float(n_above / len(shuffle_exprs)) if len(shuffle_exprs) > 0 else 1.0
 
-    if noise_var > 0:
-        f_stat = np.var(shuffle_exprs) / max(noise_var, 1e-10)
-        p_value = 1 - stats.f.cdf(f_stat, n_shuffles - 1, len(noise_preds) - 1)
+    # --- v3 metrics ---
+    # Grammar Effect Size (GES): robust z-score using median/MAD
+    shuffle_median = np.median(shuffle_exprs)
+    shuffle_mad = np.median(np.abs(shuffle_exprs - shuffle_median))
+    if shuffle_mad > 1e-10:
+        ges = abs(original_expr - shuffle_median) / (shuffle_mad * 1.4826)  # 1.4826 scales MAD to σ
     else:
-        # If no noise (deterministic), test if shuffle variance > 0
-        if np.var(shuffle_exprs) > 1e-10:
-            p_value = 0.0
-        else:
-            p_value = 1.0
+        ges = abs(original_expr - shuffle_median) / max(shuffle_std, 1e-10)
+
+    # Grammar Practical Effect (GPE): dynamic range relative to median
+    gpe = (np.max(shuffle_exprs) - np.min(shuffle_exprs)) / max(abs(shuffle_median), 1e-10)
+
+    # Robust GSI: stabilize denominator
+    gsi_robust = shuffle_std / max(abs(shuffle_mean), shuffle_std * 0.1, 1e-10)
+
+    # z-score (standard, for p-value computation)
+    z_score = abs(original_expr - shuffle_mean) / max(shuffle_std, 1e-10)
+    # Two-sided p-value from z-score
+    from scipy.stats import norm
+    p_value_zscore = float(2 * (1 - norm.cdf(z_score)))
 
     return {
         'original_expression': float(original_expr),
         'shuffle_mean': float(shuffle_mean),
         'shuffle_std': float(shuffle_std),
+        'shuffle_median': float(shuffle_median),
+        'shuffle_mad': float(shuffle_mad),
         'shuffle_expressions': shuffle_exprs.tolist(),
         'gsi': float(gsi),
+        'gsi_robust': float(gsi_robust),
         'gsi_normalized': float(gsi_normalized),
+        'ges': float(ges),
+        'gpe': float(gpe),
+        'z_score': float(z_score),
         'max_disruption': float(max_disruption),
         'mean_disruption': float(mean_disruption),
         'n_shuffles': n_shuffles,
         'p_value': float(p_value),
+        'p_value_zscore': float(p_value_zscore),
     }
 
 
@@ -164,13 +180,20 @@ def run_gsi_census(
                 'seq_id': seq_id,
                 'model': model.name,
                 'gsi': gsi_result['gsi'],
+                'gsi_robust': gsi_result.get('gsi_robust', gsi_result['gsi']),
                 'gsi_normalized': gsi_result['gsi_normalized'],
+                'ges': gsi_result.get('ges', np.nan),
+                'gpe': gsi_result.get('gpe', np.nan),
+                'z_score': gsi_result.get('z_score', np.nan),
                 'max_disruption': gsi_result['max_disruption'],
                 'mean_disruption': gsi_result['mean_disruption'],
                 'p_value': gsi_result['p_value'],
+                'p_value_zscore': gsi_result.get('p_value_zscore', np.nan),
                 'original_expression': gsi_result['original_expression'],
                 'shuffle_mean': gsi_result['shuffle_mean'],
                 'shuffle_std': gsi_result['shuffle_std'],
+                'shuffle_median': gsi_result.get('shuffle_median', np.nan),
+                'shuffle_mad': gsi_result.get('shuffle_mad', np.nan),
                 'mpra_expression': row.get('expression', np.nan),
                 'n_motifs': row.get('n_motifs', 0),
                 'motif_density': row.get('motif_density', 0),

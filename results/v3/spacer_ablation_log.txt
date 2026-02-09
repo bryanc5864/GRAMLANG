@@ -1,0 +1,107 @@
+
+============================================================
+SPACER ABLATION — agarwal / dnabert2
+============================================================
+  Loading model dnabert2...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_agarwal
+  Enhancers: 100, Variants per type: 50
+  [0/100] Processing peak31234...
+  [20/100] Processing GATA1_5948...
+  [40/100] Processing peak43253...
+  [60/100] Processing ENSG00000164488...
+  [80/100] Processing ENSG00000205268...
+
+  Results:
+  gc_shift       : median Δexpr=0.1016, range=0.5912, z=0.80
+  dinuc_shuffle  : median Δexpr=0.0454, range=0.3236, z=0.70
+  random_replace : median Δexpr=0.1486, range=0.4183, z=1.65
+  motif_only     : median Δexpr=0.0339, range=0.1579, z=0.95
+
+  Dominant factor: random_replace (Δ=0.1486)
+  Spacer GC vs expression: r=0.658
+  Saved to results/v3/spacer_ablation/
+
+============================================================
+SPACER ABLATION — jores / dnabert2
+============================================================
+  Loading model dnabert2...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_jores
+  Enhancers: 100, Variants per type: 50
+  [0/100] Processing jores_64354...
+  [20/100] Processing jores_40763...
+  [40/100] Processing jores_59061...
+  [60/100] Processing jores_73742...
+  [80/100] Processing jores_31397...
+
+  Results:
+  gc_shift       : median Δexpr=0.3461, range=2.7995, z=0.54
+  dinuc_shuffle  : median Δexpr=0.2388, range=1.4750, z=0.71
+  random_replace : median Δexpr=0.5459, range=1.9459, z=1.17
+  motif_only     : median Δexpr=0.0888, range=0.2657, z=1.06
+
+  Dominant factor: random_replace (Δ=0.5459)
+  Spacer GC vs expression: r=-0.734
+  Saved to results/v3/spacer_ablation/
+
+============================================================
+SPACER ABLATION — de_almeida / dnabert2
+============================================================
+  Loading model dnabert2...
+Loading model: dnabert2...
+  Loaded dnabert2 (transformer, hidden_dim=768, layers=12)
+  WARNING: No expression probe found at /home/bcheng/grammar/data/probes/dnabert2___dummy___probe.pt
+  predict_expression() will fail. Run train_probes.py first.
+  Loaded probe: dnabert2_de_almeida
+  Enhancers: 100, Variants per type: 50
+  [0/100] Processing chr4_133416690_133416860...
+  [20/100] Processing chr16_64578862_64579032...
+  [40/100] Processing chr2_8403983_8404153...
+  [60/100] Processing chr9_3954823_3954993...
+  [80/100] Processing chr1_30397041_30397211...
+
+  Results:
+  gc_shift       : median Δexpr=0.1210, range=0.6108, z=0.87
+  dinuc_shuffle  : median Δexpr=0.1130, range=0.5765, z=0.86
+  random_replace : median Δexpr=0.1146, range=0.6098, z=0.81
+  motif_only     : median Δexpr=0.0623, range=0.3076, z=0.95
+
+  Dominant factor: gc_shift (Δ=0.1210)
+  Spacer GC vs expression: r=0.215
+  Saved to results/v3/spacer_ablation/
+
+============================================================
+CROSS-DATASET SUMMARY
+============================================================
+  agarwal: random_replace dominates
+  jores: random_replace dominates
+  de_almeida: gc_shift dominates
+
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/bcheng/.conda/envs/gramlang/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+/home/bcheng/.cache/huggingface/modules/transformers_modules/zhihan1996/DNABERT-2-117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:123: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Some weights of BertModel were not initialized from the model checkpoint at zhihan1996/DNABERT-2-117M and are newly initialized: ['bert.pooler.dense.weight', 'bert.pooler.dense.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+

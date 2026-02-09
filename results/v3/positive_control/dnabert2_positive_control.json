@@ -1,0 +1,18 @@
+{
+  "model": "dnabert2",
+  "n_total_sequences": 209440,
+  "n_orientation_pairs": 500,
+  "n_order_pairs": 0,
+  "orientation": {
+    "n_pairs": 500,
+    "mean_abs_diff": 0.06196780130267143,
+    "median_abs_diff": 0.053830280900001526,
+    "max_abs_diff": 0.23222866654396057,
+    "std_diff": 0.07648845762014389,
+    "frac_diff_gt_0.1": 0.17,
+    "frac_diff_gt_0.5": 0.0,
+    "t_statistic": 30.855372760307777,
+    "p_value": 9.54469751787375e-118
+  },
+  "conclusion": "model_detects_grammar"
+}

@@ -1,0 +1,29 @@
+{
+  "dataset": "agarwal",
+  "model": "dnabert2",
+  "n_enhancers": 500,
+  "n_vocab_features": 141,
+  "n_grammar_features": 148,
+  "n_embed_features": 768,
+  "vocab_r2": {
+    "mean": -0.03750554456524069,
+    "std": 0.11615778226173099
+  },
+  "grammar_r2": {
+    "mean": -0.0833955392574917,
+    "std": 0.10554335537866627
+  },
+  "embedding_r2": {
+    "mean": 0.0789975898852135,
+    "std": 0.07308856320664753
+  },
+  "combined_r2": {
+    "mean": -0.025589076411148583,
+    "std": 0.15369175503729948
+  },
+  "grammar_increment": -0.04588999469225101,
+  "embedding_increment_over_grammar": 0.1623931291427052,
+  "unexplained_by_grammar": 1.0833955392574917,
+  "unexplained_by_embedding": 0.9210024101147865,
+  "grammar_captures_fraction_of_embedding": -1.0556719436462376
+}

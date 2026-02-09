@@ -1,0 +1,48 @@
+{
+  "dataset": "jores",
+  "model": "dnabert2",
+  "n_enhancers": 100,
+  "max_shuffles": 1000,
+  "checkpoints": {
+    "100": {
+      "significance_rate": 0.1,
+      "median_z_score": 0.9253526554848305,
+      "median_gsi": 0.15594163388430327,
+      "median_ges": 0.842382714395912,
+      "median_gpe": 0.7624262204412704,
+      "n_significant": 10
+    },
+    "250": {
+      "significance_rate": 0.09,
+      "median_z_score": 0.9194705236623797,
+      "median_gsi": 0.157116918404356,
+      "median_ges": 0.8860160446602655,
+      "median_gpe": 0.8737637154558657,
+      "n_significant": 9
+    },
+    "500": {
+      "significance_rate": 0.09,
+      "median_z_score": 0.9444396210063873,
+      "median_gsi": 0.15190395795637393,
+      "median_ges": 0.9186735928732519,
+      "median_gpe": 0.9320603936258495,
+      "n_significant": 9
+    },
+    "750": {
+      "significance_rate": 0.09,
+      "median_z_score": 0.9517466692997356,
+      "median_gsi": 0.15232945782261348,
+      "median_ges": 0.9346858640426308,
+      "median_gpe": 0.9620984182535307,
+      "n_significant": 9
+    },
+    "1000": {
+      "significance_rate": 0.09,
+      "median_z_score": 0.9528599286544398,
+      "median_gsi": 0.1519898519744119,
+      "median_ges": 0.9477231040677928,
+      "median_gpe": 1.0051180624771971,
+      "n_significant": 9
+    }
+  }
+}

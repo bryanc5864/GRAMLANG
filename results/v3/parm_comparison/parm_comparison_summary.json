@@ -1,0 +1,26 @@
+{
+  "agarwal": {
+    "dataset": "agarwal",
+    "cell_type": "K562",
+    "model": "PARM",
+    "n_enhancers": 100,
+    "n_shuffles": 100,
+    "median_gsi": 0.19187809306118703,
+    "mean_gsi": 0.19442525417593315,
+    "median_z": 0.5515422761393769,
+    "frac_significant": 0.06,
+    "frac_gsi_gt_0.1": 0.98
+  },
+  "klein": {
+    "dataset": "klein",
+    "cell_type": "HepG2",
+    "model": "PARM",
+    "n_enhancers": 100,
+    "n_shuffles": 100,
+    "median_gsi": 0.4482245916325668,
+    "mean_gsi": 0.4520351779374026,
+    "median_z": 0.6190273213610857,
+    "frac_significant": 0.07,
+    "frac_gsi_gt_0.1": 1.0
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "dataset": "jores",
+  "model": "dnabert2",
+  "n_enhancers": 100,
+  "n_variants": 50,
+  "variant_effects": {
+    "gc_shift": {
+      "median_delta": 0.34605729579925537,
+      "mean_delta": 0.4684658285975456,
+      "median_range": 2.799531251192093,
+      "median_z": 0.5374765360558884
+    },
+    "dinuc_shuffle": {
+      "median_delta": 0.23883342742919922,
+      "mean_delta": 0.30968396335840226,
+      "median_range": 1.4749917387962341,
+      "median_z": 0.7072495609916138
+    },
+    "random_replace": {
+      "median_delta": 0.5458928942680359,
+      "mean_delta": 0.6131674280762672,
+      "median_range": 1.9459298849105835,
+      "median_z": 1.1717409324237786
+    },
+    "motif_only": {
+      "median_delta": 0.08884891867637634,
+      "mean_delta": 0.1255929574370384,
+      "median_range": 0.2656759023666382,
+      "median_z": 1.0621521388269506
+    }
+  },
+  "dominant_factor": "random_replace",
+  "effect_ranking": [
+    [
+      "random_replace",
+      0.5458928942680359
+    ],
+    [
+      "gc_shift",
+      0.34605729579925537
+    ],
+    [
+      "dinuc_shuffle",
+      0.23883342742919922
+    ],
+    [
+      "motif_only",
+      0.08884891867637634
+    ]
+  ],
+  "gc_expression_correlation": -0.7335608714155045
+}

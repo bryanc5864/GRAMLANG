@@ -1,0 +1,29 @@
+{
+  "dataset": "jores",
+  "model": "dnabert2",
+  "n_enhancers": 500,
+  "n_vocab_features": 124,
+  "n_grammar_features": 131,
+  "n_embed_features": 768,
+  "vocab_r2": {
+    "mean": -0.1524124188114234,
+    "std": 0.20612061328025774
+  },
+  "grammar_r2": {
+    "mean": -0.15287525275578684,
+    "std": 0.21657303522300947
+  },
+  "embedding_r2": {
+    "mean": 0.2651226599358828,
+    "std": 0.08117158311747352
+  },
+  "combined_r2": {
+    "mean": 0.04547220845442268,
+    "std": 0.144949683165281
+  },
+  "grammar_increment": -0.0004628339443634444,
+  "embedding_increment_over_grammar": 0.41799791269166964,
+  "unexplained_by_grammar": 1.1528752527557868,
+  "unexplained_by_embedding": 0.7348773400641172,
+  "grammar_captures_fraction_of_embedding": -0.576620847093033
+}

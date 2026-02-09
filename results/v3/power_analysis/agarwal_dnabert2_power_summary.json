@@ -1,0 +1,48 @@
+{
+  "dataset": "agarwal",
+  "model": "dnabert2",
+  "n_enhancers": 100,
+  "max_shuffles": 1000,
+  "checkpoints": {
+    "100": {
+      "significance_rate": 0.1,
+      "median_z_score": 0.9712437050580187,
+      "median_gsi": 0.4475684656251885,
+      "median_ges": 0.9580865175382899,
+      "median_gpe": 2.2463176063394936,
+      "n_significant": 10
+    },
+    "250": {
+      "significance_rate": 0.11,
+      "median_z_score": 0.9776059831928514,
+      "median_gsi": 0.4530089930391977,
+      "median_ges": 0.9465879883567938,
+      "median_gpe": 2.5705537356678105,
+      "n_significant": 11
+    },
+    "500": {
+      "significance_rate": 0.11,
+      "median_z_score": 0.951406353222277,
+      "median_gsi": 0.4662923152309203,
+      "median_ges": 0.9622344238618952,
+      "median_gpe": 2.7315470069026757,
+      "n_significant": 11
+    },
+    "750": {
+      "significance_rate": 0.12,
+      "median_z_score": 0.977919886272873,
+      "median_gsi": 0.4687813906850448,
+      "median_ges": 0.9714905566064529,
+      "median_gpe": 2.920573035593327,
+      "n_significant": 12
+    },
+    "1000": {
+      "significance_rate": 0.11,
+      "median_z_score": 0.9748099662630145,
+      "median_gsi": 0.46344089892504314,
+      "median_ges": 0.9662408438260176,
+      "median_gpe": 2.932467990870855,
+      "n_significant": 11
+    }
+  }
+}

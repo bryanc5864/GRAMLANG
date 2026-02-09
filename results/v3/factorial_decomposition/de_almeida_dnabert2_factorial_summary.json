@@ -1,0 +1,50 @@
+{
+  "dataset": "de_almeida",
+  "model": "dnabert2",
+  "n_enhancers": 100,
+  "n_shuffles": 100,
+  "variance_decomposition": {
+    "position": {
+      "median_variance": 0.008819819893687963,
+      "mean_variance": 0.009547781336586923,
+      "median_z_score": 0.7327791666419619,
+      "median_gsi": 0.09666734282329481
+    },
+    "orientation": {
+      "median_variance": 0.004474627552554011,
+      "mean_variance": 0.0053872592322295534,
+      "median_z_score": 0.8409593543303744,
+      "median_gsi": 0.06576307965452677
+    },
+    "spacer": {
+      "median_variance": 0.016551955603063107,
+      "mean_variance": 0.01699500099290162,
+      "median_z_score": 0.6137388656028794,
+      "median_gsi": 0.13387279590923773
+    },
+    "full": {
+      "median_variance": 0.018957733176648617,
+      "mean_variance": 0.019570868778973818,
+      "median_z_score": 0.6753782586047027,
+      "median_gsi": 0.14461193383414128
+    }
+  },
+  "effect_sizes": {
+    "position": {
+      "median_fraction_of_full": 0.47223209439844255,
+      "mean_fraction_of_full": 0.5022008472989268
+    },
+    "orientation": {
+      "median_fraction_of_full": 0.24225913064808924,
+      "mean_fraction_of_full": 0.28244492985656783
+    },
+    "spacer": {
+      "median_fraction_of_full": 0.8571863923468459,
+      "mean_fraction_of_full": 0.8884661457041377
+    },
+    "interaction": {
+      "median_fraction_of_full": -0.640992116967254,
+      "mean_fraction_of_full": -0.6731119228596323
+    }
+  }
+}
