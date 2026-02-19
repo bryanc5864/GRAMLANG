@@ -9,8 +9,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-RESULTS_DIR = '/home/bcheng/grammar/results'
-FIGURES_DIR = '/home/bcheng/grammar/results/figures'
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
+RESULTS_DIR = os.path.join(PROJECT_DIR, 'results')
+FIGURES_DIR = os.path.join(RESULTS_DIR, 'figures')
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
 plt.rcParams.update({
@@ -270,7 +272,7 @@ def fig5_biophysics():
     # (A) Biophysics R² comparison
     ax = axes[0, 0]
     datasets_bio = ['Vaishnav\n(Yeast)', 'Klein\n(Human)']
-    r2_vals = [0.082, 0.636]
+    r2_vals = [0.218, 0.375]  # v2 corrected (gsi_robust): Vaishnav=0.218, Klein=0.375
     colors = ['#3498db', '#e74c3c']
     bars = ax.bar(datasets_bio, r2_vals, color=colors, edgecolor='black', linewidth=0.5, width=0.5)
     for bar, val in zip(bars, r2_vals):
@@ -278,7 +280,7 @@ def fig5_biophysics():
                 f'{val:.3f}', ha='center', va='bottom', fontsize=12, fontweight='bold')
     ax.set_ylabel('Biophysics R² (5-fold CV)')
     ax.set_title('(A) Biophysical Explanation of Grammar')
-    ax.set_ylim(0, 0.85)
+    ax.set_ylim(0, 0.5)
 
     # (B) Top features comparison
     ax = axes[0, 1]
@@ -409,18 +411,18 @@ def fig7_summary():
     ax = axes[0, 0]
     ax.axis('off')
     summary_text = (
-        "GRAMLANG: Key Numbers\n"
+        "GRAMLANG: Key Numbers (v2)\n"
         "=" * 35 + "\n\n"
-        "Models tested:          3\n"
+        "Models tested:          3 (+Enformer)\n"
         "Datasets:               5\n"
-        "GSI measurements:     1,200\n"
-        "Grammar rules:        4,218\n"
-        "Compositionality tests: 1,200\n\n"
-        "Mean GSI:              0.078\n"
-        "Frac significant:      100%\n"
-        "Mean consensus:        0.482\n"
-        "Orientation agreement: 82.5%\n"
-        "Compositionality gap:  0.990\n"
+        "GSI measurements:     7,650\n"
+        "Grammar rules:        9,019\n"
+        "Compositionality tests: 984\n\n"
+        "Median GSI:            0.118\n"
+        "Frac significant:      8.3%\n"
+        "Mean consensus:        0.433\n"
+        "Orientation agreement: 84.8%\n"
+        "Compositionality gap:  0.989\n"
         "Cross-species transfer: 0.000\n"
         "Grammar completeness: 6-18%"
     )
@@ -432,15 +434,15 @@ def fig7_summary():
     # (B) GSI by model (simplified)
     ax = axes[0, 1]
     models = ['DNABERT-2', 'NT v2', 'HyenaDNA']
-    mean_gsi = [0.0875, 0.0952, 0.0479]
+    mean_gsi = [0.167, 0.144, 0.065]  # v2 median GSI per model
     colors = [MODEL_COLORS['dnabert2'], MODEL_COLORS['nt'], MODEL_COLORS['hyenadna']]
     bars = ax.bar(models, mean_gsi, color=colors, edgecolor='black', linewidth=0.5)
     for bar, val in zip(bars, mean_gsi):
         ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.002,
                 f'{val:.3f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
-    ax.set_ylabel('Mean GSI')
+    ax.set_ylabel('Median GSI')
     ax.set_title('(B) Grammar Sensitivity by Model')
-    ax.set_ylim(0, 0.13)
+    ax.set_ylim(0, 0.22)
 
     # (C) Compositionality gap summary
     ax = axes[0, 2]
@@ -456,7 +458,7 @@ def fig7_summary():
 
     # (D) Transfer matrix
     ax = axes[1, 0]
-    transfer_matrix = np.array([[0.015, 0.000], [0.000, 0.020]])
+    transfer_matrix = np.array([[0.151, 0.000], [0.000, 0.004]])  # v2 corrected
     sns.heatmap(transfer_matrix, xticklabels=['Human', 'Yeast'],
                 yticklabels=['Human', 'Yeast'], annot=True, fmt='.3f',
                 cmap='YlOrRd', vmin=0, vmax=0.05, ax=ax,
@@ -466,7 +468,7 @@ def fig7_summary():
     # (E) Biophysics R²
     ax = axes[1, 1]
     species = ['Yeast', 'Human']
-    bio_r2 = [0.082, 0.636]
+    bio_r2 = [0.218, 0.375]  # v2 corrected (gsi_robust)
     remaining = [1 - r for r in bio_r2]
     ax.barh(species, bio_r2, color='#e74c3c', label='Biophysics-explained')
     ax.barh(species, remaining, left=bio_r2, color='#3498db', alpha=0.4, label='Unexplained')
