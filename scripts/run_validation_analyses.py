@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Resolve Round 2 critiques systematically.
+Resolve Round 2 validations systematically.
 
-Critiques addressed:
+validations addressed:
 1. Positive control: Run all 3 models on Georgakopoulos-Soares data + compute Cohen's d
 2. Probe quality stratification: Stratify compositionality by probe R²
 3. Factorial decomposition: All 3 models, 500 enhancers
@@ -22,7 +22,7 @@ from collections import defaultdict
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
-RESULTS_DIR = Path('results/v3/critique_resolutions')
+RESULTS_DIR = Path('results/v3/validation_analysiss')
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -36,13 +36,13 @@ def compute_cohens_d(group1, group2):
     return (np.mean(group1) - np.mean(group2)) / pooled_std
 
 
-def resolution_1_positive_control_all_models():
+def analysis_1_positive_control_all_models():
     """
-    Critique 1: Run all 3 models on Georgakopoulos-Soares positive control.
+    validation 1: Run all 3 models on Georgakopoulos-Soares positive control.
     Currently only DNABERT-2 tested.
     """
     print("\n" + "="*60)
-    print("RESOLUTION 1: Positive Control - All Models")
+    print("analysis 1: Positive Control - All Models")
     print("="*60)
 
     from models.foundation import load_model
@@ -219,13 +219,13 @@ def resolution_1_positive_control_all_models():
     return results
 
 
-def resolution_2_probe_quality_stratification():
+def analysis_2_probe_quality_stratification():
     """
-    Critique 2: Stratify key results by probe quality.
+    validation 2: Stratify key results by probe quality.
     Show that findings hold for viable probes (R² > 0.05).
     """
     print("\n" + "="*60)
-    print("RESOLUTION 2: Probe Quality Stratification")
+    print("analysis 2: Probe Quality Stratification")
     print("="*60)
 
     # Load probe metrics
@@ -327,12 +327,12 @@ def resolution_2_probe_quality_stratification():
     return results
 
 
-def resolution_3_factorial_all_models():
+def analysis_3_factorial_all_models():
     """
-    Critique 3: Run factorial decomposition on all 3 models with more enhancers.
+    validation 3: Run factorial decomposition on all 3 models with more enhancers.
     """
     print("\n" + "="*60)
-    print("RESOLUTION 3: Factorial Decomposition - All Models")
+    print("analysis 3: Factorial Decomposition - All Models")
     print("="*60)
 
     from models.foundation import load_model
@@ -445,12 +445,12 @@ def resolution_3_factorial_all_models():
     return results
 
 
-def resolution_4_statistical_validation():
+def analysis_4_statistical_validation():
     """
-    Critique 6: Generate QQ-plots, p-value histograms, normality tests.
+    validation 6: Generate QQ-plots, p-value histograms, normality tests.
     """
     print("\n" + "="*60)
-    print("RESOLUTION 4: Statistical Validation")
+    print("analysis 4: Statistical Validation")
     print("="*60)
 
     import matplotlib
@@ -569,12 +569,12 @@ def resolution_4_statistical_validation():
     return results
 
 
-def resolution_5_gc_all_datasets():
+def analysis_5_gc_all_datasets():
     """
-    Critique 7: Run GC correlation analysis for ALL 5 datasets.
+    validation 7: Run GC correlation analysis for ALL 5 datasets.
     """
     print("\n" + "="*60)
-    print("RESOLUTION 5: GC Correlation - All 5 Datasets")
+    print("analysis 5: GC Correlation - All 5 Datasets")
     print("="*60)
 
     from models.foundation import load_model
@@ -669,13 +669,13 @@ def resolution_5_gc_all_datasets():
     return results
 
 
-def resolution_6_compositionality_circularity():
+def analysis_6_compositionality_circularity():
     """
-    Critique 4: Address compositionality circularity.
+    validation 4: Address compositionality circularity.
     Add explicit acknowledgment and test with viable probes only.
     """
     print("\n" + "="*60)
-    print("RESOLUTION 6: Compositionality Circularity Acknowledgment")
+    print("analysis 6: Compositionality Circularity Acknowledgment")
     print("="*60)
 
     # Load existing compositionality results
@@ -738,68 +738,68 @@ def resolution_6_compositionality_circularity():
 
 
 def main():
-    """Run all critique resolutions."""
+    """Run all validation analysiss."""
     print("="*60)
-    print("GRAMLANG: Resolving Round 2 Critiques")
+    print("GRAMLANG: Resolving Round 2 validations")
     print("="*60)
 
     all_results = {}
 
-    # Resolution 4: Statistical validation (no GPU needed, quick)
+    # analysis 4: Statistical validation (no GPU needed, quick)
     print("\n[1/6] Statistical Validation...")
     try:
-        all_results['statistical_validation'] = resolution_4_statistical_validation()
+        all_results['statistical_validation'] = analysis_4_statistical_validation()
     except Exception as e:
         print(f"  ERROR: {e}")
 
-    # Resolution 6: Compositionality circularity (no GPU needed)
+    # analysis 6: Compositionality circularity (no GPU needed)
     print("\n[2/6] Compositionality Circularity...")
     try:
-        all_results['compositionality_circularity'] = resolution_6_compositionality_circularity()
+        all_results['compositionality_circularity'] = analysis_6_compositionality_circularity()
     except Exception as e:
         print(f"  ERROR: {e}")
 
-    # Resolution 2: Probe quality stratification (no GPU needed)
+    # analysis 2: Probe quality stratification (no GPU needed)
     print("\n[3/6] Probe Quality Stratification...")
     try:
-        all_results['probe_stratification'] = resolution_2_probe_quality_stratification()
+        all_results['probe_stratification'] = analysis_2_probe_quality_stratification()
     except Exception as e:
         print(f"  ERROR: {e}")
 
-    # Resolution 5: GC correlation all datasets (needs GPU)
+    # analysis 5: GC correlation all datasets (needs GPU)
     print("\n[4/6] GC Correlation All Datasets...")
     try:
-        all_results['gc_correlation'] = resolution_5_gc_all_datasets()
+        all_results['gc_correlation'] = analysis_5_gc_all_datasets()
     except Exception as e:
         print(f"  ERROR: {e}")
 
-    # Resolution 1: Positive control all models (needs GPU, critical)
+    # analysis 1: Positive control all models (needs GPU, critical)
     print("\n[5/6] Positive Control All Models...")
     try:
-        all_results['positive_control'] = resolution_1_positive_control_all_models()
+        all_results['positive_control'] = analysis_1_positive_control_all_models()
     except Exception as e:
         print(f"  ERROR: {e}")
 
-    # Resolution 3: Factorial all models (needs GPU, slower)
+    # analysis 3: Factorial all models (needs GPU, slower)
     print("\n[6/6] Factorial Decomposition All Models...")
     try:
-        all_results['factorial_all_models'] = resolution_3_factorial_all_models()
+        all_results['factorial_all_models'] = analysis_3_factorial_all_models()
     except Exception as e:
         print(f"  ERROR: {e}")
 
     # Save master results
-    output_path = RESULTS_DIR / 'all_critique_resolutions.json'
+    output_path = RESULTS_DIR / 'all_validation_analysiss.json'
     with open(output_path, 'w') as f:
         json.dump(all_results, f, indent=2, default=str)
 
     print("\n" + "="*60)
-    print("CRITIQUE RESOLUTION COMPLETE")
+    print("validation analysis COMPLETE")
     print("="*60)
     print(f"\nResults saved to: {RESULTS_DIR}")
 
     # Summary
     print("\n" + "-"*60)
-    print("RESOLUTION SUMMARY")
+    print("analysis SUMMARY")
     print("-"*60)
 
     for key, result in all_results.items():

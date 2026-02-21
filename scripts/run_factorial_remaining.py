@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Run factorial decomposition for NT v2-500M and HyenaDNA models.
-Resolves Critique 3: Factorial Decomposition All Models.
+Completes validation 3: Factorial Decomposition All Models.
 """
 
 import os
@@ -242,7 +242,7 @@ def run_factorial_decomposition(dataset_name, model_name, n_enhancers=200, n_shu
 
 def main():
     print("="*60)
-    print("CRITIQUE 3 RESOLUTION: Factorial Decomposition - All Models")
+    print("validation 3 RESOLUTION: Factorial Decomposition - All Models")
     print("="*60)
 
     all_summaries = {}

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-GPU-dependent critique resolutions.
-Run after resolve_critiques.py for CPU-based analyses.
+GPU-dependent validation analysiss.
+Run after resolve_validations.py for CPU-based analyses.
 """
 
 import os
@@ -17,7 +17,7 @@ from collections import defaultdict
 sys.path.insert(0, str(Path(__file__).parent.parent))
 sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
-RESULTS_DIR = Path('results/v3/critique_resolutions')
+RESULTS_DIR = Path('results/v3/validation_analysiss')
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -30,12 +30,12 @@ def compute_cohens_d(diffs):
     return mean_diff / std_diff
 
 
-def resolution_1_positive_control_all_models():
+def analysis_1_positive_control_all_models():
     """
-    Critique 1: Run all 3 models on Georgakopoulos-Soares positive control.
+    validation 1: Run all 3 models on Georgakopoulos-Soares positive control.
     """
     print("\n" + "="*60)
-    print("RESOLUTION 1: Positive Control - All Models")
+    print("analysis 1: Positive Control - All Models")
     print("="*60)
 
     from src.models.model_loader import load_model
@@ -164,12 +164,12 @@ def resolution_1_positive_control_all_models():
     return results
 
 
-def resolution_5_gc_all_datasets():
+def analysis_5_gc_all_datasets():
     """
-    Critique 7: Run GC correlation analysis for ALL 5 datasets.
+    validation 7: Run GC correlation analysis for ALL 5 datasets.
     """
     print("\n" + "="*60)
-    print("RESOLUTION 5: GC Correlation - All 5 Datasets")
+    print("analysis 5: GC Correlation - All 5 Datasets")
     print("="*60)
 
     from src.models.model_loader import load_model
@@ -273,33 +273,33 @@ def resolution_5_gc_all_datasets():
 
 
 def main():
-    """Run GPU-dependent critique resolutions."""
+    """Run GPU-dependent validation analysiss."""
     print("="*60)
-    print("GRAMLANG: GPU-Dependent Critique Resolutions")
+    print("GRAMLANG: GPU-Dependent validation analysiss")
     print("="*60)
 
     all_results = {}
 
-    # Resolution 5: GC correlation all datasets
+    # analysis 5: GC correlation all datasets
     print("\n[1/2] GC Correlation All Datasets...")
     try:
-        all_results['gc_correlation'] = resolution_5_gc_all_datasets()
+        all_results['gc_correlation'] = analysis_5_gc_all_datasets()
     except Exception as e:
         import traceback
         print(f"  ERROR: {e}")
         traceback.print_exc()
 
-    # Resolution 1: Positive control all models
+    # analysis 1: Positive control all models
     print("\n[2/2] Positive Control All Models...")
     try:
-        all_results['positive_control'] = resolution_1_positive_control_all_models()
+        all_results['positive_control'] = analysis_1_positive_control_all_models()
     except Exception as e:
         import traceback
         print(f"  ERROR: {e}")
         traceback.print_exc()
 
     # Update master results
-    master_path = RESULTS_DIR / 'all_critique_resolutions.json'
+    master_path = RESULTS_DIR / 'all_validation_analysiss.json'
     if master_path.exists():
         with open(master_path) as f:
             master = json.load(f)
@@ -312,7 +312,7 @@ def main():
         json.dump(master, f, indent=2, default=str)
 
     print("\n" + "="*60)
-    print("GPU RESOLUTIONS COMPLETE")
+    print("GPU analysisS COMPLETE")
     print("="*60)
 
 
