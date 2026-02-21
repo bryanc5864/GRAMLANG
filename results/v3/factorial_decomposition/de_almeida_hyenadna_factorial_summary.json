@@ -1,0 +1,46 @@
+{
+  "dataset": "de_almeida",
+  "model": "hyenadna",
+  "n_enhancers": 200,
+  "n_shuffles": 100,
+  "variance_decomposition": {
+    "position": {
+      "median_variance": 3.710472083184868e-05,
+      "mean_variance": 4.766209265653742e-05,
+      "median_z_score": 0.613489739191845,
+      "median_gsi": 0.006183405031658816
+    },
+    "orientation": {
+      "median_variance": 1.9157843780703843e-05,
+      "mean_variance": 2.6193737347313118e-05,
+      "median_z_score": 0.8707053077501086,
+      "median_gsi": 0.004444152028402521
+    },
+    "spacer": {
+      "median_variance": 5.3573890909319744e-05,
+      "mean_variance": 6.021583999654467e-05,
+      "median_z_score": 0.6519088969119837,
+      "median_gsi": 0.007618185874352008
+    },
+    "full": {
+      "median_variance": 0.00011689547682181001,
+      "mean_variance": 0.0001246544510104286,
+      "median_z_score": 0.7294386904133953,
+      "median_gsi": 0.01103862092557759
+    }
+  },
+  "effect_sizes": {
+    "position": {
+      "median_fraction_of_full": 0.3255477983063889,
+      "mean_fraction_of_full": 0.3733300773136956
+    },
+    "orientation": {
+      "median_fraction_of_full": 0.16704823303279126,
+      "mean_fraction_of_full": 0.21954129311232898
+    },
+    "spacer": {
+      "median_fraction_of_full": 0.47718517040583175,
+      "mean_fraction_of_full": 0.4974607598001684
+    }
+  }
+}
