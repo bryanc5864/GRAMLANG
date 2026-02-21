@@ -1,0 +1,25 @@
+{
+  "normality_tests": {
+    "shapiro_wilk": {
+      "statistic": 0.8996891975402832,
+      "p_value": 0.0,
+      "n_tested": 5000
+    },
+    "dagostino_pearson": {
+      "statistic": 2148.556182833814,
+      "p_value": 0.0,
+      "n_tested": 7650
+    },
+    "conclusion": "not_normal"
+  },
+  "pvalue_distribution": {
+    "n": 7650,
+    "frac_lt_0.05": 0.08300653594771241,
+    "frac_lt_0.01": 0.026535947712418302,
+    "ks_test": {
+      "statistic": 0.05436032976141153,
+      "p_value": 4.3403650910163734e-20,
+      "conclusion": "not_uniform"
+    }
+  }
+}
