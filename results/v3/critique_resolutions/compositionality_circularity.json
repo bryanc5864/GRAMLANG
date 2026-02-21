@@ -1,0 +1,13 @@
+{
+  "circularity_acknowledgment": {
+    "issue": "Compositionality test uses VP shuffles which are confounded by spacer composition",
+    "implication": "If spacer confound inflates GSI, it also inflates non-compositionality",
+    "mitigation": "Results should be interpreted as upper bound on non-compositionality",
+    "recommendation": "Future work should use spacer-controlled compositionality tests"
+  },
+  "stratified_analysis": {
+    "viable_probe_gap": NaN,
+    "weak_probe_gap": 0.9906486875369708,
+    "conclusion": "needs_investigation"
+  }
+}
