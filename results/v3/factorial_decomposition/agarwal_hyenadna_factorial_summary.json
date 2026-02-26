@@ -1,0 +1,46 @@
+{
+  "dataset": "agarwal",
+  "model": "hyenadna",
+  "n_enhancers": 200,
+  "n_shuffles": 100,
+  "variance_decomposition": {
+    "position": {
+      "median_variance": 0.000160313727974426,
+      "mean_variance": 0.0001897436357830884,
+      "median_z_score": 0.7747040536655283,
+      "median_gsi": 0.07205442001449694
+    },
+    "orientation": {
+      "median_variance": 4.499645365285687e-05,
+      "mean_variance": 6.672829998894515e-05,
+      "median_z_score": 0.9415533634952833,
+      "median_gsi": 0.0376887522424708
+    },
+    "spacer": {
+      "median_variance": 0.00023932757176226005,
+      "mean_variance": 0.0002596562494181853,
+      "median_z_score": 0.74927301275614,
+      "median_gsi": 0.08633933966308618
+    },
+    "full": {
+      "median_variance": 0.0005442480323836207,
+      "mean_variance": 0.0005579742712143343,
+      "median_z_score": 0.8309484493551685,
+      "median_gsi": 0.12401730325214885
+    }
+  },
+  "effect_sizes": {
+    "position": {
+      "median_fraction_of_full": 0.31484466673188805,
+      "mean_fraction_of_full": 0.3523636553784806
+    },
+    "orientation": {
+      "median_fraction_of_full": 0.0825833384875709,
+      "mean_fraction_of_full": 0.12745071986488957
+    },
+    "spacer": {
+      "median_fraction_of_full": 0.46953993434736335,
+      "mean_fraction_of_full": 0.47352979744187534
+    }
+  }
+}

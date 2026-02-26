@@ -1,0 +1,152 @@
+{
+  "statistical_validation": {
+    "normality_tests": {
+      "shapiro_wilk": {
+        "statistic": 0.8996891975402832,
+        "p_value": 0.0,
+        "n_tested": 5000
+      },
+      "dagostino_pearson": {
+        "statistic": 2148.556182833814,
+        "p_value": 0.0,
+        "n_tested": 7650
+      },
+      "conclusion": "not_normal"
+    },
+    "pvalue_distribution": {
+      "n": 7650,
+      "frac_lt_0.05": 0.08300653594771241,
+      "frac_lt_0.01": 0.026535947712418302,
+      "ks_test": {
+        "statistic": 0.05436032976141153,
+        "p_value": 4.3403650910163734e-20,
+        "conclusion": "not_uniform"
+      }
+    }
+  },
+  "compositionality_circularity": {
+    "circularity_acknowledgment": {
+      "issue": "Compositionality test uses VP shuffles which are confounded by spacer composition",
+      "implication": "If spacer confound inflates GSI, it also inflates non-compositionality",
+      "mitigation": "Results should be interpreted as upper bound on non-compositionality",
+      "recommendation": "Future work should use spacer-controlled compositionality tests"
+    },
+    "stratified_analysis": {
+      "viable_probe_gap": NaN,
+      "weak_probe_gap": 0.9906486875369708,
+      "conclusion": "needs_investigation"
+    }
+  },
+  "probe_stratification": {
+    "viable_probes": {
+      "count": 0,
+      "list": [],
+      "gsi_n": 0,
+      "gsi_median": null,
+      "gsi_mean": null
+    },
+    "weak_probes": {
+      "count": 18,
+      "list": [
+        "dnabert2_vaishnav2022",
+        "hyenadna_vaishnav2022",
+        "nt_vaishnav2022",
+        "dnabert2_agarwal",
+        "dnabert2_de_almeida",
+        "dnabert2_jores",
+        "dnabert2_klein",
+        "dnabert2_vaishnav",
+        "hyenadna_agarwal",
+        "hyenadna_de_almeida",
+        "hyenadna_jores",
+        "hyenadna_klein",
+        "hyenadna_vaishnav",
+        "nt_agarwal",
+        "nt_de_almeida",
+        "nt_jores",
+        "nt_klein",
+        "nt_vaishnav"
+      ],
+      "gsi_n": 10650,
+      "gsi_median": 0.09527192264795303,
+      "gsi_mean": 0.6207588754558836
+    }
+  },
+  "positive_control": {
+    "dnabert2": {
+      "n_pairs": 500,
+      "mean_abs_diff": 0.03305682940036058,
+      "median_abs_diff": 0.0037509500980377197,
+      "std_diff": 0.09199711500596339,
+      "cohens_d": 0.358965126502671,
+      "t_statistic": 8.026704244117836,
+      "p_value": 7.227422208784441e-15,
+      "frac_gt_0.1": 0.098,
+      "frac_gt_0.05": 0.122
+    },
+    "nt": {
+      "n_pairs": 500,
+      "mean_abs_diff": 0.039357419967651366,
+      "median_abs_diff": 0.03967481851577759,
+      "std_diff": 0.0035344006501423237,
+      "cohens_d": 11.124387623595284,
+      "t_statistic": 248.74886934416398,
+      "p_value": 0.0,
+      "frac_gt_0.1": 0.0,
+      "frac_gt_0.05": 0.0
+    },
+    "hyenadna": {
+      "n_pairs": 500,
+      "mean_abs_diff": 0.004162331581115722,
+      "median_abs_diff": 0.004195898771286011,
+      "std_diff": 0.0003737884103809365,
+      "cohens_d": 11.124387623595286,
+      "t_statistic": 248.74886934416406,
+      "p_value": 0.0,
+      "frac_gt_0.1": 0.0,
+      "frac_gt_0.05": 0.0
+    }
+  },
+  "gc_correlation": {
+    "agarwal": {
+      "n": 200,
+      "r": 0.19786925326753435,
+      "p_value": 0.004976100351757984,
+      "direction": "positive",
+      "gc_mean": 0.514525,
+      "gc_std": 0.10019805075449323
+    },
+    "jores": {
+      "n": 200,
+      "r": -0.2791674250924362,
+      "p_value": 6.25026277705451e-05,
+      "direction": "negative",
+      "gc_mean": 0.46047058823529413,
+      "gc_std": 0.11515772244214578
+    },
+    "de_almeida": {
+      "n": 200,
+      "r": 0.07270444370520612,
+      "p_value": 0.30625773691865127,
+      "direction": "positive",
+      "gc_mean": 0.526225,
+      "gc_std": 0.08970855240722592
+    },
+    "klein": {
+      "n": 200,
+      "r": 0.2429787416425905,
+      "p_value": 0.0005266924356589846,
+      "direction": "positive",
+      "gc_mean": 0.479765625,
+      "gc_std": 0.09187827360357434
+    },
+    "vaishnav": {
+      "n": 200,
+      "r": 0.033984958106896904,
+      "p_value": 0.6328314392427627,
+      "direction": "positive",
+      "gc_mean": 0.4476831743186685,
+      "gc_std": 0.05704392046274177
+    }
+  }
+}
