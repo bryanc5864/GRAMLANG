@@ -12,7 +12,7 @@ def load_raw_mpra(dataset_name: str, raw_path: str) -> pd.DataFrame:
     Load raw MPRA data from various formats.
 
     Args:
-        dataset_name: One of 'agarwal', 'kircher', 'de_almeida', 'vaishnav', 'jores', 'klein'
+        dataset_name: One of 'agarwal', 'kircher', 'inoue', 'vaishnav', 'jores', 'klein'
         raw_path: Path to the raw data directory
 
     Returns:
@@ -22,8 +22,8 @@ def load_raw_mpra(dataset_name: str, raw_path: str) -> pd.DataFrame:
         return _load_agarwal(raw_path)
     elif dataset_name == 'kircher':
         return _load_kircher(raw_path)
-    elif dataset_name == 'de_almeida':
-        return _load_de_almeida(raw_path)
+    elif dataset_name == 'inoue':
+        return _load_inoue(raw_path)
     elif dataset_name == 'vaishnav':
         return _load_vaishnav(raw_path)
     elif dataset_name == 'jores':
@@ -64,7 +64,7 @@ def _load_agarwal(raw_path: str) -> pd.DataFrame:
 
 # Generic loaders for other datasets (same pattern)
 _load_kircher = _load_agarwal
-_load_de_almeida = _load_agarwal
+_load_inoue = _load_agarwal
 _load_vaishnav = _load_agarwal
 _load_jores = _load_agarwal
 _load_klein = _load_agarwal

@@ -66,7 +66,7 @@ Recent consensus (2020-2025) is that most enhancers fall on a SPECTRUM between t
 
 | Analysis | Status | Key References |
 |----------|--------|----------------|
-| Motif shuffling in enhancers via MPRA | Standard | de Almeida et al. 2023 Nature; Avsec et al. 2021 Nature |
+| Motif shuffling in enhancers via MPRA | Standard | Inoue et al. 2023 Nature; Avsec et al. 2021 Nature |
 | Pairwise motif spacing/orientation scans | Extensively studied | Yanez-Cuna et al. 2013; Ng et al. 2014; Grossman et al. 2017 |
 | Attention/attribution analysis on genomic models | Well-trodden | Avsec et al. 2021; Linder et al. 2023; Novakovsky et al. 2023 |
 | Conservation at regulatory positions | Hundreds of papers | PhyloP/PhastCons standard workflow |
@@ -185,7 +185,7 @@ The long-term goal (beyond this project, but what this project contributes to) i
 |---------|---------|-----------|-------|-----------|
 | Agarwal et al. 2023 | Human | K562, HepG2 | ~700K sequences | Large-scale human |
 | Kircher et al. 2019 | Human | HepG2, K562 | ~20K variants | Saturation mutagenesis |
-| de Almeida et al. 2024 | Human | Neural progenitors | ~2K perturbations | Differentiation context |
+| Inoue et al. 2019 | Human | Neural progenitors | ~2K perturbations | Differentiation context |
 | Vaishnav et al. 2022 | Yeast | Standard conditions | 100M sequences | Massive scale |
 | Jores et al. 2021 | Plant | Leaf protoplasts | ~100K sequences | Cross-kingdom |
 | Klein et al. 2020 | Drosophila | S2 cells | ~5K variants | Invertebrate |

@@ -63,14 +63,14 @@ ALL_MODELS = ['dnabert2', 'caduceus', 'nt', 'hyenadna', 'enformer']
 ALL_DATASETS = {
     'agarwal': {'species': 'human', 'cell_type': 'K562'},
     'kircher': {'species': 'human', 'cell_type': 'K562'},
-    'de_almeida': {'species': 'human', 'cell_type': None},
+    'inoue': {'species': 'human', 'cell_type': None},
     'vaishnav': {'species': 'yeast', 'cell_type': None},
     'jores': {'species': 'plant', 'cell_type': None},
     'klein': {'species': 'human', 'cell_type': 'HepG2'},  # Klein 2020 is human HepG2
 }
 
 SPECIES_MAP = {
-    'human': ['agarwal', 'kircher', 'de_almeida', 'klein'],
+    'human': ['agarwal', 'kircher', 'inoue', 'klein'],
     'yeast': ['vaishnav'],
     'plant': ['jores'],
 }

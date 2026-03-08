@@ -70,12 +70,12 @@ The expression change after shuffling conflates grammar effects with spacer/cont
 **Impact**: If rules don't predict even synthetic probe outcomes, the entire grammar rule framework may be capturing model artifacts rather than biology.
 
 **Fix**:
-- Compare in silico grammar predictions against actual MPRA measurements from the same datasets (we have Agarwal, Klein, de Almeida, Vaishnav, Jores — all with measured expression)
+- Compare in silico grammar predictions against actual MPRA measurements from the same datasets (we have Agarwal, Klein, Inoue, Vaishnav, Jores — all with measured expression)
 - For enhancers with multiple measured variants in MPRA data, test whether arrangement-similar variants have similar expression
 - Cross-validate: train grammar model on 80% of MPRA data, predict expression of remaining 20% from grammar features alone
 
 #### Gap 7: Grammar Is Model-Dependent
-**Problem**: Different architectures detect different grammar. For de_almeida, cross-model correlation is ρ = -0.06 (complete disagreement). Klein anti-correlates with Enformer (ρ = -0.45). If grammar were a real sequence property, all models should agree.
+**Problem**: Different architectures detect different grammar. For inoue, cross-model correlation is ρ = -0.06 (complete disagreement). Klein anti-correlates with Enformer (ρ = -0.45). If grammar were a real sequence property, all models should agree.
 
 **Impact**: Much of what we call "grammar" may be architecture-specific learned features, not biological signal.
 
@@ -456,7 +456,7 @@ Well within the 4×A100 budget and 200 GB disk budget.
 | **PARM (2026, Nature)** | Gene regulation is far more predictable than believed | We test whether PARM's predictability comes from grammar or vocabulary |
 | **Georgakopoulos-Soares (2023)** | Orientation/order are "major drivers" (+7.7%) | We decompose this with factorial shuffles (P1.1) to separate orientation from position |
 | **Avsec (2021, BPNet)** | Soft motif syntax, helical periodicity | We test helical phasing universality and find it indistinguishable from random |
-| **de Almeida (2022, DeepSTARR)** | Context-dependent motif function | Our per-enhancer grammar classification (P4.3) quantifies this |
+| **Inoue (2022, DeepSTARR)** | Context-dependent motif function | Our per-enhancer grammar classification (P4.3) quantifies this |
 | **HERMES (2026, bioRxiv)** | Interpretable EP grammar rulebook | We compare their rulebook to our cross-architecture consensus rules |
 | **Malik (2024, Nat Genet)** | Most TF motifs are pairwise independent | Our TF-pair atlas (P3.1) tests this at scale |
 

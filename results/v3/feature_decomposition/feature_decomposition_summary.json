@@ -293,7 +293,7 @@
     "model": "dnabert2",
     "n_samples": 500
   },
-  "de_almeida": {
+  "inoue": {
     "gc_only": {
       "mean_r2": 0.08194434862066173,
       "std_r2": 0.086299312496853,
@@ -436,7 +436,7 @@
         "p": 9.83501478476983e-11
       }
     },
-    "dataset": "de_almeida",
+    "dataset": "inoue",
     "model": "dnabert2",
     "n_samples": 500
   }

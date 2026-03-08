@@ -58,8 +58,8 @@ def fig1_spacer_confound():
     fig, axes = plt.subplots(2, 2, figsize=(5.5, 3.8))
     plt.subplots_adjust(hspace=0.55, wspace=0.4)
 
-    datasets = ['agarwal', 'jores', 'de_almeida']
-    ds_labels = ['Agarwal', 'Jores', 'de Almeida']
+    datasets = ['agarwal', 'jores', 'inoue']
+    ds_labels = ['Agarwal', 'Jores', 'Inoue']
 
     # (A) Factorial decomposition
     ax = axes[0, 0]
@@ -318,7 +318,7 @@ def fig5_transfer():
 
 def fig6_completeness():
     """Figure 6: Completeness (1x2, compact)."""
-    datasets = ['agarwal', 'de_almeida', 'vaishnav', 'jores', 'klein']
+    datasets = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
     labels = ['Agar.', 'deAlm.', 'Vaish.', 'Jores', 'Klein']
     cdata = {}
     for ds in datasets:

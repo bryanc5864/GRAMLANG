@@ -33,7 +33,7 @@ This is not "grammar doesn't exist" but rather **"the standard computational met
 |---------|---------|-----------|-----------|------------------|
 | Agarwal et al. 2025 | Human | K562 | 113,386 | [-1.99, 3.27] |
 | Klein et al. 2020 | Human | HepG2 | 2,275 | log2 RNA/DNA |
-| de Almeida / Inoue 2019 | Human | hESC neural | 2,453 | [0.39, 4.04] |
+| Inoue & Kreimer et al. 2019 | Human | hESC neural | 2,453 | [0.39, 4.04] |
 | Jores et al. 2021 | Plant | 3 species | 76,177 | [-7.25, 4.94] |
 | Vaishnav et al. 2022 | Yeast | - | 200,000 | [0.0, 17.0] |
 | Georgakopoulos-Soares (positive control) | Human | K562/HepG2 | 209,440 | Controlled synthetic |
@@ -62,7 +62,7 @@ Vocabulary-preserving shuffles maintain motif identities while permuting positio
 
 We isolated individual components of vocabulary-preserving shuffles using controlled perturbations:
 
-| Factor | Agarwal Var | Jores Var | de Almeida Var |
+| Factor | Agarwal Var | Jores Var | Inoue Var |
 |--------|-------------|-----------|----------------|
 | Position (motif order) | 0.0026 | 0.0373 | 0.0088 |
 | Orientation (strand flips) | 0.0015 | 0.0214 | 0.0045 |
@@ -71,7 +71,7 @@ We isolated individual components of vocabulary-preserving shuffles using contro
 
 **Fraction of full shuffle variance explained by each factor:**
 
-| Factor | Agarwal | Jores | de Almeida | Average |
+| Factor | Agarwal | Jores | Inoue | Average |
 |--------|---------|-------|------------|---------|
 | **Spacer DNA** | **82.8%** | **78.4%** | **85.7%** | **82.3%** |
 | Position | 42.5% | 28.3% | 47.2% | 39.3% |
@@ -81,7 +81,7 @@ We isolated individual components of vocabulary-preserving shuffles using contro
 
 Four perturbation types isolating spacer effects:
 
-| Perturbation | Agarwal Δexpr | Jores Δexpr | de Almeida Δexpr |
+| Perturbation | Agarwal Δexpr | Jores Δexpr | Inoue Δexpr |
 |--------------|---------------|-------------|------------------|
 | random_replace | **0.149** | **0.546** | 0.115 |
 | gc_shift | 0.102 | 0.346 | **0.121** |
@@ -96,7 +96,7 @@ Four perturbation types isolating spacer effects:
 |---------|---|----------------|
 | Jores (plant) | **-0.734** | Higher GC → lower expression |
 | Agarwal (K562) | **+0.658** | Higher GC → higher expression |
-| de Almeida | +0.215 | Weak positive |
+| Inoue | +0.215 | Weak positive |
 
 The **direction of GC correlation reverses between species**. This explains why grammar doesn't transfer — even basic composition effects are species-specific.
 
@@ -130,7 +130,7 @@ We decomposed DNABERT-2 predictions into interpretable features using cross-vali
 |---------|------------|----------|----------|-----------------|
 | Agarwal | **0.40** | 0.47 | 0.45 | 0.48 |
 | Jores | **0.59** | 0.74 | 0.53 | **0.80** |
-| de Almeida | 0.08 | 0.11 | 0.09 | 0.16 |
+| Inoue | 0.08 | 0.11 | 0.09 | 0.16 |
 
 **Simple sequence statistics explain 48-80% of model predictions.** Top features:
 - Agarwal: dinuc_CG (0.22), gc_content (0.09), twist_std (0.05)
@@ -138,13 +138,13 @@ We decomposed DNABERT-2 predictions into interpretable features using cross-vali
 
 ### Variance Decomposition: Embeddings vs Grammar Features
 
-| Feature Set | Agarwal R² | Jores R² | de Almeida R² |
+| Feature Set | Agarwal R² | Jores R² | Inoue R² |
 |------------|-----------|---------|--------------|
 | Vocabulary (motif counts) | -0.038 | -0.152 | -0.227 |
 | Grammar (vocab + arrangement) | -0.083 | -0.153 | -0.223 |
 | **DL Embeddings (768-dim)** | **0.079** | **0.265** | **0.026** |
 
-| Gap Metric | Agarwal | Jores | de Almeida |
+| Gap Metric | Agarwal | Jores | Inoue |
 |-----------|---------|-------|------------|
 | Grammar increment over vocab | -0.046 | -0.001 | +0.003 |
 | **Embedding increment over grammar** | **+0.162** | **+0.418** | **+0.249** |
@@ -163,7 +163,7 @@ DL embeddings capture **16-42% more expression variance** than hand-crafted gram
 | Agarwal | Human (K562) | **0.328** | 1.726 | 8.7% |
 | Jores | Plant | **0.118** | 0.127 | 10.4% |
 | Vaishnav | Yeast | **0.084** | 0.081 | 6.9% |
-| de Almeida | Human (neural) | **0.044** | 0.067 | 8.3% |
+| Inoue | Human (neural) | **0.044** | 0.067 | 8.3% |
 
 ### ANOVA: Sources of GSI Variance
 
@@ -231,7 +231,7 @@ Models agree strongly (ρ = 0.65-0.90) on GSI rankings for well-probed datasets.
 | Klein | **0.224** | 0.000 | 78.7% |
 | Jores | 0.121 | **0.016** | 86.3% |
 | Agarwal | 0.111 | 0.000 | 90.1% |
-| de Almeida | 0.086 | 0.014 | 90.9% |
+| Inoue | 0.086 | 0.014 | 90.9% |
 | Vaishnav | 0.083 | 0.000 | 94.2% |
 
 **Vocabulary (motif identity) explains 8-22% of expression variance; grammar (motif arrangement) explains 0-1.6%.**
@@ -243,7 +243,7 @@ Models agree strongly (ρ = 0.65-0.90) on GSI rankings for well-probed datasets.
 | Klein | **0.130** | 0.111 | **-0.019** |
 | Agarwal | **0.095** | 0.076 | **-0.018** |
 | Jores | **0.097** | 0.089 | **-0.009** |
-| de Almeida | 0.039 | **0.059** | +0.021 |
+| Inoue | 0.039 | **0.059** | +0.021 |
 | Vaishnav | -0.001 | -0.027 | **-0.026** |
 
 Grammar features **decrease** prediction accuracy in 4 of 5 datasets. Bag-of-motifs alone performs as well or better.
@@ -314,7 +314,7 @@ Evidence: High-sensitivity rules show 89.0% +/+ vs 73.1% in low-sensitivity rule
 | Klein (HepG2) | **0.375** | Minor Groove Width (16%) |
 | Vaishnav (yeast) | 0.218 | CpG content (16%) |
 | Agarwal (K562) | 0.062 | CpG content (21%) |
-| de Almeida | -0.488 | Not predictable |
+| Inoue | -0.488 | Not predictable |
 
 Biophysics explains grammar across a spectrum: 79% (plant) to 6% (K562). Grammar biophysics is species- and cell-type-specific.
 

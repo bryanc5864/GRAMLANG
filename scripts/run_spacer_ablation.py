@@ -363,7 +363,7 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
 
 def main():
     parser = argparse.ArgumentParser(description='Spacer Ablation Experiment')
-    parser.add_argument('--datasets', type=str, default='agarwal,jores,de_almeida',
+    parser.add_argument('--datasets', type=str, default='agarwal,jores,inoue',
                         help='Comma-separated dataset names')
     parser.add_argument('--model', type=str, default='dnabert2')
     parser.add_argument('--n-enhancers', type=int, default=100)

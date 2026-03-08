@@ -27,7 +27,7 @@ from src.utils.io import load_processed, save_json
 
 RESULTS_DIR = Path('results/v3/factorial_decomposition')
 PROBES_DIR = Path('data/probes')
-DATASETS = ['agarwal', 'jores', 'de_almeida']
+DATASETS = ['agarwal', 'jores', 'inoue']
 MODELS = ['nt', 'hyenadna']  # Skip dnabert2, already done
 
 
