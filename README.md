@@ -2,7 +2,7 @@
 
 **Decoding the Computational Grammar of Gene Regulation**
 
-GRAMLANG investigates whether regulatory DNA follows compositional grammar rules using foundation models (DNABERT-2, NT v2-500M, HyenaDNA, Enformer) on five MPRA datasets (Agarwal/K562, Klein/HepG2, de Almeida/neural, Vaishnav/yeast, Jores/plant).
+GRAMLANG investigates whether regulatory DNA follows compositional grammar rules using foundation models (DNABERT-2, NT v2-500M, HyenaDNA, Enformer) on five MPRA datasets (Agarwal/K562, Klein/HepG2, Inoue/neural, Vaishnav/yeast, Jores/plant).
 
 **Key finding (v3):** The standard computational method for measuring grammar (vocabulary-preserving shuffles + expression prediction) is fundamentally confounded by spacer DNA composition effects -- 78-86% of measured variance comes from spacer DNA, not motif arrangement. However, a positive control proves grammar IS real when spacers are controlled (p < 1e-117).
 
@@ -41,7 +41,7 @@ MPRA datasets must be downloaded separately:
 
 - Agarwal et al. (2023) -- K562 MPRA
 - Klein et al. (2020) -- HepG2 MPRA
-- de Almeida et al. (2024) -- Neural MPRA
+- Inoue & Kreimer et al. (2019) -- Neural MPRA (Cell Stem Cell)
 - Vaishnav et al. (2022) -- Yeast MPRA
 - Jores et al. (2021) -- Plant MPRA
 
@@ -56,7 +56,7 @@ Place raw data in `data/raw/` and processed data in `data/processed/`.
 ```bash
 python scripts/train_probes.py \
   --models dnabert2 nt hyenadna \
-  --datasets vaishnav2022 klein2020 agarwal2023 jores2021 de_almeida2024
+  --datasets vaishnav2022 klein2020 agarwal2023 jores2021 inoue2019
 ```
 
 ### 2. Run main pipeline (Modules 1-6)

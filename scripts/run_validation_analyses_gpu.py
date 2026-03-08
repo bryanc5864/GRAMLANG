@@ -174,7 +174,7 @@ def analysis_5_gc_all_datasets():
 
     from src.models.model_loader import load_model
 
-    datasets = ['agarwal', 'jores', 'de_almeida', 'klein', 'vaishnav']
+    datasets = ['agarwal', 'jores', 'inoue', 'klein', 'vaishnav']
     model_name = 'dnabert2'
     n_samples = 200
 

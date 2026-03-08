@@ -40,7 +40,7 @@ from src.grammar.sensitivity import compute_gsi
 from src.utils.io import load_processed, save_json
 
 # Configuration
-DATASETS = ['agarwal', 'klein', 'de_almeida', 'vaishnav', 'jores']
+DATASETS = ['agarwal', 'klein', 'inoue', 'vaishnav', 'jores']
 MODELS = ['dnabert2', 'nt', 'hyenadna']
 RESULTS_DIR = Path('results/v3')
 V2_RESULTS_DIR = Path('results/v2')
@@ -48,7 +48,7 @@ V2_RESULTS_DIR = Path('results/v2')
 DATASET_CELL_TYPES = {
     'agarwal': 'K562',
     'klein': 'HepG2',
-    'de_almeida': 'neural',
+    'inoue': 'neural',
     'vaishnav': 'yeast',
     'jores': 'plant',
 }
@@ -687,7 +687,7 @@ def main():
     parser.add_argument('--phase', type=str, default='all',
                         choices=['P0.3', 'P1.1', 'P1.2', 'P1.3', 'all'],
                         help='Which analysis phase to run')
-    parser.add_argument('--datasets', type=str, default='agarwal,jores,de_almeida',
+    parser.add_argument('--datasets', type=str, default='agarwal,jores,inoue',
                         help='Comma-separated dataset names')
     parser.add_argument('--models', type=str, default='dnabert2,nt,hyenadna',
                         help='Comma-separated model names')

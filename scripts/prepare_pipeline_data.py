@@ -39,8 +39,8 @@ DATASET_CONFIG = {
         'species': 'human',
         'subsample': None,  # Only 2275 sequences, use all
     },
-    'de_almeida': {
-        'source_file': 'de_almeida2024.parquet',
+    'inoue': {
+        'source_file': 'inoue2024.parquet',
         'motif_db': 'JASPAR2024_vertebrates.meme',
         'species': 'human',
         'subsample': 5000,

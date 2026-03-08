@@ -277,15 +277,15 @@ def preprocess_kircher():
     return None
 
 
-def preprocess_dealmeida():
-    """Preprocess de Almeida et al. 2022 - Neural differentiation MPRA."""
-    data_dir = os.path.join(RAW_DIR, 'dealmeida2022')
+def preprocess_inoue():
+    """Preprocess Inoue et al. 2022 - Neural differentiation MPRA."""
+    data_dir = os.path.join(RAW_DIR, 'inoue2022')
     files = os.listdir(data_dir) if os.path.exists(data_dir) else []
     if not files:
-        print("  de Almeida: No data files found, skipping")
+        print("  Inoue: No data files found, skipping")
         return None
 
-    print(f"  Processing de Almeida 2022. Files: {files}")
+    print(f"  Processing Inoue 2022. Files: {files}")
     return None
 
 
@@ -349,7 +349,7 @@ if __name__ == '__main__':
         ("Klein 2020 (HepG2)", preprocess_klein),
         ("Agarwal 2025 (lentiMPRA)", preprocess_agarwal),
         ("Kircher 2019 (saturation)", preprocess_kircher),
-        ("de Almeida 2022 (neural)", preprocess_dealmeida),
+        ("Inoue 2022 (neural)", preprocess_inoue),
         ("Jores 2021 (plant)", preprocess_jores),
     ]
 

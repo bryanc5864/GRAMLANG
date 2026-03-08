@@ -141,7 +141,7 @@
       "p": 9.83501478476983e-11
     }
   },
-  "dataset": "de_almeida",
+  "dataset": "inoue",
   "model": "dnabert2",
   "n_samples": 500
 }

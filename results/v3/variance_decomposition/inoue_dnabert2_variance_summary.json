@@ -1,5 +1,5 @@
 {
-  "dataset": "de_almeida",
+  "dataset": "inoue",
   "model": "dnabert2",
   "n_enhancers": 500,
   "n_vocab_features": 141,

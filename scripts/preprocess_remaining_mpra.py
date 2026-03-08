@@ -2,7 +2,7 @@
 """
 Preprocess remaining MPRA datasets into standardized parquet format.
 
-Handles: Agarwal 2025, Jores 2021, de Almeida (Inoue/Kreimer 2019)
+Handles: Agarwal 2025, Jores 2021, Inoue (Inoue/Kreimer 2019)
 Skips: Kircher 2019 (saturation mutagenesis, not full-sequence MPRA)
 
 Output format: parquet with columns [seq_id, sequence, expression, ...]
@@ -174,7 +174,7 @@ def preprocess_dealmeida():
     Compute log2(RNA/DNA) per element, use T48h timepoint.
     """
     print("\n" + "=" * 60)
-    print("Preprocessing: de Almeida / Inoue-Kreimer 2019 (Neural induction)")
+    print("Preprocessing: Inoue / Inoue-Kreimer 2019 (Neural induction)")
     print("=" * 60)
 
     data_dir = os.path.join(MPRA_DIR, 'dealmeida2022')
@@ -287,7 +287,7 @@ def preprocess_dealmeida():
     print(f"  Valid sequences: {len(result)}")
 
     if len(result) > 0:
-        out_path = os.path.join(PROCESSED_DIR, 'de_almeida2024.parquet')
+        out_path = os.path.join(PROCESSED_DIR, 'inoue2024.parquet')
         result.to_parquet(out_path, index=False)
         print(f"  Saved: {out_path}")
         print(f"  Expression range: [{result['expression'].min():.2f}, {result['expression'].max():.2f}]")
@@ -316,7 +316,7 @@ def main():
         import traceback
         traceback.print_exc()
 
-    # de Almeida 2019
+    # Inoue 2019
     try:
         results['dealmeida'] = preprocess_dealmeida()
     except Exception as e:

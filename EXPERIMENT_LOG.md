@@ -43,7 +43,7 @@ grammar/
 | Vaishnav et al. 2022 | 200,000 | Yeast | - | [0.0, 17.0] |
 | Klein et al. 2020 | 2,275 | Human | HepG2 | log2 RNA/DNA |
 | Agarwal et al. 2025 | 113,386 | Human | K562 | [-1.99, 3.27] |
-| de Almeida / Inoue 2019 | 2,453 | Human | hESC neural | [0.39, 4.04] |
+| Inoue / Inoue 2019 | 2,453 | Human | hESC neural | [0.39, 4.04] |
 | Jores et al. 2021 | 76,177 | Plant | 3 species | [-7.25, 4.94] |
 | Georgakopoulos-Soares (positive control) | 209,440 | Human | K562/HepG2 | Controlled |
 
@@ -73,17 +73,17 @@ grammar/
 | Model | Dataset | Pearson r | R² | Viable (R²>0.05)? |
 |-------|---------|-----------|-----|-------------------|
 | DNABERT-2 | agarwal | 0.340 | 0.116 | Yes |
-| DNABERT-2 | de_almeida | 0.234 | 0.055 | No |
+| DNABERT-2 | inoue | 0.234 | 0.055 | No |
 | DNABERT-2 | jores | **0.580** | **0.336** | Yes |
 | DNABERT-2 | klein | 0.260 | 0.068 | No |
 | DNABERT-2 | vaishnav | 0.472 | 0.223 | Yes |
 | NT v2-500M | agarwal | 0.331 | 0.109 | Yes |
-| NT v2-500M | de_almeida | 0.286 | 0.082 | No |
+| NT v2-500M | inoue | 0.286 | 0.082 | No |
 | NT v2-500M | jores | **0.575** | **0.331** | Yes |
 | NT v2-500M | klein | 0.331 | 0.110 | Yes |
 | NT v2-500M | vaishnav | **0.551** | **0.304** | Yes |
 | HyenaDNA | agarwal | 0.168 | 0.028 | No |
-| HyenaDNA | de_almeida | 0.174 | 0.030 | No |
+| HyenaDNA | inoue | 0.174 | 0.030 | No |
 | HyenaDNA | jores | 0.507 | 0.257 | Yes |
 | HyenaDNA | klein | 0.239 | 0.057 | No |
 | HyenaDNA | vaishnav | 0.418 | 0.175 | Yes |
@@ -104,7 +104,7 @@ grammar/
 | Agarwal | Human (K562) | **0.328** | 1.726 | 8.7% |
 | Jores | Plant | **0.118** | 0.127 | 10.4% |
 | Vaishnav | Yeast | **0.084** | 0.081 | 6.9% |
-| de Almeida | Human (neural) | **0.044** | 0.067 | 8.3% |
+| Inoue | Human (neural) | **0.044** | 0.067 | 8.3% |
 
 ### Statistical Correction
 
@@ -132,14 +132,14 @@ Dataset explains 6.5× more variance than model architecture.
 | Jores | ρ = 0.89 | ρ = 0.65 | ρ = 0.70 |
 | Klein | ρ = 0.88 | ρ = 0.66 | ρ = 0.67 |
 | Vaishnav | ρ = 0.56 | ρ = -0.03 | ρ = -0.08 |
-| de Almeida | ρ = -0.06 | ρ = -0.16 | ρ = 0.05 |
+| Inoue | ρ = -0.06 | ρ = -0.16 | ρ = 0.05 |
 
 ### Enformer Results
 
 | Dataset | n | Median GSI | Frac Significant |
 |---------|---|-----------|-----------------|
 | Agarwal | 50 | 0.446 | 14.0% |
-| de Almeida | 50 | 0.450 | 2.0% |
+| Inoue | 50 | 0.450 | 2.0% |
 | Klein | 50 | 0.434 | 4.0% |
 
 ---
@@ -150,7 +150,7 @@ Dataset explains 6.5× more variance than model architecture.
 
 Four shuffle types isolating individual factors:
 
-| Factor | Agarwal Var | Jores Var | de Almeida Var |
+| Factor | Agarwal Var | Jores Var | Inoue Var |
 |--------|-------------|-----------|----------------|
 | Position (motif order) | 0.0026 | 0.0373 | 0.0088 |
 | Orientation (strand flips) | 0.0015 | 0.0214 | 0.0045 |
@@ -159,7 +159,7 @@ Four shuffle types isolating individual factors:
 
 **Fraction of variance explained:**
 
-| Factor | Agarwal | Jores | de Almeida | Average |
+| Factor | Agarwal | Jores | Inoue | Average |
 |--------|---------|-------|------------|---------|
 | **Spacer** | **82.8%** | **78.4%** | **85.7%** | **82.3%** |
 | Position | 42.5% | 28.3% | 47.2% | 39.3% |
@@ -167,7 +167,7 @@ Four shuffle types isolating individual factors:
 
 ### Spacer Ablation
 
-| Perturbation | Agarwal Δ | Jores Δ | de Almeida Δ |
+| Perturbation | Agarwal Δ | Jores Δ | Inoue Δ |
 |--------------|-----------|---------|--------------|
 | random_replace | **0.149** | **0.546** | 0.115 |
 | gc_shift | 0.102 | 0.346 | **0.121** |
@@ -182,7 +182,7 @@ Four shuffle types isolating individual factors:
 |---------|---|
 | Jores (plant) | **-0.734** |
 | Agarwal (K562) | **+0.658** |
-| de Almeida | +0.215 |
+| Inoue | +0.215 |
 
 Direction **reverses** across species.
 
@@ -211,13 +211,13 @@ Georgakopoulos-Soares data with controlled spacers.
 |---------|------------|----------|-----------------|
 | Agarwal | **0.40** | 0.47 | 0.48 |
 | Jores | **0.59** | 0.74 | **0.80** |
-| de Almeida | 0.08 | 0.11 | 0.16 |
+| Inoue | 0.08 | 0.11 | 0.16 |
 
 Simple features explain 48-80% of model predictions.
 
 ### Variance Decomposition
 
-| Feature Set | Agarwal R² | Jores R² | de Almeida R² |
+| Feature Set | Agarwal R² | Jores R² | Inoue R² |
 |------------|-----------|---------|--------------|
 | Vocabulary | -0.038 | -0.152 | -0.227 |
 | Grammar | -0.083 | -0.153 | -0.223 |
@@ -236,7 +236,7 @@ Embeddings capture 16-42% more variance than grammar features.
 | Klein | **0.224** | 0.000 | 78.7% |
 | Jores | 0.121 | **0.016** | 86.3% |
 | Agarwal | 0.111 | 0.000 | 90.1% |
-| de Almeida | 0.086 | 0.014 | 90.9% |
+| Inoue | 0.086 | 0.014 | 90.9% |
 | Vaishnav | 0.083 | 0.000 | 94.2% |
 
 Vocabulary explains 8-22%; grammar explains 0-1.6%.
@@ -248,7 +248,7 @@ Vocabulary explains 8-22%; grammar explains 0-1.6%.
 | Klein | **0.130** | 0.111 | -0.019 |
 | Agarwal | **0.095** | 0.076 | -0.018 |
 | Jores | **0.097** | 0.089 | -0.009 |
-| de Almeida | 0.039 | **0.059** | +0.021 |
+| Inoue | 0.039 | **0.059** | +0.021 |
 | Vaishnav | -0.001 | -0.027 | -0.026 |
 
 Grammar features **decrease** prediction in 4/5 datasets.
@@ -334,7 +334,7 @@ Matches foundation model significance rates (6-7% vs 8.3%).
 | Klein (HepG2) | **0.375** | Minor Groove Width (16%) |
 | Vaishnav (yeast) | 0.218 | CpG content (16%) |
 | Agarwal (K562) | 0.062 | CpG content (21%) |
-| de Almeida | -0.488 | Not predictable |
+| Inoue | -0.488 | Not predictable |
 
 ---
 

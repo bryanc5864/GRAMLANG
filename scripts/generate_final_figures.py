@@ -345,8 +345,8 @@ def fig5_biophysics():
 
 def fig6_completeness():
     """Figure 6: Grammar Completeness Ceiling."""
-    datasets = ['agarwal', 'de_almeida', 'vaishnav', 'jores', 'klein']
-    labels = ['Agarwal\n(K562)', 'de Almeida\n(Neural)', 'Vaishnav\n(Yeast)', 'Jores\n(Plant)', 'Klein\n(HepG2)']
+    datasets = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
+    labels = ['Agarwal\n(K562)', 'Inoue\n(Neural)', 'Vaishnav\n(Yeast)', 'Jores\n(Plant)', 'Klein\n(HepG2)']
 
     completeness_data = {}
     for ds in datasets:
@@ -479,7 +479,7 @@ def fig7_summary():
 
     # (F) Completeness
     ax = axes[1, 2]
-    ds_labels = ['Agarwal', 'de Almeida', 'Vaishnav', 'Jores', 'Klein']
+    ds_labels = ['Agarwal', 'Inoue', 'Vaishnav', 'Jores', 'Klein']
     completeness = [17.7, 5.7, 11.1, 12.4, 16.6]
     colors_ds = ['#e74c3c', '#e67e22', '#3498db', '#2ecc71', '#9b59b6']
     bars = ax.bar(ds_labels, completeness, color=colors_ds, edgecolor='black', linewidth=0.5)

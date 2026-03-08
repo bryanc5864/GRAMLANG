@@ -1,5 +1,5 @@
 {
-  "dataset": "de_almeida",
+  "dataset": "inoue",
   "model": "nt",
   "n_enhancers": 200,
   "n_shuffles": 100,

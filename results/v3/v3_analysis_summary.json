@@ -57,8 +57,8 @@
     "unexplained_by_embedding": 0.7348773400641172,
     "grammar_captures_fraction_of_embedding": -0.576620847093033
   },
-  "variance_de_almeida_dnabert2": {
-    "dataset": "de_almeida",
+  "variance_inoue_dnabert2": {
+    "dataset": "inoue",
     "model": "dnabert2",
     "n_enhancers": 500,
     "n_vocab_features": 141,

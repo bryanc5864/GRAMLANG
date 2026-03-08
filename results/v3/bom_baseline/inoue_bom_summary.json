@@ -1,5 +1,5 @@
 {
-  "dataset": "de_almeida",
+  "dataset": "inoue",
   "n_enhancers": 500,
   "n_motif_types": 141,
   "bom_ridge": {
