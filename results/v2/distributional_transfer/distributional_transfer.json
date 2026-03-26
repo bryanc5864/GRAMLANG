@@ -1,0 +1,261 @@
+{
+  "species": [
+    "human",
+    "plant",
+    "yeast"
+  ],
+  "n_species": 3,
+  "species_distributions": {
+    "human": {
+      "n_rules": 20265,
+      "n_gsi": 4650,
+      "mean_spacing_sensitivity": 0.11177358290889683,
+      "mean_fold_change": 1533294781.775993,
+      "helical_phasing_rate": 0.1382186035035776,
+      "mean_gsi": 1.3077557666842927,
+      "grammar_types": {
+        "orientation_dependent": 0.14759437453737972,
+        "spacing_dependent": 0.09474463360473723,
+        "helical_phased": 0.1382186035035776,
+        "mixed": 0.0,
+        "insensitive": 0.6194423883543054
+      }
+    },
+    "plant": {
+      "n_rules": 4701,
+      "n_gsi": 1500,
+      "mean_spacing_sensitivity": 0.37708065646445593,
+      "mean_fold_change": -16798706680.98955,
+      "helical_phasing_rate": 0.133588598170602,
+      "mean_gsi": 0.1269567574808995,
+      "grammar_types": {
+        "orientation_dependent": 0.18974686236970859,
+        "spacing_dependent": 0.08827908955541375,
+        "helical_phased": 0.133588598170602,
+        "mixed": 0.03509891512444161,
+        "insensitive": 0.553286534779834
+      }
+    },
+    "yeast": {
+      "n_rules": 2091,
+      "n_gsi": 1500,
+      "mean_spacing_sensitivity": 1.240203470832591,
+      "mean_fold_change": 1.726751048105405,
+      "helical_phasing_rate": 0.14347202295552366,
+      "mean_gsi": 0.0805718427275618,
+      "grammar_types": {
+        "orientation_dependent": 0.17216642754662842,
+        "spacing_dependent": 0.11429937828790053,
+        "helical_phased": 0.14347202295552366,
+        "mixed": 0.569583931133429,
+        "insensitive": 0.00047824007651841227
+      }
+    }
+  },
+  "pairwise_comparisons": {
+    "human_vs_plant": {
+      "spacing_sensitivity": {
+        "mean_1": 0.11177358290889683,
+        "mean_2": 0.37708065646445593,
+        "std_1": 0.0655389647439977,
+        "std_2": 0.10516059647516333,
+        "wasserstein_distance": 0.2653070735555591,
+        "ks_statistic": 0.8574094586864442,
+        "ks_pvalue": 0.0,
+        "cohens_d": 3.555208106717726
+      },
+      "orientation_sensitivity": {
+        "mean_1": 0.12699173807375966,
+        "mean_2": 0.4440011401929974,
+        "std_1": 0.08909374428950231,
+        "std_2": 0.19232339755070207,
+        "wasserstein_distance": 0.3170094021192377,
+        "ks_statistic": 0.7265370408771714,
+        "ks_pvalue": 0.0,
+        "cohens_d": 2.7377465908245586
+      },
+      "helical_phase_score": {
+        "mean_1": 1.0001195114137686,
+        "mean_2": 1.0091527800281077,
+        "std_1": 0.9618693560996343,
+        "std_2": 0.9625305726765893,
+        "wasserstein_distance": 0.02110845444567942,
+        "ks_statistic": 0.01714043864550918,
+        "ks_pvalue": 0.20978044022994846,
+        "cohens_d": 0.009390151702897781
+      },
+      "fold_change": {
+        "mean_1": 1533294781.775993,
+        "mean_2": -16798706680.98955,
+        "std_1": 2763793292.0290203,
+        "std_2": 7358016928.963604,
+        "wasserstein_distance": 18332001462.76554,
+        "ks_statistic": 0.9921279800776281,
+        "ks_pvalue": 0.0,
+        "cohens_d": 4.52750068913011
+      },
+      "gsi": {
+        "mean_1": 1.3077557666842927,
+        "mean_2": 0.1269567574808995,
+        "std_1": 16.400508347274915,
+        "std_2": 0.06606866940984721,
+        "wasserstein_distance": 1.190480187957247,
+        "ks_statistic": 0.4447311827956989,
+        "ks_pvalue": 4.8704999893023796e-203,
+        "cohens_d": 0.0827996717697185
+      },
+      "grammar_type_js_divergence": 0.12039483854700979,
+      "grammar_types_1": {
+        "orientation_dependent": 0.14759437453737972,
+        "spacing_dependent": 0.09474463360473723,
+        "helical_phased": 0.1382186035035776,
+        "mixed": 0.0,
+        "insensitive": 0.6194423883543054
+      },
+      "grammar_types_2": {
+        "orientation_dependent": 0.18974686236970859,
+        "spacing_dependent": 0.08827908955541375,
+        "helical_phased": 0.133588598170602,
+        "mixed": 0.03509891512444161,
+        "insensitive": 0.553286534779834
+      }
+    },
+    "human_vs_yeast": {
+      "spacing_sensitivity": {
+        "mean_1": 0.11177358290889683,
+        "mean_2": 1.240203470832591,
+        "std_1": 0.0655389647439977,
+        "std_2": 0.2540382396374091,
+        "wasserstein_distance": 1.1284298879236943,
+        "ks_statistic": 1.0,
+        "ks_pvalue": 0.0,
+        "cohens_d": 11.324158443289955
+      },
+      "orientation_sensitivity": {
+        "mean_1": 0.12699173807375966,
+        "mean_2": 1.4185956934282564,
+        "std_1": 0.08909374428950231,
+        "std_2": 0.578496808513304,
+        "wasserstein_distance": 1.2916039553544967,
+        "ks_statistic": 0.976945288414873,
+        "ks_pvalue": 0.0,
+        "cohens_d": 6.582919896315647
+      },
+      "helical_phase_score": {
+        "mean_1": 1.0001195114137686,
+        "mean_2": 1.0304561628182054,
+        "std_1": 0.9618693560996343,
+        "std_2": 0.9588948574391762,
+        "wasserstein_distance": 0.035135739680961876,
+        "ks_statistic": 0.033254004242920465,
+        "ks_pvalue": 0.029579860560820737,
+        "cohens_d": 0.031548376086590224
+      },
+      "fold_change": {
+        "mean_1": 1533294781.775993,
+        "mean_2": 1.726751048105405,
+        "std_1": 2763793292.0290203,
+        "std_2": 0.24085473765027646,
+        "wasserstein_distance": 1662697737.7172403,
+        "ks_statistic": 0.6043780737367612,
+        "ks_pvalue": 0.0,
+        "cohens_d": 0.5826984262807642
+      },
+      "gsi": {
+        "mean_1": 1.3077557666842927,
+        "mean_2": 0.0805718427275618,
+        "std_1": 16.400508347274915,
+        "std_2": 0.018977928168950692,
+        "wasserstein_distance": 1.2386010819904285,
+        "ks_statistic": 0.6959139784946237,
+        "ks_pvalue": 1.645e-321,
+        "cohens_d": 0.08605246899071216
+      },
+      "grammar_type_js_divergence": 0.6412901098329948,
+      "grammar_types_1": {
+        "orientation_dependent": 0.14759437453737972,
+        "spacing_dependent": 0.09474463360473723,
+        "helical_phased": 0.1382186035035776,
+        "mixed": 0.0,
+        "insensitive": 0.6194423883543054
+      },
+      "grammar_types_2": {
+        "orientation_dependent": 0.17216642754662842,
+        "spacing_dependent": 0.11429937828790053,
+        "helical_phased": 0.14347202295552366,
+        "mixed": 0.569583931133429,
+        "insensitive": 0.00047824007651841227
+      }
+    },
+    "plant_vs_yeast": {
+      "spacing_sensitivity": {
+        "mean_1": 0.37708065646445593,
+        "mean_2": 1.240203470832591,
+        "std_1": 0.10516059647516333,
+        "std_2": 0.2540382396374091,
+        "wasserstein_distance": 0.8631228143681353,
+        "ks_statistic": 0.9986180784515154,
+        "ks_pvalue": 0.0,
+        "cohens_d": 5.202727034670569
+      },
+      "orientation_sensitivity": {
+        "mean_1": 0.4440011401929974,
+        "mean_2": 1.4185956934282564,
+        "std_1": 0.19232339755070207,
+        "std_2": 0.578496808513304,
+        "wasserstein_distance": 0.974594553235259,
+        "ks_statistic": 0.8224261329666114,
+        "ks_pvalue": 0.0,
+        "cohens_d": 2.7173985189718035
+      },
+      "helical_phase_score": {
+        "mean_1": 1.0091527800281077,
+        "mean_2": 1.0304561628182054,
+        "std_1": 0.9625305726765893,
+        "std_2": 0.9588948574391762,
+        "wasserstein_distance": 0.03462660366864084,
+        "ks_statistic": 0.025334516267945067,
+        "ks_pvalue": 0.3044550198770256,
+        "cohens_d": 0.022158415363591578
+      },
+      "fold_change": {
+        "mean_1": -16798706680.98955,
+        "mean_2": 1.726751048105405,
+        "std_1": 7358016928.963604,
+        "std_2": 0.24085473765027646,
+        "wasserstein_distance": 16798706682.716301,
+        "ks_statistic": 1.0,
+        "ks_pvalue": 0.0,
+        "cohens_d": 2.744219066264907
+      },
+      "gsi": {
+        "mean_1": 0.1269567574808995,
+        "mean_2": 0.0805718427275618,
+        "std_1": 0.06606866940984721,
+        "std_2": 0.018977928168950692,
+        "wasserstein_distance": 0.04839708873877922,
+        "ks_statistic": 0.5273333333333333,
+        "ks_pvalue": 5.246674168513002e-191,
+        "cohens_d": 0.9542897210667777
+      },
+      "grammar_type_js_divergence": 0.5776815657692448,
+      "grammar_types_1": {
+        "orientation_dependent": 0.18974686236970859,
+        "spacing_dependent": 0.08827908955541375,
+        "helical_phased": 0.133588598170602,
+        "mixed": 0.03509891512444161,
+        "insensitive": 0.553286534779834
+      },
+      "grammar_types_2": {
+        "orientation_dependent": 0.17216642754662842,
+        "spacing_dependent": 0.11429937828790053,
+        "helical_phased": 0.14347202295552366,
+        "mixed": 0.569583931133429,
+        "insensitive": 0.00047824007651841227
+      }
+    }
+  },
+  "mean_ks_pvalue": 0.0453179433889829,
+  "mean_cohens_d": 3.3364728096349263,
+  "grammar_properties_conserved": 0.16666666666666666
+}

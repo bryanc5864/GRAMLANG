@@ -1,0 +1,17 @@
+{
+  "n_sequences": 2000,
+  "n_vocab_features": 288,
+  "n_pairwise_features": 5,
+  "n_higher_features": 4,
+  "r2_vocabulary": 0.08267614599586967,
+  "r2_vocab_plus_pairwise": 0.05875313236007451,
+  "r2_vocab_plus_all_grammar": 0.05757981642511449,
+  "r2_full_model": 0.0,
+  "eta2_vocabulary": 0.08267614599586967,
+  "eta2_pairwise_grammar": 0.0,
+  "eta2_higher_order_grammar": 0.0,
+  "eta2_model_features": 0.0,
+  "eta2_unexplained": 0.9424201835748856,
+  "grammar_total_eta2": 0.0,
+  "vocabulary_dominance": 1.0
+}

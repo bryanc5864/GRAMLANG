@@ -1,0 +1,49 @@
+{
+  "classification": "context-sensitive",
+  "best_bic_model": "linear",
+  "confidence": 0.5645493748217564,
+  "bic": {
+    "constant": -61.305172853147255,
+    "linear": -62.96792058142379,
+    "exponential": -58.086296834597654
+  },
+  "r_squared": {
+    "constant": 0.0,
+    "linear": 0.48026547579264,
+    "exponential": -3.873628129369422e-08
+  },
+  "fit_results": {
+    "constant": {
+      "params": [
+        0.9892039395094319
+      ],
+      "ss_res": 1.7150482670735164e-05,
+      "n_params": 1
+    },
+    "linear": {
+      "params": [
+        -0.0009075673374431217,
+        0.9937417761966478
+      ],
+      "ss_res": 8.913697950801113e-06,
+      "n_params": 2,
+      "slope": -0.0009075673374431217,
+      "intercept": 0.9937417761966478
+    },
+    "exponential": {
+      "params": [
+        0.05829026751530892,
+        6.278845746661945e-10,
+        0.9309136735079584
+      ],
+      "ss_res": 1.7150483335081085e-05,
+      "n_params": 3
+    }
+  },
+  "mean_gap": 0.9892039395094319,
+  "gap_range": [
+    0.9859801722890975,
+    0.9916656675896101
+  ],
+  "note": "Compositionality gap near 1 \u2014 strongly non-compositional"
+}

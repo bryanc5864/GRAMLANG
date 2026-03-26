@@ -1,0 +1,182 @@
+{
+  "NR1H2::RXRA_Rxra": {
+    "spacing_range": 0.48827821016311646,
+    "spacing_fold_change": 3.6283397881850386,
+    "orientation_range": 0.19427353143692017,
+    "best_orientation": "-/-",
+    "order_effect": -0.5468321740627289,
+    "helical_phase_score": 0.32827900708563157,
+    "grammar_potential": 0.6825517416000366
+  },
+  "Rxra_RXRG": {
+    "spacing_range": 0.6558678690344095,
+    "spacing_fold_change": 6315815448.760986,
+    "orientation_range": 0.2522578835487366,
+    "best_orientation": "+/-",
+    "order_effect": -0.28068211674690247,
+    "helical_phase_score": 2.187767089305924,
+    "grammar_potential": 0.9081257525831461
+  },
+  "Rxra_RXRB": {
+    "spacing_range": 0.5032456554472446,
+    "spacing_fold_change": 4550524652.004242,
+    "orientation_range": 0.6339243650436401,
+    "best_orientation": "+/+",
+    "order_effect": -0.086972177028656,
+    "helical_phase_score": 1.0729814167454172,
+    "grammar_potential": 1.1371700204908848
+  },
+  "RXRB_RXRG": {
+    "spacing_range": 0.5690718218684196,
+    "spacing_fold_change": 5362735390.663147,
+    "orientation_range": 0.2711518406867981,
+    "best_orientation": "-/+",
+    "order_effect": -0.07404330372810364,
+    "helical_phase_score": 1.828848303962187,
+    "grammar_potential": 0.8402236625552177
+  },
+  "NR1H2::RXRA_RXRG": {
+    "spacing_range": 0.37251511216163635,
+    "spacing_fold_change": 3.40821478533431,
+    "orientation_range": 0.2099657952785492,
+    "best_orientation": "+/+",
+    "order_effect": -0.32756128907203674,
+    "helical_phase_score": 0.2754449301918084,
+    "grammar_potential": 0.5824809074401855
+  },
+  "NR1H2::RXRA_RXRB": {
+    "spacing_range": 0.3750334680080414,
+    "spacing_fold_change": 3.730653781882041,
+    "orientation_range": 0.20143058896064758,
+    "best_orientation": "-/+",
+    "order_effect": -0.2749480903148651,
+    "helical_phase_score": 0.3825509365964941,
+    "grammar_potential": 0.576464056968689
+  },
+  "FOXI1_FOXL1": {
+    "spacing_range": 0.3552543520927429,
+    "spacing_fold_change": 9.999260905047814,
+    "orientation_range": 0.6551177799701691,
+    "best_orientation": "+/-",
+    "order_effect": 0.04530349373817444,
+    "helical_phase_score": 1.1654642371058843,
+    "grammar_potential": 1.010372132062912
+  },
+  "FOXB1_FOXC1": {
+    "spacing_range": 0.5173074305057526,
+    "spacing_fold_change": 3.5306696843886396,
+    "orientation_range": 0.4512680768966675,
+    "best_orientation": "+/+",
+    "order_effect": -0.6538657397031784,
+    "helical_phase_score": 0.15926775954143668,
+    "grammar_potential": 0.96857550740242
+  },
+  "Rxra_Nr2F6": {
+    "spacing_range": 0.5796855390071869,
+    "spacing_fold_change": 3.6866118847549463,
+    "orientation_range": 0.45564519613981247,
+    "best_orientation": "+/+",
+    "order_effect": -0.5615668594837189,
+    "helical_phase_score": 2.1998840126247283,
+    "grammar_potential": 1.0353307351469994
+  },
+  "EWSR1-FLI1_Rxra": {
+    "spacing_range": 0.8339250981807709,
+    "spacing_fold_change": 6508300304.412842,
+    "orientation_range": 0.5629738494753838,
+    "best_orientation": "+/+",
+    "order_effect": -0.3289131820201874,
+    "helical_phase_score": 1.1594661586610453,
+    "grammar_potential": 1.3968989476561546
+  },
+  "NR1H2::RXRA_Nr2F6": {
+    "spacing_range": 0.41861289367079735,
+    "spacing_fold_change": 184.2643351419937,
+    "orientation_range": 0.2535223662853241,
+    "best_orientation": "+/+",
+    "order_effect": 0.10412481427192688,
+    "helical_phase_score": 0.13550091481922294,
+    "grammar_potential": 0.6721352599561214
+  },
+  "EWSR1-FLI1_EWSR1-FLI1": {
+    "spacing_range": 0.6771658100187778,
+    "spacing_fold_change": 35.518046674053544,
+    "orientation_range": 0.5315216481685638,
+    "best_orientation": "-/-",
+    "order_effect": -0.10289204120635986,
+    "helical_phase_score": 0.059897942765794285,
+    "grammar_potential": 1.2086874581873417
+  },
+  "NR1H2::RXRA_EWSR1-FLI1": {
+    "spacing_range": 0.4954660162329674,
+    "spacing_fold_change": 4197152256.965637,
+    "orientation_range": 0.2778654992580414,
+    "best_orientation": "+/-",
+    "order_effect": 0.04635080695152283,
+    "helical_phase_score": 0.05048481093573451,
+    "grammar_potential": 0.7733315154910088
+  },
+  "INSM1_Rxra": {
+    "spacing_range": 0.49097520112991333,
+    "spacing_fold_change": 4.639329711321504,
+    "orientation_range": 0.7818995043635368,
+    "best_orientation": "+/+",
+    "order_effect": -0.1611482799053192,
+    "helical_phase_score": 0.1535701273388568,
+    "grammar_potential": 1.2728747054934502
+  },
+  "NR1H2::RXRA_RARA": {
+    "spacing_range": 0.5978600010275841,
+    "spacing_fold_change": 18.87904993733463,
+    "orientation_range": 0.12798354029655457,
+    "best_orientation": "-/+",
+    "order_effect": -0.4039885699748993,
+    "helical_phase_score": 3.210525191626631,
+    "grammar_potential": 0.7258435413241386
+  },
+  "TFAP2B_TFAP2B": {
+    "spacing_range": 0.5738278925418854,
+    "spacing_fold_change": 5673128962.516785,
+    "orientation_range": 0.4803925156593323,
+    "best_orientation": "+/+",
+    "order_effect": 0.11417704820632935,
+    "helical_phase_score": 1.6792168651161175,
+    "grammar_potential": 1.0542204082012177
+  },
+  "FOXG1_FOXI1": {
+    "spacing_range": 0.46000107377767563,
+    "spacing_fold_change": 4172491431.236267,
+    "orientation_range": 0.15644267201423645,
+    "best_orientation": "-/-",
+    "order_effect": -0.27502384781837463,
+    "helical_phase_score": 0.1928464941660166,
+    "grammar_potential": 0.6164437457919121
+  },
+  "Rxra_RARA": {
+    "spacing_range": 0.5557000264525414,
+    "spacing_fold_change": 8.103997823028484,
+    "orientation_range": 0.3582257032394409,
+    "best_orientation": "+/+",
+    "order_effect": -0.6513941381126642,
+    "helical_phase_score": 1.005828575223658,
+    "grammar_potential": 0.9139257296919823
+  },
+  "Nr2F6_RARA": {
+    "spacing_range": 0.47040972113609314,
+    "spacing_fold_change": 4.5013228396410465,
+    "orientation_range": 0.419081449508667,
+    "best_orientation": "+/+",
+    "order_effect": 0.07420939207077026,
+    "helical_phase_score": 0.045561991578895414,
+    "grammar_potential": 0.8894911706447601
+  },
+  "EWSR1-FLI1_PLAG1": {
+    "spacing_range": 0.50276780128479,
+    "spacing_fold_change": 5.013452012258688,
+    "orientation_range": 0.6070880144834518,
+    "best_orientation": "+/+",
+    "order_effect": -0.4933031499385834,
+    "helical_phase_score": 0.4108331134295619,
+    "grammar_potential": 1.1098558157682419
+  }
+}

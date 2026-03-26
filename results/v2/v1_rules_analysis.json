@@ -1,0 +1,262 @@
+{
+  "shape": {
+    "rows": 26922,
+    "columns": 14
+  },
+  "column_names": [
+    "seq_id",
+    "dataset",
+    "model",
+    "pair",
+    "motif_a",
+    "motif_b",
+    "optimal_spacing",
+    "spacing_sensitivity",
+    "optimal_orientation",
+    "orientation_sensitivity",
+    "helical_phase_score",
+    "fold_change",
+    "spacing_profile",
+    "spacings"
+  ],
+  "unique_counts": {
+    "total_rule_rows": 26922,
+    "unique_motif_pairs": 5032,
+    "unique_motif_a": 354,
+    "unique_motif_b": 374,
+    "unique_motifs_union": 398,
+    "datasets": [
+      "agarwal",
+      "inoue",
+      "jores",
+      "klein",
+      "vaishnav"
+    ],
+    "models": [
+      "dnabert2",
+      "hyenadna",
+      "nt"
+    ],
+    "unique_sequences": 500
+  },
+  "rules_per_dataset_model": {
+    "klein__dnabert2": {
+      "n_rules": 2896,
+      "n_unique_pairs": 1977,
+      "n_unique_seqs": 100
+    },
+    "klein__hyenadna": {
+      "n_rules": 2896,
+      "n_unique_pairs": 1977,
+      "n_unique_seqs": 100
+    },
+    "klein__nt": {
+      "n_rules": 2896,
+      "n_unique_pairs": 1977,
+      "n_unique_seqs": 100
+    },
+    "inoue__dnabert2": {
+      "n_rules": 2200,
+      "n_unique_pairs": 1316,
+      "n_unique_seqs": 100
+    },
+    "inoue__hyenadna": {
+      "n_rules": 2200,
+      "n_unique_pairs": 1316,
+      "n_unique_seqs": 100
+    },
+    "inoue__nt": {
+      "n_rules": 2200,
+      "n_unique_pairs": 1316,
+      "n_unique_seqs": 100
+    },
+    "agarwal__dnabert2": {
+      "n_rules": 1713,
+      "n_unique_pairs": 1274,
+      "n_unique_seqs": 100
+    },
+    "agarwal__hyenadna": {
+      "n_rules": 1713,
+      "n_unique_pairs": 1274,
+      "n_unique_seqs": 100
+    },
+    "agarwal__nt": {
+      "n_rules": 1713,
+      "n_unique_pairs": 1274,
+      "n_unique_seqs": 100
+    },
+    "jores__dnabert2": {
+      "n_rules": 1491,
+      "n_unique_pairs": 1045,
+      "n_unique_seqs": 100
+    },
+    "jores__hyenadna": {
+      "n_rules": 1491,
+      "n_unique_pairs": 1045,
+      "n_unique_seqs": 100
+    },
+    "jores__nt": {
+      "n_rules": 1491,
+      "n_unique_pairs": 1045,
+      "n_unique_seqs": 100
+    },
+    "vaishnav__dnabert2": {
+      "n_rules": 674,
+      "n_unique_pairs": 478,
+      "n_unique_seqs": 100
+    },
+    "vaishnav__hyenadna": {
+      "n_rules": 674,
+      "n_unique_pairs": 478,
+      "n_unique_seqs": 100
+    },
+    "vaishnav__nt": {
+      "n_rules": 674,
+      "n_unique_pairs": 478,
+      "n_unique_seqs": 100
+    }
+  },
+  "rule_types": {
+    "spacing": {
+      "optimal_spacing_range": [
+        2,
+        50
+      ],
+      "mean_optimal_spacing": 26.4,
+      "median_optimal_spacing": 26.0,
+      "spacing_sensitivity_median": 1.0892,
+      "helical_periodic_count": 7665,
+      "helical_periodic_pct": 28.5
+    },
+    "orientation": {
+      "distribution": {
+        "+/+": 22426,
+        "-/-": 1588,
+        "-/+": 1473,
+        "+/-": 1435
+      },
+      "orientation_sensitivity_median": 1.2065
+    },
+    "helical_phase": {
+      "mean": 0.9978,
+      "median": 0.7075,
+      "strong_periodicity_count": 3632
+    },
+    "rule_classification": {
+      "weak": 11286,
+      "helical": 3478,
+      "orientation": 3169,
+      "spacing": 2655,
+      "orientation+spacing": 2422,
+      "helical+orientation": 934,
+      "helical+spacing": 799,
+      "helical+orientation+spacing": 753,
+      "spacing+strong_effect": 412,
+      "orientation+spacing+strong_effect": 315,
+      "strong_effect": 273,
+      "helical+spacing+strong_effect": 117,
+      "orientation+strong_effect": 114,
+      "helical+strong_effect": 88,
+      "helical+orientation+spacing+strong_effect": 76,
+      "helical+orientation+strong_effect": 31
+    }
+  },
+  "top_20_motif_pairs": {
+    "KLF5_KLF16": 111,
+    "EWSR1-FLI1_KLF5": 99,
+    "EWSR1-FLI1_EWSR1-FLI1": 99,
+    "PLAG1_KLF5": 81,
+    "NR1H2::RXRA_Rxra": 81,
+    "KLF5_KLF5": 72,
+    "RXRB_RXRG": 69,
+    "Rxra_RXRB": 69,
+    "Rxra_RXRG": 60,
+    "TFAP2B_TFAP2B": 60,
+    "TFAP2B_TFAP2C": 57,
+    "KLF5_ZIC1": 57,
+    "FOXB1_FOXC1": 54,
+    "TFAP2C_TFAP2C": 54,
+    "ZIC1_KLF16": 51,
+    "FOXI1_FOXL1": 51,
+    "PLAG1_KLF16": 48,
+    "NR1H2::RXRA_RXRB": 48,
+    "INSM1_KLF5": 45,
+    "KLF5_GLIS2": 45
+  },
+  "effect_sizes": {
+    "fold_change": {
+      "min": 1.1357,
+      "q25": 1.4638,
+      "median": 1.5887,
+      "q75": 1.7369,
+      "max": 12.3321,
+      "mean": 1.6219,
+      "std": 0.2353,
+      "above_1.5": 18247,
+      "above_2.0": 1426,
+      "above_3.0": 20,
+      "above_5.0": 2
+    },
+    "spacing_sensitivity": {
+      "min": 0.3949,
+      "median": 1.0892,
+      "max": 2.0442,
+      "mean": 1.0914,
+      "std": 0.2056
+    },
+    "orientation_sensitivity": {
+      "min": 0.064,
+      "median": 1.2065,
+      "max": 4.5315,
+      "mean": 1.2393,
+      "std": 0.468
+    }
+  },
+  "consensus": {
+    "pairs_in_2plus_models": 6090,
+    "orientation_agreement": 3190,
+    "spacing_agreement": 955,
+    "full_consensus": 642,
+    "pairs_in_all_3_models": 6090,
+    "three_model_full_consensus": 642
+  },
+  "cross_species": {
+    "species_map": {
+      "agarwal": "human",
+      "inoue": "human",
+      "klein": "human",
+      "vaishnav": "yeast",
+      "jores": "plant"
+    },
+    "rules_per_species": {
+      "human": 20427,
+      "plant": 4473,
+      "yeast": 2022
+    },
+    "pairs_per_species": {
+      "human": 3509,
+      "plant": 1045,
+      "yeast": 478
+    },
+    "motifs_per_species": {
+      "human": 172,
+      "plant": 111,
+      "yeast": 116
+    },
+    "shared_pairs": {},
+    "shared_motifs_count": {
+      "human__plant": 0,
+      "human__yeast": 1,
+      "plant__yeast": 0
+    }
+  },
+  "v2_observations": [
+    "v1 database has 26922 rule rows across 5 datasets and 3 models.",
+    "8675 rules (32.2%) have fold_change < 1.5, suggesting many weak/noisy rules. v2 should apply stricter filtering.",
+    "Only 642 of 6090 multi-model pairs (10.5%) have full consensus. v2 should prioritize cross-model agreement.",
+    "v1 has no p_value column - statistical significance was not tracked. v2 should add significance testing.",
+    "No motif pairs are shared across species, likely because different motif databases were used per species. v2 could explore orthologous TF comparisons.",
+    "Most common orientation is +/+ (83.3%). v2 should check if this reflects biology or extraction bias.",
+    "v1 stores raw spacing_profile arrays but no summary statistics (periodicity p-value, peak sharpness). v2 should compute and store derived features."
+  ]
+}

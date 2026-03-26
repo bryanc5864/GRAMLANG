@@ -1,0 +1,42 @@
+{
+  "agarwal": {
+    "r2_raw": -9.560167286531442,
+    "r2_robust": 0.06153497622972146,
+    "r2_std": 0.10026537279797747,
+    "top_feature": "dinuc_CG",
+    "top_feature_importance": 0.21205362784951742,
+    "n_samples": 500
+  },
+  "inoue": {
+    "r2_raw": -0.5727060223659349,
+    "r2_robust": -0.4876030554562075,
+    "r2_std": 0.3851525196495249,
+    "top_feature": "dinuc_CA",
+    "top_feature_importance": 0.17013271696868504,
+    "n_samples": 500
+  },
+  "jores": {
+    "r2_raw": 0.7924020752951446,
+    "r2_robust": 0.7889851599805116,
+    "r2_std": 0.040438132873371155,
+    "top_feature": "shape_Roll_std",
+    "top_feature_importance": 0.585872535728313,
+    "n_samples": 500
+  },
+  "klein": {
+    "r2_raw": -19.135064822362317,
+    "r2_robust": 0.3752324338871773,
+    "r2_std": 0.12661691070805822,
+    "top_feature": "shape_MGW_mean",
+    "top_feature_importance": 0.15806094668987528,
+    "n_samples": 500
+  },
+  "vaishnav": {
+    "r2_raw": 0.19714810023034351,
+    "r2_robust": 0.21808673318958469,
+    "r2_std": 0.14152284272400842,
+    "top_feature": "dinuc_CG",
+    "top_feature_importance": 0.15973559714662613,
+    "n_samples": 500
+  }
+}

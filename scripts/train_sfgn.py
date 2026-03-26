@@ -142,6 +142,7 @@ def train_epoch(model, dataloader, optimizer, device, epoch):
     total_mse = 0
     total_orth = 0
     n_batches = 0
+    nan_batches = 0
 
     pbar = tqdm(dataloader, desc=f'Epoch {epoch}')
     for sequences, expressions, motifs in pbar:
@@ -152,8 +153,29 @@ def train_epoch(model, dataloader, optimizer, device, epoch):
         output = model(sequences, motifs)
         loss, metrics = model.compute_loss(output, expressions)
 
+        # Skip NaN losses
+        if torch.isnan(loss) or torch.isinf(loss):
+            nan_batches += 1
+            pbar.set_postfix({'loss': 'NaN', 'skipped': nan_batches})
+            continue
+
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+
+        # Check for NaN gradients and skip if found
+        has_nan_grad = False
+        for param in model.parameters():
+            if param.grad is not None and (torch.isnan(param.grad).any() or torch.isinf(param.grad).any()):
+                has_nan_grad = True
+                break
+
+        if has_nan_grad:
+            nan_batches += 1
+            optimizer.zero_grad()  # Clear the bad gradients
+            pbar.set_postfix({'loss': 'NaN grad', 'skipped': nan_batches})
+            continue
+
+        # Aggressive gradient clipping
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
         optimizer.step()
 
         total_loss += metrics['total_loss']
@@ -167,10 +189,14 @@ def train_epoch(model, dataloader, optimizer, device, epoch):
             'α': f"{metrics['mean_alpha']:.3f}",
         })
 
+    if n_batches == 0:
+        return {'loss': float('nan'), 'mse': float('nan'), 'orthogonality': float('nan')}
+
     return {
         'loss': total_loss / n_batches,
         'mse': total_mse / n_batches,
         'orthogonality': total_orth / n_batches,
+        'nan_batches': nan_batches,
     }
 
 
@@ -269,12 +295,12 @@ def main():
 
         history.append({
             'epoch': epoch,
-            'train_loss': train_metrics['loss'],
-            'train_mse': train_metrics['mse'],
-            'val_r2': val_metrics['r2'],
-            'val_pearson': val_metrics['pearson_r'],
-            'mean_alpha': val_metrics['mean_alpha'],
-            'mean_beta': val_metrics['mean_beta'],
+            'train_loss': float(train_metrics['loss']),
+            'train_mse': float(train_metrics['mse']),
+            'val_r2': float(val_metrics['r2']),
+            'val_pearson': float(val_metrics['pearson_r']),
+            'mean_alpha': float(val_metrics['mean_alpha']),
+            'mean_beta': float(val_metrics['mean_beta']),
         })
 
         # Save best model
@@ -308,12 +334,13 @@ def main():
     print(f"Mean α (grammar weight): {final_metrics['mean_alpha']:.3f}")
     print(f"Mean β (composition weight): {final_metrics['mean_beta']:.3f}")
 
-    # Save final metrics
+    # Save final metrics (convert numpy types to Python floats)
+    final_metrics_clean = {k: float(v) for k, v in final_metrics.items()}
     with open(output_dir / f'{args.dataset}_sfgn_metrics.json', 'w') as f:
         json.dump({
             'dataset': args.dataset,
-            'best_val_r2': best_val_r2,
-            'final_metrics': final_metrics,
+            'best_val_r2': float(best_val_r2),
+            'final_metrics': final_metrics_clean,
             'config': {
                 'epochs': args.epochs,
                 'batch_size': args.batch_size,

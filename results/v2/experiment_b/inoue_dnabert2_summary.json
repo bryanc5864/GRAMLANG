@@ -1,0 +1,182 @@
+{
+  "TFAP2B_TFAP2B": {
+    "spacing_range": 0.3067980408668518,
+    "spacing_fold_change": 1.360832868378388,
+    "orientation_range": 0.35191190242767334,
+    "best_orientation": "+/+",
+    "order_effect": 0.04083287715911865,
+    "helical_phase_score": 2.6728933729337845,
+    "grammar_potential": 0.6587099432945251
+  },
+  "EWSR1-FLI1_EWSR1-FLI1": {
+    "spacing_range": 0.3554535508155823,
+    "spacing_fold_change": 1.4691297062960234,
+    "orientation_range": 0.4058254361152649,
+    "best_orientation": "+/+",
+    "order_effect": 0.05284106731414795,
+    "helical_phase_score": 1.6918506286633588,
+    "grammar_potential": 0.7612789869308472
+  },
+  "KLF5_KLF16": {
+    "spacing_range": 0.7223780751228333,
+    "spacing_fold_change": 2.0878096583766776,
+    "orientation_range": 0.31532537937164307,
+    "best_orientation": "+/-",
+    "order_effect": -0.1620844602584839,
+    "helical_phase_score": 0.8658247908005272,
+    "grammar_potential": 1.0377034544944763
+  },
+  "EWSR1-FLI1_KLF5": {
+    "spacing_range": 0.49229007959365845,
+    "spacing_fold_change": 1.6793094568300717,
+    "orientation_range": 0.3309798240661621,
+    "best_orientation": "+/+",
+    "order_effect": 0.04460418224334717,
+    "helical_phase_score": 1.1180618197969374,
+    "grammar_potential": 0.8232699036598206
+  },
+  "TFAP2B_TFAP2C": {
+    "spacing_range": 0.43001919984817505,
+    "spacing_fold_change": 1.5759336027373934,
+    "orientation_range": 0.40863388776779175,
+    "best_orientation": "+/+",
+    "order_effect": 0.0162583589553833,
+    "helical_phase_score": 2.4845678095165975,
+    "grammar_potential": 0.8386530876159668
+  },
+  "RELA_ZIC1": {
+    "spacing_range": 0.4691423773765564,
+    "spacing_fold_change": 1.5996214666673472,
+    "orientation_range": 0.43356138467788696,
+    "best_orientation": "+/+",
+    "order_effect": -0.24563050270080566,
+    "helical_phase_score": 0.9096612792082267,
+    "grammar_potential": 0.9027037620544434
+  },
+  "RELA_EWSR1-FLI1": {
+    "spacing_range": 0.46217209100723267,
+    "spacing_fold_change": 1.5905233697714638,
+    "orientation_range": 0.36109334230422974,
+    "best_orientation": "+/-",
+    "order_effect": -0.11758029460906982,
+    "helical_phase_score": 1.78931998514247,
+    "grammar_potential": 0.8232654333114624
+  },
+  "KLF5_ZIC1": {
+    "spacing_range": 0.5737641453742981,
+    "spacing_fold_change": 1.840985814876038,
+    "orientation_range": 0.34958821535110474,
+    "best_orientation": "+/+",
+    "order_effect": -0.12982726097106934,
+    "helical_phase_score": 0.8003453938059085,
+    "grammar_potential": 0.9233523607254028
+  },
+  "ZIC1_TFAP2B": {
+    "spacing_range": 0.5450566411018372,
+    "spacing_fold_change": 1.7296094463278027,
+    "orientation_range": 0.30911964178085327,
+    "best_orientation": "+/+",
+    "order_effect": -0.5328544974327087,
+    "helical_phase_score": 1.2071095925415303,
+    "grammar_potential": 0.8541762828826904
+  },
+  "RELA_KLF5": {
+    "spacing_range": 0.6683422923088074,
+    "spacing_fold_change": 1.8311199753975531,
+    "orientation_range": 0.6313515305519104,
+    "best_orientation": "-/+",
+    "order_effect": -0.4730040431022644,
+    "helical_phase_score": 0.07165906687922538,
+    "grammar_potential": 1.2996938228607178
+  },
+  "RELA_RELA": {
+    "spacing_range": 0.4015534520149231,
+    "spacing_fold_change": 1.5773804009194619,
+    "orientation_range": 0.05171859264373779,
+    "best_orientation": "+/+",
+    "order_effect": 0.08587253093719482,
+    "helical_phase_score": 0.6510941644495586,
+    "grammar_potential": 0.4532720446586609
+  },
+  "RELA_NFKB1": {
+    "spacing_range": 0.3746817708015442,
+    "spacing_fold_change": 1.4494772582397566,
+    "orientation_range": 0.5198737978935242,
+    "best_orientation": "+/+",
+    "order_effect": -0.5416179299354553,
+    "helical_phase_score": 2.1269013230657823,
+    "grammar_potential": 0.8945555686950684
+  },
+  "TFAP2C_TFAP2C": {
+    "spacing_range": 0.3134637475013733,
+    "spacing_fold_change": 1.372770512518175,
+    "orientation_range": 0.45636969804763794,
+    "best_orientation": "+/+",
+    "order_effect": 0.06552314758300781,
+    "helical_phase_score": 2.4718259059899674,
+    "grammar_potential": 0.7698334455490112
+  },
+  "NFKB1_NFKB1": {
+    "spacing_range": 0.4916955828666687,
+    "spacing_fold_change": 1.6259389805929152,
+    "orientation_range": 0.4224427342414856,
+    "best_orientation": "+/+",
+    "order_effect": 0.08752131462097168,
+    "helical_phase_score": 0.8501417134246898,
+    "grammar_potential": 0.9141383171081543
+  },
+  "PLAG1_KLF5": {
+    "spacing_range": 0.41695624589920044,
+    "spacing_fold_change": 1.5713284993596472,
+    "orientation_range": 0.2874367833137512,
+    "best_orientation": "+/-",
+    "order_effect": -0.2953763008117676,
+    "helical_phase_score": 0.41411207320117566,
+    "grammar_potential": 0.7043930292129517
+  },
+  "ZIC1_GLIS2": {
+    "spacing_range": 0.3309498429298401,
+    "spacing_fold_change": 1.3770169349507901,
+    "orientation_range": 0.3438537120819092,
+    "best_orientation": "+/+",
+    "order_effect": -0.1671522855758667,
+    "helical_phase_score": 3.0141830430604157,
+    "grammar_potential": 0.6748035550117493
+  },
+  "RELA_PLAG1": {
+    "spacing_range": 0.47212666273117065,
+    "spacing_fold_change": 1.6512892177898233,
+    "orientation_range": 0.41040951013565063,
+    "best_orientation": "-/+",
+    "order_effect": -0.2093234658241272,
+    "helical_phase_score": 3.336656343693928,
+    "grammar_potential": 0.8825361728668213
+  },
+  "ZIC1_KLF16": {
+    "spacing_range": 0.5925937294960022,
+    "spacing_fold_change": 1.949544614468329,
+    "orientation_range": 0.47461050748825073,
+    "best_orientation": "+/-",
+    "order_effect": -0.3392295241355896,
+    "helical_phase_score": 0.13967213435321169,
+    "grammar_potential": 1.067204236984253
+  },
+  "KLF5_GLIS2": {
+    "spacing_range": 0.42057645320892334,
+    "spacing_fold_change": 1.509835654078041,
+    "orientation_range": 0.432320773601532,
+    "best_orientation": "+/+",
+    "order_effect": -0.2821487784385681,
+    "helical_phase_score": 0.07461416796164959,
+    "grammar_potential": 0.8528972268104553
+  },
+  "KLF5_KLF5": {
+    "spacing_range": 0.3316352963447571,
+    "spacing_fold_change": 1.4503677099990164,
+    "orientation_range": 0.6313208341598511,
+    "best_orientation": "+/+",
+    "order_effect": 0.279299259185791,
+    "helical_phase_score": 1.9425964926821813,
+    "grammar_potential": 0.9629561305046082
+  }
+}

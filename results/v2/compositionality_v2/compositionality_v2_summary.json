@@ -1,0 +1,14 @@
+{
+  "n_tests": 984,
+  "n_enhancers": 188,
+  "mean_compositionality": 0.1628537078919481,
+  "median_compositionality": 0.0,
+  "std_compositionality": 0.2820264136387626,
+  "mean_interaction": 0.4004826041989547,
+  "mean_abs_interaction": 0.7290068309982705,
+  "mean_combined_effect": 0.5299245866370005,
+  "mean_pairwise_sum": 1.2236227248359957,
+  "frac_additive": 0.06707317073170732,
+  "frac_nonadditive": 0.7754065040650406,
+  "interaction_vs_combined_corr": 0.7940304848881268
+}

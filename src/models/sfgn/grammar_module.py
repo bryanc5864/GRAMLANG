@@ -198,15 +198,26 @@ class GrammarAttention(nn.Module):
 
         # Mask
         if mask is not None:
+            # Create 2D mask: (batch, 1, n_motifs, n_motifs)
+            # mask_2d[b, :, i, j] = 1 if both i and j are valid motifs
             mask_2d = mask.unsqueeze(1).unsqueeze(2) * mask.unsqueeze(1).unsqueeze(3)
-            scores = scores.masked_fill(mask_2d == 0, float('-inf'))
+            # Use large negative instead of -inf to avoid NaN in softmax
+            scores = scores.masked_fill(mask_2d == 0, -1e9)
 
         # Softmax and apply
         attn = F.softmax(scores, dim=-1)
+
+        # Handle NaN from all-masked rows (replace with uniform or zero)
+        attn = torch.nan_to_num(attn, nan=0.0)
+
         attn = self.dropout(attn)
 
         out = torch.matmul(attn, v)  # (batch, heads, n_motifs, d_head)
         out = out.transpose(1, 2).contiguous().view(batch_size, n_motifs, self.d_model)
+
+        # Zero out masked positions in output
+        if mask is not None:
+            out = out * mask.unsqueeze(-1)
 
         return self.out_proj(out)
 
@@ -290,6 +301,11 @@ class GrammarModule(nn.Module):
             grammar_vector: (batch, output_dim)
         """
         batch_size, n_motifs, _ = motif_embeddings.shape
+        device = motif_embeddings.device
+
+        # Handle edge case: no motifs at all
+        if n_motifs == 0 or (mask is not None and mask.sum() == 0):
+            return torch.zeros(batch_size, self.output_dim, device=device)
 
         # Project input
         x = self.input_proj(motif_embeddings)
@@ -318,6 +334,9 @@ class GrammarModule(nn.Module):
 
         pooled, _ = self.pool_attn(query, x, x, key_padding_mask=key_padding_mask)
         pooled = pooled.squeeze(1)  # (batch, hidden_dim)
+
+        # Handle potential NaN from all-masked sequences
+        pooled = torch.nan_to_num(pooled, nan=0.0)
 
         # Project to output
         grammar_vector = self.output_proj(pooled)

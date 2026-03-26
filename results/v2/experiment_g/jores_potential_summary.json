@@ -1,0 +1,19 @@
+{
+  "n_enhancers": 200,
+  "mean_potential": 2.0016293516755104,
+  "median_potential": 1.9908843040466309,
+  "max_potential": 2.917415738105774,
+  "mean_utilization": 0.5422886275771297,
+  "median_utilization": 0.5298337241564393,
+  "mean_headroom": 0.9155235108733177,
+  "mean_percentile": 0.565025,
+  "frac_above_median": 0.555,
+  "frac_in_top_10pct": 0.2,
+  "potential_vs_n_motifs_corr": -0.18341824425540781,
+  "potential_percentiles": {
+    "p25": 1.819532722234726,
+    "p50": 1.9908843040466309,
+    "p75": 2.1719923466444016,
+    "p95": 2.5308004230260845
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "CRF2_RAP2-3": {
+    "spacing_range": 2.319404125213623,
+    "spacing_fold_change": -12190258502.960205,
+    "orientation_range": 2.1216598749160767,
+    "best_orientation": "+/+",
+    "order_effect": -0.2290782928466797,
+    "helical_phase_score": 1.494738305848835,
+    "grammar_potential": 4.4410640001297
+  },
+  "CRF2_Os05g0497200": {
+    "spacing_range": 1.1566102504730225,
+    "spacing_fold_change": -14965400695.800781,
+    "orientation_range": 0.5898958444595337,
+    "best_orientation": "+/+",
+    "order_effect": -0.17955398559570312,
+    "helical_phase_score": 0.571248632663424,
+    "grammar_potential": 1.7465060949325562
+  },
+  "Os05g0497200_RAP2-3": {
+    "spacing_range": 1.4046365022659302,
+    "spacing_fold_change": -15953451395.03479,
+    "orientation_range": 0.9443199634552002,
+    "best_orientation": "+/+",
+    "order_effect": -0.12888848781585693,
+    "helical_phase_score": 1.1326870481849851,
+    "grammar_potential": 2.3489564657211304
+  },
+  "ERF1B_Os05g0497200": {
+    "spacing_range": 1.2441911697387695,
+    "spacing_fold_change": -9730508327.48413,
+    "orientation_range": 1.4839526414871216,
+    "best_orientation": "+/+",
+    "order_effect": -1.1352343559265137,
+    "helical_phase_score": 1.2906552906160313,
+    "grammar_potential": 2.728143811225891
+  },
+  "RAP2-3_ERF109": {
+    "spacing_range": 2.449855089187622,
+    "spacing_fold_change": -11555187702.178955,
+    "orientation_range": 2.062345862388611,
+    "best_orientation": "+/+",
+    "order_effect": -0.026108980178833008,
+    "helical_phase_score": 0.36918690506764046,
+    "grammar_potential": 4.512200951576233
+  },
+  "ERF1B_CRF2": {
+    "spacing_range": 1.3081740140914917,
+    "spacing_fold_change": -12323907613.754272,
+    "orientation_range": 1.5203680992126465,
+    "best_orientation": "+/-",
+    "order_effect": -0.8884247541427612,
+    "helical_phase_score": 0.12717785807523385,
+    "grammar_potential": 2.828542113304138
+  },
+  "ERF1B_RAP2-3": {
+    "spacing_range": 1.0988922119140625,
+    "spacing_fold_change": -12828483581.542969,
+    "orientation_range": 1.5186493396759033,
+    "best_orientation": "+/+",
+    "order_effect": -0.710944652557373,
+    "helical_phase_score": 0.07944080506623495,
+    "grammar_potential": 2.617541551589966
+  },
+  "RAP2-6_ERF5": {
+    "spacing_range": 1.6094409227371216,
+    "spacing_fold_change": -16722592115.402222,
+    "orientation_range": 1.4152605533599854,
+    "best_orientation": "+/+",
+    "order_effect": -0.45234405994415283,
+    "helical_phase_score": 0.14102762797309915,
+    "grammar_potential": 3.024701476097107
+  },
+  "DOF3.6_DOF3.6": {
+    "spacing_range": 1.8254038095474243,
+    "spacing_fold_change": -11564587354.660034,
+    "orientation_range": 1.0865354537963867,
+    "best_orientation": "+/+",
+    "order_effect": -0.45932435989379883,
+    "helical_phase_score": 1.6836528254498806,
+    "grammar_potential": 2.911939263343811
+  },
+  "CRF2_ERF109": {
+    "spacing_range": 2.022883415222168,
+    "spacing_fold_change": -14153945446.014404,
+    "orientation_range": 2.0656598806381226,
+    "best_orientation": "+/+",
+    "order_effect": 0.03876316547393799,
+    "helical_phase_score": 0.3914908939098947,
+    "grammar_potential": 4.0885432958602905
+  },
+  "ERF1B_ERF109": {
+    "spacing_range": 1.0396519899368286,
+    "spacing_fold_change": -13032351732.254028,
+    "orientation_range": 1.732130765914917,
+    "best_orientation": "-/-",
+    "order_effect": -0.5663720369338989,
+    "helical_phase_score": 0.07769313622989345,
+    "grammar_potential": 2.7717827558517456
+  },
+  "Os05g0497200_ERF109": {
+    "spacing_range": 1.9121414422988892,
+    "spacing_fold_change": -12762061357.498169,
+    "orientation_range": 0.8894916772842407,
+    "best_orientation": "+/+",
+    "order_effect": -0.6081342697143555,
+    "helical_phase_score": 1.355058760890628,
+    "grammar_potential": 2.80163311958313
+  },
+  "abi4_RAP2-3": {
+    "spacing_range": 1.3122010231018066,
+    "spacing_fold_change": -18262903690.338135,
+    "orientation_range": 1.9594807624816895,
+    "best_orientation": "+/+",
+    "order_effect": -0.1787416934967041,
+    "helical_phase_score": 1.4566496439072514,
+    "grammar_potential": 3.271681785583496
+  },
+  "CRF2_RAP2-6": {
+    "spacing_range": 1.5394033193588257,
+    "spacing_fold_change": -13965996503.829956,
+    "orientation_range": 1.6167933940887451,
+    "best_orientation": "+/+",
+    "order_effect": -1.0464004278182983,
+    "helical_phase_score": 0.3271166144905623,
+    "grammar_potential": 3.156196713447571
+  },
+  "ERF109_RAP2-6": {
+    "spacing_range": 1.376489281654358,
+    "spacing_fold_change": -15136064291.000366,
+    "orientation_range": 2.29500275850296,
+    "best_orientation": "+/+",
+    "order_effect": -1.4248369932174683,
+    "helical_phase_score": 0.757380371053817,
+    "grammar_potential": 3.671492040157318
+  },
+  "BPC5_BPC1": {
+    "spacing_range": 1.1817042827606201,
+    "spacing_fold_change": -15862410068.511963,
+    "orientation_range": 1.1777229309082031,
+    "best_orientation": "+/-",
+    "order_effect": -0.4612901210784912,
+    "helical_phase_score": 0.005571640002372133,
+    "grammar_potential": 2.3594272136688232
+  },
+  "abi4_CRF2": {
+    "spacing_range": 1.4631602764129639,
+    "spacing_fold_change": -14093399047.851562,
+    "orientation_range": 2.107169985771179,
+    "best_orientation": "+/+",
+    "order_effect": -0.8443288803100586,
+    "helical_phase_score": 2.0108374199164207,
+    "grammar_potential": 3.570330262184143
+  },
+  "RAP2-3_RAP2-6": {
+    "spacing_range": 0.8978259563446045,
+    "spacing_fold_change": -17906649112.701416,
+    "orientation_range": 0.5164260864257812,
+    "best_orientation": "+/+",
+    "order_effect": -1.1446995735168457,
+    "helical_phase_score": 0.979959801551856,
+    "grammar_potential": 1.4142520427703857
+  },
+  "PI_AP1": {
+    "spacing_range": 1.4270899295806885,
+    "spacing_fold_change": -12753305435.180664,
+    "orientation_range": 0.797946572303772,
+    "best_orientation": "-/+",
+    "order_effect": -0.8994901180267334,
+    "helical_phase_score": 0.3856455162330476,
+    "grammar_potential": 2.2250365018844604
+  },
+  "TSO1_TCX2": {
+    "spacing_range": 1.3164321184158325,
+    "spacing_fold_change": -10295356512.069702,
+    "orientation_range": 1.1855100989341736,
+    "best_orientation": "+/+",
+    "order_effect": -0.008732438087463379,
+    "helical_phase_score": 0.20772051112765502,
+    "grammar_potential": 2.501942217350006
+  }
+}
