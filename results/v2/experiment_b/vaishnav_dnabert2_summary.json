@@ -1,0 +1,182 @@
+{
+  "LEU3_STB3": {
+    "spacing_range": 1.9142646789550781,
+    "spacing_fold_change": 1.2041659059296799,
+    "orientation_range": 2.3273305892944336,
+    "best_orientation": "+/+",
+    "order_effect": 0.6220922470092773,
+    "helical_phase_score": 0.9684425293529249,
+    "grammar_potential": 4.241595268249512
+  },
+  "STB3_UGA3": {
+    "spacing_range": 2.5676345825195312,
+    "spacing_fold_change": 1.2330130092496911,
+    "orientation_range": 4.137225151062012,
+    "best_orientation": "+/+",
+    "order_effect": -0.5534677505493164,
+    "helical_phase_score": 0.7182922849415377,
+    "grammar_potential": 6.704859733581543
+  },
+  "STB3_GSM1": {
+    "spacing_range": 4.615174293518066,
+    "spacing_fold_change": 1.5584323748914577,
+    "orientation_range": 3.8851823806762695,
+    "best_orientation": "+/+",
+    "order_effect": -0.3845796585083008,
+    "helical_phase_score": 0.5118785451474497,
+    "grammar_potential": 8.500356674194336
+  },
+  "REI1_STB3": {
+    "spacing_range": 2.6693906784057617,
+    "spacing_fold_change": 1.344379788642129,
+    "orientation_range": 2.8034515380859375,
+    "best_orientation": "-/+",
+    "order_effect": 3.9953536987304688,
+    "helical_phase_score": 1.5636874463495667,
+    "grammar_potential": 5.472842216491699
+  },
+  "OAF1_STB3": {
+    "spacing_range": 5.135047912597656,
+    "spacing_fold_change": 1.5546841841977959,
+    "orientation_range": 4.542697906494141,
+    "best_orientation": "+/+",
+    "order_effect": -3.118131637573242,
+    "helical_phase_score": 3.569776679700917,
+    "grammar_potential": 9.677745819091797
+  },
+  "RIM101_STB3": {
+    "spacing_range": 4.144587516784668,
+    "spacing_fold_change": 1.4479415928809496,
+    "orientation_range": 1.399195671081543,
+    "best_orientation": "-/+",
+    "order_effect": -1.8548965454101562,
+    "helical_phase_score": 0.07044472253419641,
+    "grammar_potential": 5.543783187866211
+  },
+  "YPR196W_STB3": {
+    "spacing_range": 4.504485130310059,
+    "spacing_fold_change": 1.4310369766109285,
+    "orientation_range": 2.6653661727905273,
+    "best_orientation": "+/+",
+    "order_effect": -1.2116117477416992,
+    "helical_phase_score": 0.32845497485127867,
+    "grammar_potential": 7.169851303100586
+  },
+  "ASH1_STB3": {
+    "spacing_range": 4.654644966125488,
+    "spacing_fold_change": 1.5385147790795282,
+    "orientation_range": 5.104457855224609,
+    "best_orientation": "+/+",
+    "order_effect": 1.1725635528564453,
+    "helical_phase_score": 0.2744972349682062,
+    "grammar_potential": 9.759102821350098
+  },
+  "STB3_YBR182C": {
+    "spacing_range": 2.3957223892211914,
+    "spacing_fold_change": 1.2368128074582596,
+    "orientation_range": 4.731138229370117,
+    "best_orientation": "+/+",
+    "order_effect": -1.7288265228271484,
+    "helical_phase_score": 0.16926360756342324,
+    "grammar_potential": 7.126860618591309
+  },
+  "STB3_YBR089C-A": {
+    "spacing_range": 2.019643783569336,
+    "spacing_fold_change": 1.2099304461350344,
+    "orientation_range": 2.5211944580078125,
+    "best_orientation": "+/+",
+    "order_effect": 0.1330718994140625,
+    "helical_phase_score": 2.1587512272251166,
+    "grammar_potential": 4.540838241577148
+  },
+  "YNR063W_STB3": {
+    "spacing_range": 3.442411422729492,
+    "spacing_fold_change": 1.3944222323964208,
+    "orientation_range": 2.776519775390625,
+    "best_orientation": "+/+",
+    "order_effect": -1.5498018264770508,
+    "helical_phase_score": 2.223260731360303,
+    "grammar_potential": 6.218931198120117
+  },
+  "STB3_MAL63": {
+    "spacing_range": 5.4199323654174805,
+    "spacing_fold_change": 1.5236370072588707,
+    "orientation_range": 6.2441511154174805,
+    "best_orientation": "+/+",
+    "order_effect": -1.8027477264404297,
+    "helical_phase_score": 0.7314840617610471,
+    "grammar_potential": 11.664083480834961
+  },
+  "STB3_YBR066C": {
+    "spacing_range": 3.4664793014526367,
+    "spacing_fold_change": 1.3681336883615567,
+    "orientation_range": 4.076566696166992,
+    "best_orientation": "+/+",
+    "order_effect": -2.163050651550293,
+    "helical_phase_score": 0.36947712849414904,
+    "grammar_potential": 7.543045997619629
+  },
+  "STB3_SUT2": {
+    "spacing_range": 3.563004493713379,
+    "spacing_fold_change": 1.3708768516017493,
+    "orientation_range": 5.438488960266113,
+    "best_orientation": "+/+",
+    "order_effect": -2.1327695846557617,
+    "helical_phase_score": 0.7333304564181254,
+    "grammar_potential": 9.001493453979492
+  },
+  "NHP10_STB3": {
+    "spacing_range": 3.6627368927001953,
+    "spacing_fold_change": 1.4007630724204019,
+    "orientation_range": 5.275228500366211,
+    "best_orientation": "+/+",
+    "order_effect": 0.19797801971435547,
+    "helical_phase_score": 0.7973736876463411,
+    "grammar_potential": 8.937965393066406
+  },
+  "LEU3_UGA3": {
+    "spacing_range": 4.57594108581543,
+    "spacing_fold_change": 1.500755743005007,
+    "orientation_range": 2.999373435974121,
+    "best_orientation": "+/+",
+    "order_effect": -2.2618093490600586,
+    "helical_phase_score": 0.8177748374602218,
+    "grammar_potential": 7.575314521789551
+  },
+  "RPN4_STB3": {
+    "spacing_range": 4.117448806762695,
+    "spacing_fold_change": 1.464723459672967,
+    "orientation_range": 3.882359504699707,
+    "best_orientation": "+/+",
+    "order_effect": -1.7244606018066406,
+    "helical_phase_score": 0.1677728215465864,
+    "grammar_potential": 7.999808311462402
+  },
+  "STB3_URC2": {
+    "spacing_range": 3.9503097534179688,
+    "spacing_fold_change": 1.4485149317834365,
+    "orientation_range": 2.320798873901367,
+    "best_orientation": "+/+",
+    "order_effect": -0.0487213134765625,
+    "helical_phase_score": 0.5199343536001119,
+    "grammar_potential": 6.271108627319336
+  },
+  "STB5_STB3": {
+    "spacing_range": 5.1079559326171875,
+    "spacing_fold_change": 1.5475893088362684,
+    "orientation_range": 4.378053665161133,
+    "best_orientation": "+/+",
+    "order_effect": -3.717909812927246,
+    "helical_phase_score": 3.925422313573561,
+    "grammar_potential": 9.48600959777832
+  },
+  "STB5_OAF1": {
+    "spacing_range": 3.80782413482666,
+    "spacing_fold_change": 1.4237147158030012,
+    "orientation_range": 1.5949974060058594,
+    "best_orientation": "+/+",
+    "order_effect": -3.025491714477539,
+    "helical_phase_score": 0.5927529065045101,
+    "grammar_potential": 5.4028215408325195
+  }
+}

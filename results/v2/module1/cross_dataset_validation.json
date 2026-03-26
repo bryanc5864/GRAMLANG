@@ -1,0 +1,1799 @@
+{
+  "experiment": "Validation Experiment I - Cross-Dataset GSI Replication",
+  "description": "Tests whether grammar rules replicate across MPRA datasets measuring the same biology",
+  "datasets": {
+    "agarwal": "human",
+    "inoue": "human",
+    "klein": "human",
+    "vaishnav": "yeast",
+    "jores": "plant"
+  },
+  "models": [
+    "dnabert2",
+    "nt",
+    "hyenadna"
+  ],
+  "n_sequences_per_file": 500,
+  "seq_id_overlap": {
+    "dnabert2": {
+      "agarwal_vs_inoue": 0,
+      "agarwal_vs_klein": 0,
+      "agarwal_vs_vaishnav": 0,
+      "agarwal_vs_jores": 0,
+      "inoue_vs_klein": 0,
+      "inoue_vs_vaishnav": 0,
+      "inoue_vs_jores": 0,
+      "klein_vs_vaishnav": 0,
+      "klein_vs_jores": 0,
+      "vaishnav_vs_jores": 0
+    },
+    "nt": {
+      "agarwal_vs_inoue": 0,
+      "agarwal_vs_klein": 0,
+      "agarwal_vs_vaishnav": 0,
+      "agarwal_vs_jores": 0,
+      "inoue_vs_klein": 0,
+      "inoue_vs_vaishnav": 0,
+      "inoue_vs_jores": 0,
+      "klein_vs_vaishnav": 0,
+      "klein_vs_jores": 0,
+      "vaishnav_vs_jores": 0
+    },
+    "hyenadna": {
+      "agarwal_vs_inoue": 0,
+      "agarwal_vs_klein": 0,
+      "agarwal_vs_vaishnav": 0,
+      "agarwal_vs_jores": 0,
+      "inoue_vs_klein": 0,
+      "inoue_vs_vaishnav": 0,
+      "inoue_vs_jores": 0,
+      "klein_vs_vaishnav": 0,
+      "klein_vs_jores": 0,
+      "vaishnav_vs_jores": 0
+    }
+  },
+  "gsi_distribution_comparison": {
+    "dnabert2": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 0.97,
+        "ks_p_value": 5.09e-267,
+        "mannwhitney_statistic": 248956.0,
+        "mannwhitney_p_value": 3e-162,
+        "mean_gsi_ds1": 1.3221,
+        "mean_gsi_ds2": 0.1455,
+        "median_gsi_ds1": 0.4871,
+        "median_gsi_ds2": 0.1447
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 0.348,
+        "ks_p_value": 2.97e-27,
+        "mannwhitney_statistic": 71736.0,
+        "mannwhitney_p_value": 1.96e-31,
+        "mean_gsi_ds1": 1.3221,
+        "mean_gsi_ds2": 4.222,
+        "median_gsi_ds1": 0.4871,
+        "median_gsi_ds2": 0.9963
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 0.996,
+        "ks_p_value": 3.7e-294,
+        "mannwhitney_statistic": 249995.0,
+        "mannwhitney_p_value": 6.03e-165,
+        "mean_gsi_ds1": 1.3221,
+        "mean_gsi_ds2": 0.0912,
+        "median_gsi_ds1": 0.4871,
+        "median_gsi_ds2": 0.0909
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 0.824,
+        "ks_p_value": 7.72e-172,
+        "mannwhitney_statistic": 242716.0,
+        "mannwhitney_p_value": 1.59e-146,
+        "mean_gsi_ds1": 1.3221,
+        "mean_gsi_ds2": 0.1606,
+        "median_gsi_ds1": 0.4871,
+        "median_gsi_ds2": 0.1469
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 0.984,
+        "ks_p_value": 1.78e-280,
+        "mannwhitney_statistic": 1092.0,
+        "mannwhitney_p_value": 4e-162,
+        "mean_gsi_ds1": 0.1455,
+        "mean_gsi_ds2": 4.222,
+        "median_gsi_ds1": 0.1447,
+        "median_gsi_ds2": 0.9963
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 0.954,
+        "ks_p_value": 2.22e-253,
+        "mannwhitney_statistic": 248768.0,
+        "mannwhitney_p_value": 9.19e-162,
+        "mean_gsi_ds1": 0.1455,
+        "mean_gsi_ds2": 0.0912,
+        "median_gsi_ds1": 0.1447,
+        "median_gsi_ds2": 0.0909
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 0.318,
+        "ks_p_value": 9.54e-23,
+        "mannwhitney_statistic": 117328.0,
+        "mannwhitney_p_value": 0.093,
+        "mean_gsi_ds1": 0.1455,
+        "mean_gsi_ds2": 0.1606,
+        "median_gsi_ds1": 0.1447,
+        "median_gsi_ds2": 0.1469
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 0.998,
+        "ks_p_value": 7.4e-297,
+        "mannwhitney_statistic": 249994.0,
+        "mannwhitney_p_value": 6.07e-165,
+        "mean_gsi_ds1": 4.222,
+        "mean_gsi_ds2": 0.0912,
+        "median_gsi_ds1": 0.9963,
+        "median_gsi_ds2": 0.0909
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 0.908,
+        "ks_p_value": 4.7e-220,
+        "mannwhitney_statistic": 246864.0,
+        "mannwhitney_p_value": 6.91e-157,
+        "mean_gsi_ds1": 4.222,
+        "mean_gsi_ds2": 0.1606,
+        "median_gsi_ds1": 0.9963,
+        "median_gsi_ds2": 0.1469
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "yeast_vs_plant",
+        "ks_statistic": 0.792,
+        "ks_p_value": 2.79e-156,
+        "mannwhitney_statistic": 16164.0,
+        "mannwhitney_p_value": 1.53e-125,
+        "mean_gsi_ds1": 0.0912,
+        "mean_gsi_ds2": 0.1606,
+        "median_gsi_ds1": 0.0909,
+        "median_gsi_ds2": 0.1469
+      }
+    },
+    "nt": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 1.0,
+        "ks_p_value": 7.4e-300,
+        "mannwhitney_statistic": 250000.0,
+        "mannwhitney_p_value": 5.86e-165,
+        "mean_gsi_ds1": 2.5794,
+        "mean_gsi_ds2": 0.0452,
+        "median_gsi_ds1": 0.38,
+        "median_gsi_ds2": 0.0445
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 0.314,
+        "ks_p_value": 3.53e-22,
+        "mannwhitney_statistic": 79139.0,
+        "mannwhitney_p_value": 9.91e-24,
+        "mean_gsi_ds1": 2.5794,
+        "mean_gsi_ds2": 1.5007,
+        "median_gsi_ds1": 0.38,
+        "median_gsi_ds2": 0.6591
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 0.992,
+        "ks_p_value": 3.06e-289,
+        "mannwhitney_statistic": 249945.0,
+        "mannwhitney_p_value": 8.15e-165,
+        "mean_gsi_ds1": 2.5794,
+        "mean_gsi_ds2": 0.0914,
+        "median_gsi_ds1": 0.38,
+        "median_gsi_ds2": 0.0892
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 0.758,
+        "ks_p_value": 4.71e-141,
+        "mannwhitney_statistic": 238109.0,
+        "mannwhitney_p_value": 1.96e-135,
+        "mean_gsi_ds1": 2.5794,
+        "mean_gsi_ds2": 0.1577,
+        "median_gsi_ds1": 0.38,
+        "median_gsi_ds2": 0.1445
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 1.0,
+        "ks_p_value": 7.4e-300,
+        "mannwhitney_statistic": 0.0,
+        "mannwhitney_p_value": 5.86e-165,
+        "mean_gsi_ds1": 0.0452,
+        "mean_gsi_ds2": 1.5007,
+        "median_gsi_ds1": 0.0445,
+        "median_gsi_ds2": 0.6591
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 0.992,
+        "ks_p_value": 3.06e-289,
+        "mannwhitney_statistic": 985.0,
+        "mannwhitney_p_value": 2.11e-162,
+        "mean_gsi_ds1": 0.0452,
+        "mean_gsi_ds2": 0.0914,
+        "median_gsi_ds1": 0.0445,
+        "median_gsi_ds2": 0.0892
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 0.994,
+        "ks_p_value": 1.23e-291,
+        "mannwhitney_statistic": 200.0,
+        "mannwhitney_p_value": 1.94e-164,
+        "mean_gsi_ds1": 0.0452,
+        "mean_gsi_ds2": 0.1577,
+        "median_gsi_ds1": 0.0445,
+        "median_gsi_ds2": 0.1445
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 0.996,
+        "ks_p_value": 3.7e-294,
+        "mannwhitney_statistic": 249993.0,
+        "mannwhitney_p_value": 6.11e-165,
+        "mean_gsi_ds1": 1.5007,
+        "mean_gsi_ds2": 0.0914,
+        "median_gsi_ds1": 0.6591,
+        "median_gsi_ds2": 0.0892
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 0.886,
+        "ks_p_value": 3.59e-206,
+        "mannwhitney_statistic": 246747.0,
+        "mannwhitney_p_value": 1.37e-156,
+        "mean_gsi_ds1": 1.5007,
+        "mean_gsi_ds2": 0.1577,
+        "median_gsi_ds1": 0.6591,
+        "median_gsi_ds2": 0.1445
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "yeast_vs_plant",
+        "ks_statistic": 0.754,
+        "ks_p_value": 2.42e-139,
+        "mannwhitney_statistic": 15065.0,
+        "mannwhitney_p_value": 4.75e-128,
+        "mean_gsi_ds1": 0.0914,
+        "mean_gsi_ds2": 0.1577,
+        "median_gsi_ds1": 0.0892,
+        "median_gsi_ds2": 0.1445
+      }
+    },
+    "hyenadna": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 1.0,
+        "ks_p_value": 7.4e-300,
+        "mannwhitney_statistic": 250000.0,
+        "mannwhitney_p_value": 5.86e-165,
+        "mean_gsi_ds1": 1.2773,
+        "mean_gsi_ds2": 0.0113,
+        "median_gsi_ds1": 0.1255,
+        "median_gsi_ds2": 0.0113
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 0.412,
+        "ks_p_value": 2.3e-38,
+        "mannwhitney_statistic": 67424.0,
+        "mannwhitney_p_value": 1.91e-36,
+        "mean_gsi_ds1": 1.2773,
+        "mean_gsi_ds2": 0.8521,
+        "median_gsi_ds1": 0.1255,
+        "median_gsi_ds2": 0.2639
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 0.908,
+        "ks_p_value": 4.7e-220,
+        "mannwhitney_statistic": 244133.0,
+        "mannwhitney_p_value": 5.04e-150,
+        "mean_gsi_ds1": 1.2773,
+        "mean_gsi_ds2": 0.0591,
+        "median_gsi_ds1": 0.1255,
+        "median_gsi_ds2": 0.0582
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 0.77,
+        "ks_p_value": 2.76e-146,
+        "mannwhitney_statistic": 235949.0,
+        "mannwhitney_p_value": 2.19e-130,
+        "mean_gsi_ds1": 1.2773,
+        "mean_gsi_ds2": 0.0626,
+        "median_gsi_ds1": 0.1255,
+        "median_gsi_ds2": 0.0585
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "ks_statistic": 1.0,
+        "ks_p_value": 7.4e-300,
+        "mannwhitney_statistic": 0.0,
+        "mannwhitney_p_value": 5.86e-165,
+        "mean_gsi_ds1": 0.0113,
+        "mean_gsi_ds2": 0.8521,
+        "median_gsi_ds1": 0.0113,
+        "median_gsi_ds2": 0.2639
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 1.0,
+        "ks_p_value": 7.4e-300,
+        "mannwhitney_statistic": 0.0,
+        "mannwhitney_p_value": 5.86e-165,
+        "mean_gsi_ds1": 0.0113,
+        "mean_gsi_ds2": 0.0591,
+        "median_gsi_ds1": 0.0113,
+        "median_gsi_ds2": 0.0582
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 1.0,
+        "ks_p_value": 7.4e-300,
+        "mannwhitney_statistic": 0.0,
+        "mannwhitney_p_value": 5.86e-165,
+        "mean_gsi_ds1": 0.0113,
+        "mean_gsi_ds2": 0.0626,
+        "median_gsi_ds1": 0.0113,
+        "median_gsi_ds2": 0.0585
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "ks_statistic": 0.922,
+        "ks_p_value": 1.71e-229,
+        "mannwhitney_statistic": 244908.0,
+        "mannwhitney_p_value": 5.9e-152,
+        "mean_gsi_ds1": 0.8521,
+        "mean_gsi_ds2": 0.0591,
+        "median_gsi_ds1": 0.2639,
+        "median_gsi_ds2": 0.0582
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "ks_statistic": 0.83,
+        "ks_p_value": 6.66e-175,
+        "mannwhitney_statistic": 241401.0,
+        "mannwhitney_p_value": 2.59e-143,
+        "mean_gsi_ds1": 0.8521,
+        "mean_gsi_ds2": 0.0626,
+        "median_gsi_ds1": 0.2639,
+        "median_gsi_ds2": 0.0585
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "yeast_vs_plant",
+        "ks_statistic": 0.204,
+        "ks_p_value": 1.62e-09,
+        "mannwhitney_statistic": 122686.0,
+        "mannwhitney_p_value": 0.612,
+        "mean_gsi_ds1": 0.0591,
+        "mean_gsi_ds2": 0.0626,
+        "median_gsi_ds1": 0.0582,
+        "median_gsi_ds2": 0.0585
+      }
+    }
+  },
+  "motif_conditioned_gsi_correlation": {
+    "dnabert2": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.1,
+        "spearman_p": 0.8729,
+        "pearson_r": 0.6496,
+        "pearson_p": 0.2355
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": -0.9,
+        "spearman_p": 0.0374,
+        "pearson_r": -0.4507,
+        "pearson_p": 0.4462
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": 0.4,
+        "spearman_p": 0.6,
+        "pearson_r": 0.4696,
+        "pearson_p": 0.5304
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": -0.3,
+        "spearman_p": 0.6238,
+        "pearson_r": 0.0756,
+        "pearson_p": 0.9039
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.3,
+        "spearman_p": 0.6238,
+        "pearson_r": 0.2849,
+        "pearson_p": 0.6422
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": 0.4,
+        "spearman_p": 0.6,
+        "pearson_r": 0.4388,
+        "pearson_p": 0.5612
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.6,
+        "spearman_p": 0.2848,
+        "pearson_r": 0.7002,
+        "pearson_p": 0.1879
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": -0.4,
+        "spearman_p": 0.6,
+        "pearson_r": 0.0957,
+        "pearson_p": 0.9043
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.5,
+        "spearman_p": 0.391,
+        "pearson_r": 0.4446,
+        "pearson_p": 0.4532
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": -0.8,
+        "spearman_p": 0.2,
+        "pearson_r": -0.6201,
+        "pearson_p": 0.3799
+      }
+    },
+    "nt": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": -0.2,
+        "spearman_p": 0.7471,
+        "pearson_r": -0.2471,
+        "pearson_p": 0.6886
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": -0.8,
+        "spearman_p": 0.1041,
+        "pearson_r": -0.3578,
+        "pearson_p": 0.5544
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": -1.0,
+        "spearman_p": 0.0,
+        "pearson_r": -0.846,
+        "pearson_p": 0.154
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.1,
+        "spearman_p": 0.8729,
+        "pearson_r": 0.6957,
+        "pearson_p": 0.1921
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.2,
+        "spearman_p": 0.7471,
+        "pearson_r": -0.3361,
+        "pearson_p": 0.5802
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": 0.4,
+        "spearman_p": 0.6,
+        "pearson_r": -0.0961,
+        "pearson_p": 0.9039
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": -0.9,
+        "spearman_p": 0.0374,
+        "pearson_r": -0.8231,
+        "pearson_p": 0.0869
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": 0.8,
+        "spearman_p": 0.2,
+        "pearson_r": 0.8751,
+        "pearson_p": 0.1249
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.1,
+        "spearman_p": 0.8729,
+        "pearson_r": 0.254,
+        "pearson_p": 0.6801
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": -0.4,
+        "spearman_p": 0.6,
+        "pearson_r": -0.4714,
+        "pearson_p": 0.5286
+      }
+    },
+    "hyenadna": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.9,
+        "spearman_p": 0.0374,
+        "pearson_r": 0.4377,
+        "pearson_p": 0.461
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": -0.6,
+        "spearman_p": 0.2848,
+        "pearson_r": -0.5216,
+        "pearson_p": 0.3674
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": 0.8,
+        "spearman_p": 0.2,
+        "pearson_r": 0.879,
+        "pearson_p": 0.121
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.4,
+        "spearman_p": 0.5046,
+        "pearson_r": 0.3444,
+        "pearson_p": 0.5703
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "n_bins_used": 5,
+        "spearman_r": -0.7,
+        "spearman_p": 0.1881,
+        "pearson_r": -0.8088,
+        "pearson_p": 0.0974
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": 0.8,
+        "spearman_p": 0.2,
+        "pearson_r": 0.8717,
+        "pearson_p": 0.1283
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.3,
+        "spearman_p": 0.6238,
+        "pearson_r": 0.2982,
+        "pearson_p": 0.6261
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": -0.2,
+        "spearman_p": 0.8,
+        "pearson_r": -0.3535,
+        "pearson_p": 0.6465
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 5,
+        "spearman_r": 0.2,
+        "spearman_p": 0.7471,
+        "pearson_r": 0.1699,
+        "pearson_p": 0.7848
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "n_bins_used": 4,
+        "spearman_r": 0.8,
+        "spearman_p": 0.2,
+        "pearson_r": 0.7649,
+        "pearson_p": 0.2351
+      }
+    }
+  },
+  "regression_slope_comparison": {
+    "dnabert2": {
+      "agarwal": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": 2.4085,
+          "r_squared": 0.0219,
+          "p_value": 0.000913,
+          "stderr": 0.7219
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": 0.012,
+          "r_squared": 0.0219,
+          "p_value": 0.000913,
+          "stderr": 0.0036
+        }
+      },
+      "inoue": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": -0.1613,
+          "r_squared": 0.1253,
+          "p_value": 3.28e-16,
+          "stderr": 0.0191
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": -0.0008,
+          "r_squared": 0.1253,
+          "p_value": 3.28e-16,
+          "stderr": 0.0001
+        }
+      },
+      "klein": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": -5.1541,
+          "r_squared": 0.1143,
+          "p_value": 7.76e-15,
+          "stderr": 0.6429
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": -0.0268,
+          "r_squared": 0.1143,
+          "p_value": 7.76e-15,
+          "stderr": 0.0033
+        }
+      },
+      "vaishnav": {
+        "species": "yeast",
+        "log_gsi_vs_motif_density": {
+          "slope": -0.1276,
+          "r_squared": 0.0455,
+          "p_value": 1.48e-06,
+          "stderr": 0.0262
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": -0.0012,
+          "r_squared": 0.0454,
+          "p_value": 1.54e-06,
+          "stderr": 0.0002
+        }
+      },
+      "jores": {
+        "species": "plant",
+        "log_gsi_vs_motif_density": {
+          "slope": -0.1531,
+          "r_squared": 0.0341,
+          "p_value": 3.28e-05,
+          "stderr": 0.0365
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": -0.0009,
+          "r_squared": 0.0341,
+          "p_value": 3.28e-05,
+          "stderr": 0.0002
+        }
+      }
+    },
+    "nt": {
+      "agarwal": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": 2.6957,
+          "r_squared": 0.0183,
+          "p_value": 0.00246,
+          "stderr": 0.8858
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": 0.0135,
+          "r_squared": 0.0183,
+          "p_value": 0.00246,
+          "stderr": 0.0044
+        }
+      },
+      "inoue": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": 0.0142,
+          "r_squared": 0.0055,
+          "p_value": 0.0989,
+          "stderr": 0.0086
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": 0.0001,
+          "r_squared": 0.0055,
+          "p_value": 0.0989,
+          "stderr": 0.0
+        }
+      },
+      "klein": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": -3.0362,
+          "r_squared": 0.0816,
+          "p_value": 7.72e-11,
+          "stderr": 0.4566
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": -0.0158,
+          "r_squared": 0.0816,
+          "p_value": 7.72e-11,
+          "stderr": 0.0024
+        }
+      },
+      "vaishnav": {
+        "species": "yeast",
+        "log_gsi_vs_motif_density": {
+          "slope": -0.1366,
+          "r_squared": 0.0323,
+          "p_value": 5.31e-05,
+          "stderr": 0.0335
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": -0.0013,
+          "r_squared": 0.0338,
+          "p_value": 3.52e-05,
+          "stderr": 0.0003
+        }
+      },
+      "jores": {
+        "species": "plant",
+        "log_gsi_vs_motif_density": {
+          "slope": -0.0534,
+          "r_squared": 0.0042,
+          "p_value": 0.15,
+          "stderr": 0.0371
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": -0.0003,
+          "r_squared": 0.0042,
+          "p_value": 0.15,
+          "stderr": 0.0002
+        }
+      }
+    },
+    "hyenadna": {
+      "agarwal": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": 2.2135,
+          "r_squared": 0.031,
+          "p_value": 7.66e-05,
+          "stderr": 0.555
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": 0.0111,
+          "r_squared": 0.031,
+          "p_value": 7.66e-05,
+          "stderr": 0.0028
+        }
+      },
+      "inoue": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": 0.0039,
+          "r_squared": 0.005,
+          "p_value": 0.116,
+          "stderr": 0.0025
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": 0.0,
+          "r_squared": 0.005,
+          "p_value": 0.116,
+          "stderr": 0.0
+        }
+      },
+      "klein": {
+        "species": "human",
+        "log_gsi_vs_motif_density": {
+          "slope": -2.2183,
+          "r_squared": 0.0486,
+          "p_value": 6.48e-07,
+          "stderr": 0.44
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": -0.0116,
+          "r_squared": 0.0486,
+          "p_value": 6.48e-07,
+          "stderr": 0.0023
+        }
+      },
+      "vaishnav": {
+        "species": "yeast",
+        "log_gsi_vs_motif_density": {
+          "slope": 0.111,
+          "r_squared": 0.0528,
+          "p_value": 2.05e-07,
+          "stderr": 0.0211
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": 0.001,
+          "r_squared": 0.0527,
+          "p_value": 2.1e-07,
+          "stderr": 0.0002
+        }
+      },
+      "jores": {
+        "species": "plant",
+        "log_gsi_vs_motif_density": {
+          "slope": 0.03,
+          "r_squared": 0.0069,
+          "p_value": 0.0638,
+          "stderr": 0.0162
+        },
+        "log_gsi_vs_n_motifs": {
+          "slope": 0.0002,
+          "r_squared": 0.0069,
+          "p_value": 0.0638,
+          "stderr": 0.0001
+        }
+      }
+    }
+  },
+  "density_binned_gsi_profiles": {
+    "dnabert2": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "spearman_r": -0.8909,
+        "spearman_p": 0.0005,
+        "n_bins": 10
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "spearman_r": -0.8061,
+        "spearman_p": 0.0049,
+        "n_bins": 10
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": -0.9515,
+        "spearman_p": 0.0,
+        "n_bins": 10
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": -0.5515,
+        "spearman_p": 0.0984,
+        "n_bins": 10
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "spearman_r": 0.7697,
+        "spearman_p": 0.0092,
+        "n_bins": 10
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.903,
+        "spearman_p": 0.0003,
+        "n_bins": 10
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.6364,
+        "spearman_p": 0.0479,
+        "n_bins": 10
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.8909,
+        "spearman_p": 0.0005,
+        "n_bins": 10
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.697,
+        "spearman_p": 0.0251,
+        "n_bins": 10
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.6364,
+        "spearman_p": 0.0479,
+        "n_bins": 10
+      }
+    },
+    "nt": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "spearman_r": 0.4545,
+        "spearman_p": 0.1869,
+        "n_bins": 10
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "spearman_r": -0.7576,
+        "spearman_p": 0.0111,
+        "n_bins": 10
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": -0.7333,
+        "spearman_p": 0.0158,
+        "n_bins": 10
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": -0.4545,
+        "spearman_p": 0.1869,
+        "n_bins": 10
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "spearman_r": -0.7091,
+        "spearman_p": 0.0217,
+        "n_bins": 10
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": -0.7091,
+        "spearman_p": 0.0217,
+        "n_bins": 10
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": -0.1273,
+        "spearman_p": 0.7261,
+        "n_bins": 10
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.7091,
+        "spearman_p": 0.0217,
+        "n_bins": 10
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.3818,
+        "spearman_p": 0.2763,
+        "n_bins": 10
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.3212,
+        "spearman_p": 0.3655,
+        "n_bins": 10
+      }
+    },
+    "hyenadna": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "spearman_r": 0.6485,
+        "spearman_p": 0.0425,
+        "n_bins": 10
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "spearman_r": -0.7939,
+        "spearman_p": 0.0061,
+        "n_bins": 10
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.5879,
+        "spearman_p": 0.0739,
+        "n_bins": 10
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.1394,
+        "spearman_p": 0.7009,
+        "n_bins": 10
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "spearman_r": -0.4788,
+        "spearman_p": 0.1615,
+        "n_bins": 10
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.3576,
+        "spearman_p": 0.3104,
+        "n_bins": 10
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": -0.2848,
+        "spearman_p": 0.425,
+        "n_bins": 10
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "spearman_r": -0.3818,
+        "spearman_p": 0.2763,
+        "n_bins": 10
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.0667,
+        "spearman_p": 0.8548,
+        "n_bins": 10
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "spearman_r": 0.2606,
+        "spearman_p": 0.4671,
+        "n_bins": 10
+      }
+    }
+  },
+  "cross_species_control": {
+    "dnabert2": {
+      "human_summary": {
+        "n": 1500,
+        "mean": 1.8966,
+        "median": 0.3968,
+        "std": 20.4542,
+        "iqr": 0.7813,
+        "pct_significant": 23.0
+      },
+      "yeast_summary": {
+        "n": 500,
+        "mean": 0.0912,
+        "median": 0.0909,
+        "std": 0.0109,
+        "iqr": 0.0134,
+        "pct_significant": 0.0
+      },
+      "plant_summary": {
+        "n": 500,
+        "mean": 0.1606,
+        "median": 0.1469,
+        "std": 0.0563,
+        "iqr": 0.074,
+        "pct_significant": 0.0
+      },
+      "kruskal_wallis": {
+        "statistic": 1421.458,
+        "p_value": 2.16e-309,
+        "interpretation": "significant"
+      },
+      "human_vs_yeast": {
+        "mannwhitney_U": 748757.0,
+        "p_value": 6.69e-245
+      },
+      "human_vs_plant": {
+        "mannwhitney_U": 606908.0,
+        "p_value": 1.6e-95
+      },
+      "yeast_vs_plant": {
+        "mannwhitney_U": 16164.0,
+        "p_value": 1.53e-125
+      }
+    },
+    "nt": {
+      "human_summary": {
+        "n": 1500,
+        "mean": 1.3751,
+        "median": 0.3256,
+        "std": 15.8333,
+        "iqr": 0.6062,
+        "pct_significant": 13.93
+      },
+      "yeast_summary": {
+        "n": 500,
+        "mean": 0.0914,
+        "median": 0.0892,
+        "std": 0.014,
+        "iqr": 0.014,
+        "pct_significant": 0.0
+      },
+      "plant_summary": {
+        "n": 500,
+        "mean": 0.1577,
+        "median": 0.1445,
+        "std": 0.0565,
+        "iqr": 0.0692,
+        "pct_significant": 0.0
+      },
+      "kruskal_wallis": {
+        "statistic": 284.7797,
+        "p_value": 1.45e-62,
+        "interpretation": "significant"
+      },
+      "human_vs_yeast": {
+        "mannwhitney_U": 500923.0,
+        "p_value": 2.07e-29
+      },
+      "human_vs_plant": {
+        "mannwhitney_U": 485056.0,
+        "p_value": 7.48e-23
+      },
+      "yeast_vs_plant": {
+        "mannwhitney_U": 15065.0,
+        "p_value": 4.75e-128
+      }
+    },
+    "hyenadna": {
+      "human_summary": {
+        "n": 1500,
+        "mean": 0.7135,
+        "median": 0.1122,
+        "std": 12.8052,
+        "iqr": 0.2012,
+        "pct_significant": 6.27
+      },
+      "yeast_summary": {
+        "n": 500,
+        "mean": 0.0591,
+        "median": 0.0582,
+        "std": 0.0086,
+        "iqr": 0.0088,
+        "pct_significant": 0.0
+      },
+      "plant_summary": {
+        "n": 500,
+        "mean": 0.0626,
+        "median": 0.0585,
+        "std": 0.0224,
+        "iqr": 0.0221,
+        "pct_significant": 0.0
+      },
+      "kruskal_wallis": {
+        "statistic": 150.2914,
+        "p_value": 2.32e-33,
+        "interpretation": "significant"
+      },
+      "human_vs_yeast": {
+        "mannwhitney_U": 489041.0,
+        "p_value": 2.03e-24
+      },
+      "human_vs_plant": {
+        "mannwhitney_U": 477350.0,
+        "p_value": 5.58e-20
+      },
+      "yeast_vs_plant": {
+        "mannwhitney_U": 122686.0,
+        "p_value": 0.612
+      }
+    }
+  },
+  "effect_size_analysis": {
+    "dnabert2": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": 1.19,
+        "abs_cohens_d": 1.19,
+        "interpretation": "large"
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": -0.5819,
+        "abs_cohens_d": 0.5819,
+        "interpretation": "medium"
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": 1.3302,
+        "abs_cohens_d": 1.3302,
+        "interpretation": "large"
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": 1.1504,
+        "abs_cohens_d": 1.1504,
+        "interpretation": "large"
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": -1.5141,
+        "abs_cohens_d": 1.5141,
+        "interpretation": "large"
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": 3.7704,
+        "abs_cohens_d": 3.7704,
+        "interpretation": "large"
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": -0.3416,
+        "abs_cohens_d": 0.3416,
+        "interpretation": "small"
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": 1.6095,
+        "abs_cohens_d": 1.6095,
+        "interpretation": "large"
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": 1.4875,
+        "abs_cohens_d": 1.4875,
+        "interpretation": "large"
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "yeast_vs_plant",
+        "cohens_d": -1.7641,
+        "abs_cohens_d": 1.7641,
+        "interpretation": "large"
+      },
+      "summary": {
+        "mean_abs_d_within_species": 1.0953,
+        "mean_abs_d_cross_species": 1.6363,
+        "ratio_cross_to_within": 1.4939,
+        "within_species_more_similar": true
+      }
+    },
+    "nt": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": 1.0734,
+        "abs_cohens_d": 1.0734,
+        "interpretation": "large"
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": -0.253,
+        "abs_cohens_d": 0.253,
+        "interpretation": "small"
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": 0.9715,
+        "abs_cohens_d": 0.9715,
+        "interpretation": "large"
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": 0.8327,
+        "abs_cohens_d": 0.8327,
+        "interpretation": "large"
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": -1.6774,
+        "abs_cohens_d": 1.6774,
+        "interpretation": "large"
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": -4.2961,
+        "abs_cohens_d": 4.2961,
+        "interpretation": "large"
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": -2.9856,
+        "abs_cohens_d": 2.9856,
+        "interpretation": "large"
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": 1.5555,
+        "abs_cohens_d": 1.5555,
+        "interpretation": "large"
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": 1.3867,
+        "abs_cohens_d": 1.3867,
+        "interpretation": "large"
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "yeast_vs_plant",
+        "cohens_d": -1.6672,
+        "abs_cohens_d": 1.6672,
+        "interpretation": "large"
+      },
+      "summary": {
+        "mean_abs_d_within_species": 1.0013,
+        "mean_abs_d_cross_species": 1.9565,
+        "ratio_cross_to_within": 1.954,
+        "within_species_more_similar": true
+      }
+    },
+    "hyenadna": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": 0.7188,
+        "abs_cohens_d": 0.7188,
+        "interpretation": "medium"
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": -0.4457,
+        "abs_cohens_d": 0.4457,
+        "interpretation": "small"
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": 0.5463,
+        "abs_cohens_d": 0.5463,
+        "interpretation": "medium"
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": 0.5341,
+        "abs_cohens_d": 0.5341,
+        "interpretation": "medium"
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "species_pair": "human_vs_human",
+        "cohens_d": -1.142,
+        "abs_cohens_d": 1.142,
+        "interpretation": "large"
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": -7.8801,
+        "abs_cohens_d": 7.8801,
+        "interpretation": "large"
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": -3.3454,
+        "abs_cohens_d": 3.3454,
+        "interpretation": "large"
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_yeast",
+        "cohens_d": 1.0047,
+        "abs_cohens_d": 1.0047,
+        "interpretation": "large"
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "human_vs_plant",
+        "cohens_d": 0.9947,
+        "abs_cohens_d": 0.9947,
+        "interpretation": "large"
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "species_pair": "yeast_vs_plant",
+        "cohens_d": -0.1963,
+        "abs_cohens_d": 0.1963,
+        "interpretation": "negligible"
+      },
+      "summary": {
+        "mean_abs_d_within_species": 0.7688,
+        "mean_abs_d_cross_species": 2.0716,
+        "ratio_cross_to_within": 2.6945,
+        "within_species_more_similar": true
+      }
+    }
+  },
+  "cross_model_consistency": {
+    "agarwal_vs_inoue": {
+      "pair_type": "within_species",
+      "cohens_d_by_model": {
+        "dnabert2": 1.19,
+        "nt": 1.0734,
+        "hyenadna": 0.7188
+      },
+      "mean_cohens_d": 0.9941,
+      "std_cohens_d": 0.2004,
+      "models_agree_on_sign": true
+    },
+    "agarwal_vs_klein": {
+      "pair_type": "within_species",
+      "cohens_d_by_model": {
+        "dnabert2": -0.5819,
+        "nt": -0.253,
+        "hyenadna": -0.4457
+      },
+      "mean_cohens_d": -0.4269,
+      "std_cohens_d": 0.1349,
+      "models_agree_on_sign": true
+    },
+    "agarwal_vs_vaishnav": {
+      "pair_type": "cross_species",
+      "cohens_d_by_model": {
+        "dnabert2": 1.3302,
+        "nt": 0.9715,
+        "hyenadna": 0.5463
+      },
+      "mean_cohens_d": 0.9493,
+      "std_cohens_d": 0.3204,
+      "models_agree_on_sign": true
+    },
+    "agarwal_vs_jores": {
+      "pair_type": "cross_species",
+      "cohens_d_by_model": {
+        "dnabert2": 1.1504,
+        "nt": 0.8327,
+        "hyenadna": 0.5341
+      },
+      "mean_cohens_d": 0.8391,
+      "std_cohens_d": 0.2516,
+      "models_agree_on_sign": true
+    },
+    "inoue_vs_klein": {
+      "pair_type": "within_species",
+      "cohens_d_by_model": {
+        "dnabert2": -1.5141,
+        "nt": -1.6774,
+        "hyenadna": -1.142
+      },
+      "mean_cohens_d": -1.4445,
+      "std_cohens_d": 0.224,
+      "models_agree_on_sign": true
+    },
+    "inoue_vs_vaishnav": {
+      "pair_type": "cross_species",
+      "cohens_d_by_model": {
+        "dnabert2": 3.7704,
+        "nt": -4.2961,
+        "hyenadna": -7.8801
+      },
+      "mean_cohens_d": -2.8019,
+      "std_cohens_d": 4.8722,
+      "models_agree_on_sign": false
+    },
+    "inoue_vs_jores": {
+      "pair_type": "cross_species",
+      "cohens_d_by_model": {
+        "dnabert2": -0.3416,
+        "nt": -2.9856,
+        "hyenadna": -3.3454
+      },
+      "mean_cohens_d": -2.2242,
+      "std_cohens_d": 1.3393,
+      "models_agree_on_sign": true
+    },
+    "klein_vs_vaishnav": {
+      "pair_type": "cross_species",
+      "cohens_d_by_model": {
+        "dnabert2": 1.6095,
+        "nt": 1.5555,
+        "hyenadna": 1.0047
+      },
+      "mean_cohens_d": 1.3899,
+      "std_cohens_d": 0.2733,
+      "models_agree_on_sign": true
+    },
+    "klein_vs_jores": {
+      "pair_type": "cross_species",
+      "cohens_d_by_model": {
+        "dnabert2": 1.4875,
+        "nt": 1.3867,
+        "hyenadna": 0.9947
+      },
+      "mean_cohens_d": 1.2896,
+      "std_cohens_d": 0.2126,
+      "models_agree_on_sign": true
+    },
+    "vaishnav_vs_jores": {
+      "pair_type": "cross_species",
+      "cohens_d_by_model": {
+        "dnabert2": -1.7641,
+        "nt": -1.6672,
+        "hyenadna": -0.1963
+      },
+      "mean_cohens_d": -1.2092,
+      "std_cohens_d": 0.7173,
+      "models_agree_on_sign": true
+    }
+  },
+  "rank_based_profiles": {
+    "dnabert2": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "r1": 0.2301,
+        "r2": -0.332,
+        "abs_difference": 0.5621,
+        "same_direction": false
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "r1": 0.2301,
+        "r2": -0.4441,
+        "abs_difference": 0.6742,
+        "same_direction": false
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": 0.2301,
+        "r2": -0.1799,
+        "abs_difference": 0.41,
+        "same_direction": false
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": 0.2301,
+        "r2": -0.1927,
+        "abs_difference": 0.4228,
+        "same_direction": false
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "r1": -0.332,
+        "r2": -0.4441,
+        "abs_difference": 0.1121,
+        "same_direction": true
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": -0.332,
+        "r2": -0.1799,
+        "abs_difference": 0.1521,
+        "same_direction": true
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": -0.332,
+        "r2": -0.1927,
+        "abs_difference": 0.1393,
+        "same_direction": true
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": -0.4441,
+        "r2": -0.1799,
+        "abs_difference": 0.2642,
+        "same_direction": true
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": -0.4441,
+        "r2": -0.1927,
+        "abs_difference": 0.2514,
+        "same_direction": true
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": -0.1799,
+        "r2": -0.1927,
+        "abs_difference": 0.0128,
+        "same_direction": true
+      }
+    },
+    "nt": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "r1": 0.2384,
+        "r2": 0.1119,
+        "abs_difference": 0.1264,
+        "same_direction": true
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "r1": 0.2384,
+        "r2": -0.4404,
+        "abs_difference": 0.6787,
+        "same_direction": false
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": 0.2384,
+        "r2": -0.1796,
+        "abs_difference": 0.418,
+        "same_direction": false
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": 0.2384,
+        "r2": -0.0716,
+        "abs_difference": 0.31,
+        "same_direction": false
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "r1": 0.1119,
+        "r2": -0.4404,
+        "abs_difference": 0.5523,
+        "same_direction": false
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": 0.1119,
+        "r2": -0.1796,
+        "abs_difference": 0.2915,
+        "same_direction": false
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": 0.1119,
+        "r2": -0.0716,
+        "abs_difference": 0.1835,
+        "same_direction": false
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": -0.4404,
+        "r2": -0.1796,
+        "abs_difference": 0.2608,
+        "same_direction": true
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": -0.4404,
+        "r2": -0.0716,
+        "abs_difference": 0.3688,
+        "same_direction": true
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": -0.1796,
+        "r2": -0.0716,
+        "abs_difference": 0.108,
+        "same_direction": true
+      }
+    },
+    "hyenadna": {
+      "agarwal_vs_inoue": {
+        "pair_type": "within_species",
+        "r1": 0.3446,
+        "r2": 0.0877,
+        "abs_difference": 0.257,
+        "same_direction": true
+      },
+      "agarwal_vs_klein": {
+        "pair_type": "within_species",
+        "r1": 0.3446,
+        "r2": -0.3815,
+        "abs_difference": 0.7261,
+        "same_direction": false
+      },
+      "agarwal_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": 0.3446,
+        "r2": 0.224,
+        "abs_difference": 0.1206,
+        "same_direction": true
+      },
+      "agarwal_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": 0.3446,
+        "r2": 0.1004,
+        "abs_difference": 0.2442,
+        "same_direction": true
+      },
+      "inoue_vs_klein": {
+        "pair_type": "within_species",
+        "r1": 0.0877,
+        "r2": -0.3815,
+        "abs_difference": 0.4692,
+        "same_direction": false
+      },
+      "inoue_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": 0.0877,
+        "r2": 0.224,
+        "abs_difference": 0.1363,
+        "same_direction": true
+      },
+      "inoue_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": 0.0877,
+        "r2": 0.1004,
+        "abs_difference": 0.0127,
+        "same_direction": true
+      },
+      "klein_vs_vaishnav": {
+        "pair_type": "cross_species",
+        "r1": -0.3815,
+        "r2": 0.224,
+        "abs_difference": 0.6055,
+        "same_direction": false
+      },
+      "klein_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": -0.3815,
+        "r2": 0.1004,
+        "abs_difference": 0.4819,
+        "same_direction": false
+      },
+      "vaishnav_vs_jores": {
+        "pair_type": "cross_species",
+        "r1": 0.224,
+        "r2": 0.1004,
+        "abs_difference": 0.1236,
+        "same_direction": true
+      }
+    }
+  },
+  "summary": {
+    "overall_mean_abs_cohens_d_within_species": 0.9551,
+    "overall_mean_abs_cohens_d_cross_species": 1.8881,
+    "ratio_cross_to_within": 1.9768,
+    "permutation_test_p_value": 0.0351,
+    "n_permutations": 10000,
+    "within_species_pairs": 9,
+    "cross_species_pairs": 21,
+    "conclusion": "SUPPORTED: Within-species GSI distributions are significantly more similar (mean |d|=0.955) than cross-species (mean |d|=1.888), permutation p=0.0351. This supports the hypothesis that GSI captures species-specific grammar rules."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "observed_effect": 0.015618052252753853,
+  "n_samples": 2000,
+  "alpha": 0.05,
+  "power": 0.9998789218162751,
+  "minimum_detectable_effect_80pct": 0.003912835896115231,
+  "adequately_powered": true
+}

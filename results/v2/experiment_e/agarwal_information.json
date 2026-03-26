@@ -1,0 +1,14 @@
+{
+  "n_sequences": 500,
+  "n_vocab_features": 282,
+  "n_grammar_features": 6,
+  "r2_vocabulary_gb": 0.053212008907101496,
+  "r2_vocabulary_linear": 0.0,
+  "r2_grammar_only": 0.0,
+  "r2_vocab_plus_grammar": 0.08386987863782198,
+  "grammar_information": 0.03065786973072049,
+  "model_r2": 0.0,
+  "vocabulary_fraction": 0.6344591141819657,
+  "grammar_fraction": 0.3655408858180344,
+  "unexplained_fraction": 0.916130121362178
+}

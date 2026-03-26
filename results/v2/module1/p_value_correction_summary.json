@@ -1,0 +1,107 @@
+{
+  "agarwal_dnabert2": {
+    "n_sig": 61,
+    "frac_sig": 0.122,
+    "med_z": 0.8515039222414666,
+    "med_p": 0.3944927003879375,
+    "n_extreme": 5
+  },
+  "agarwal_nt": {
+    "n_sig": 26,
+    "frac_sig": 0.052,
+    "med_z": 0.7558471542449632,
+    "med_p": 0.44974160953042497,
+    "n_extreme": 10
+  },
+  "agarwal_hyenadna": {
+    "n_sig": 48,
+    "frac_sig": 0.096,
+    "med_z": 0.7998448663818978,
+    "med_p": 0.42380151043677494,
+    "n_extreme": 3
+  },
+  "inoue_dnabert2": {
+    "n_sig": 55,
+    "frac_sig": 0.11,
+    "med_z": 0.7838120219957494,
+    "med_p": 0.43315956625230245,
+    "n_extreme": 0
+  },
+  "inoue_nt": {
+    "n_sig": 42,
+    "frac_sig": 0.084,
+    "med_z": 0.6479978274681992,
+    "med_p": 0.5169863992671073,
+    "n_extreme": 0
+  },
+  "inoue_hyenadna": {
+    "n_sig": 28,
+    "frac_sig": 0.056,
+    "med_z": 0.6907332840907141,
+    "med_p": 0.4897348372019068,
+    "n_extreme": 0
+  },
+  "vaishnav_dnabert2": {
+    "n_sig": 78,
+    "frac_sig": 0.156,
+    "med_z": 0.991388259819477,
+    "med_p": 0.32149605156134353,
+    "n_extreme": 0
+  },
+  "vaishnav_nt": {
+    "n_sig": 22,
+    "frac_sig": 0.044,
+    "med_z": 0.7448559131576599,
+    "med_p": 0.4563589699001296,
+    "n_extreme": 0
+  },
+  "vaishnav_hyenadna": {
+    "n_sig": 3,
+    "frac_sig": 0.006,
+    "med_z": 0.4785568900728518,
+    "med_p": 0.6322538992693386,
+    "n_extreme": 0
+  },
+  "jores_dnabert2": {
+    "n_sig": 53,
+    "frac_sig": 0.106,
+    "med_z": 0.860645177415189,
+    "med_p": 0.38943399742484885,
+    "n_extreme": 0
+  },
+  "jores_nt": {
+    "n_sig": 39,
+    "frac_sig": 0.078,
+    "med_z": 0.7313409000592954,
+    "med_p": 0.4645715392123754,
+    "n_extreme": 0
+  },
+  "jores_hyenadna": {
+    "n_sig": 64,
+    "frac_sig": 0.128,
+    "med_z": 0.9121443950844565,
+    "med_p": 0.36169271122906843,
+    "n_extreme": 0
+  },
+  "klein_dnabert2": {
+    "n_sig": 29,
+    "frac_sig": 0.058,
+    "med_z": 0.7587347926974077,
+    "med_p": 0.4480123175330567,
+    "n_extreme": 18
+  },
+  "klein_nt": {
+    "n_sig": 29,
+    "frac_sig": 0.058,
+    "med_z": 0.6968522347962463,
+    "med_p": 0.4858960446396614,
+    "n_extreme": 8
+  },
+  "klein_hyenadna": {
+    "n_sig": 48,
+    "frac_sig": 0.096,
+    "med_z": 0.8326703079826354,
+    "med_p": 0.40503166075247654,
+    "n_extreme": 8
+  }
+}

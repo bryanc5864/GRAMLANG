@@ -1,0 +1,788 @@
+{
+  "n_heads_total": 464,
+  "n_grammar_heads": 101,
+  "grammar_head_fraction": 0.21767241379310345,
+  "grammar_heads": [
+    {
+      "layer": 4,
+      "head": 1,
+      "mean_enrichment": 2.1218771035877046,
+      "max_enrichment": 9.702241944504962,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 4,
+      "head": 7,
+      "mean_enrichment": 2.535816422723098,
+      "max_enrichment": 13.65407671292069,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 6,
+      "head": 0,
+      "mean_enrichment": 4.237727524151807,
+      "max_enrichment": 35.73826977805592,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 6,
+      "head": 9,
+      "mean_enrichment": 2.2734324604153744,
+      "max_enrichment": 11.864075572311314,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 6,
+      "head": 10,
+      "mean_enrichment": 2.2373527221431266,
+      "max_enrichment": 15.999375581745985,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 7,
+      "head": 0,
+      "mean_enrichment": 2.2744667436429236,
+      "max_enrichment": 11.927146107501192,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 7,
+      "head": 10,
+      "mean_enrichment": 2.2380169262371927,
+      "max_enrichment": 20.929993473514962,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 7,
+      "head": 14,
+      "mean_enrichment": 3.8172149261512573,
+      "max_enrichment": 35.54428384047535,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 8,
+      "head": 0,
+      "mean_enrichment": 2.0933959428960836,
+      "max_enrichment": 34.62859914728553,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 8,
+      "head": 7,
+      "mean_enrichment": 2.395041008169773,
+      "max_enrichment": 30.768615016575044,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 8,
+      "head": 10,
+      "mean_enrichment": 2.291959608252496,
+      "max_enrichment": 11.943014055915071,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 8,
+      "head": 14,
+      "mean_enrichment": 4.051372181218485,
+      "max_enrichment": 33.35582660618554,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 9,
+      "head": 8,
+      "mean_enrichment": 2.2764183004330203,
+      "max_enrichment": 11.917661816495196,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 9,
+      "head": 12,
+      "mean_enrichment": 2.328876840902675,
+      "max_enrichment": 11.267442857716658,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 9,
+      "head": 15,
+      "mean_enrichment": 3.855016101845428,
+      "max_enrichment": 32.08706235820754,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 11,
+      "head": 13,
+      "mean_enrichment": 3.5581502882686844,
+      "max_enrichment": 35.028932787262406,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 12,
+      "head": 10,
+      "mean_enrichment": 2.23760131680847,
+      "max_enrichment": 11.565129432341982,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 13,
+      "head": 1,
+      "mean_enrichment": 3.3377371763679013,
+      "max_enrichment": 25.685792493180987,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 14,
+      "head": 13,
+      "mean_enrichment": 2.6883959039617067,
+      "max_enrichment": 15.041348464478936,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 15,
+      "head": 0,
+      "mean_enrichment": 2.4550373181964638,
+      "max_enrichment": 10.992466010209426,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 15,
+      "head": 4,
+      "mean_enrichment": 4.165999012865234,
+      "max_enrichment": 35.952425927278206,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 15,
+      "head": 5,
+      "mean_enrichment": 2.5863015967508147,
+      "max_enrichment": 21.653816538648183,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 15,
+      "head": 10,
+      "mean_enrichment": 2.320494379249805,
+      "max_enrichment": 11.272556220944551,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 16,
+      "head": 6,
+      "mean_enrichment": 4.305207791793094,
+      "max_enrichment": 35.99887534976843,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 16,
+      "head": 7,
+      "mean_enrichment": 3.0092209698129277,
+      "max_enrichment": 35.764821501338325,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 16,
+      "head": 10,
+      "mean_enrichment": 4.160670210975235,
+      "max_enrichment": 35.87406036351576,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 16,
+      "head": 12,
+      "mean_enrichment": 2.6931330960927875,
+      "max_enrichment": 30.672081241964687,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 16,
+      "head": 13,
+      "mean_enrichment": 4.2208393277289655,
+      "max_enrichment": 35.36853048675857,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 17,
+      "head": 0,
+      "mean_enrichment": 3.790244293644174,
+      "max_enrichment": 35.033653475093445,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 17,
+      "head": 6,
+      "mean_enrichment": 4.055032947950808,
+      "max_enrichment": 35.97731253521657,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 17,
+      "head": 15,
+      "mean_enrichment": 3.2136652980791665,
+      "max_enrichment": 28.825959706113043,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 18,
+      "head": 2,
+      "mean_enrichment": 2.551755862492015,
+      "max_enrichment": 17.625343549062734,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 18,
+      "head": 3,
+      "mean_enrichment": 2.2750040246425955,
+      "max_enrichment": 11.085710323708428,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 18,
+      "head": 6,
+      "mean_enrichment": 2.4121996556309626,
+      "max_enrichment": 11.804509074952385,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 4,
+      "mean_enrichment": 4.14898836460787,
+      "max_enrichment": 35.057385660280396,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 5,
+      "mean_enrichment": 4.111433993277241,
+      "max_enrichment": 34.35875390202735,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 6,
+      "mean_enrichment": 4.133218574768786,
+      "max_enrichment": 35.62152931376152,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 7,
+      "mean_enrichment": 2.245431365789911,
+      "max_enrichment": 17.479742515983116,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 8,
+      "mean_enrichment": 2.3379121587724967,
+      "max_enrichment": 22.929648943769568,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 14,
+      "mean_enrichment": 4.205513981358353,
+      "max_enrichment": 35.11683414044355,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 15,
+      "mean_enrichment": 4.183086759862995,
+      "max_enrichment": 35.302934383579085,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 20,
+      "head": 1,
+      "mean_enrichment": 3.8755290288522843,
+      "max_enrichment": 33.814310537172034,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 20,
+      "head": 2,
+      "mean_enrichment": 2.501246315504033,
+      "max_enrichment": 25.43541364792426,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 20,
+      "head": 7,
+      "mean_enrichment": 3.6145476034419297,
+      "max_enrichment": 32.16166424630833,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 20,
+      "head": 12,
+      "mean_enrichment": 3.9398685709771257,
+      "max_enrichment": 33.25578664797703,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 20,
+      "head": 14,
+      "mean_enrichment": 3.7472509939252885,
+      "max_enrichment": 35.406420443904246,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 21,
+      "head": 2,
+      "mean_enrichment": 3.6748047040080203,
+      "max_enrichment": 32.06233668280887,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 21,
+      "head": 5,
+      "mean_enrichment": 3.583718444753702,
+      "max_enrichment": 33.12605570907849,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 21,
+      "head": 7,
+      "mean_enrichment": 2.589091278480059,
+      "max_enrichment": 18.133088930449716,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 21,
+      "head": 9,
+      "mean_enrichment": 2.594080432989492,
+      "max_enrichment": 13.853435651559861,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 21,
+      "head": 10,
+      "mean_enrichment": 3.838357724799316,
+      "max_enrichment": 33.88532470252123,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 21,
+      "head": 12,
+      "mean_enrichment": 2.5496926356740928,
+      "max_enrichment": 16.608064289330958,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 21,
+      "head": 15,
+      "mean_enrichment": 3.9933870187871268,
+      "max_enrichment": 34.05151222607857,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 22,
+      "head": 0,
+      "mean_enrichment": 3.172927780751869,
+      "max_enrichment": 28.311587122741436,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 22,
+      "head": 1,
+      "mean_enrichment": 2.3232863422658845,
+      "max_enrichment": 10.751510301593614,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 22,
+      "head": 8,
+      "mean_enrichment": 3.886624103551978,
+      "max_enrichment": 35.40060541480329,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 22,
+      "head": 13,
+      "mean_enrichment": 4.021852116573205,
+      "max_enrichment": 33.63828467102137,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 23,
+      "head": 8,
+      "mean_enrichment": 2.3380634792892994,
+      "max_enrichment": 11.49167767545821,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 23,
+      "head": 10,
+      "mean_enrichment": 2.2389157088357425,
+      "max_enrichment": 11.474133882864312,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 23,
+      "head": 12,
+      "mean_enrichment": 2.982294960611536,
+      "max_enrichment": 25.84331540880117,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 24,
+      "head": 0,
+      "mean_enrichment": 2.172229604854426,
+      "max_enrichment": 16.925604574936596,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 24,
+      "head": 2,
+      "mean_enrichment": 4.10420843684525,
+      "max_enrichment": 34.77521512824882,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 24,
+      "head": 3,
+      "mean_enrichment": 2.1678692277241343,
+      "max_enrichment": 16.192734955305347,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 24,
+      "head": 4,
+      "mean_enrichment": 2.6582845765549896,
+      "max_enrichment": 23.282065456494202,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 24,
+      "head": 8,
+      "mean_enrichment": 2.108857388086043,
+      "max_enrichment": 17.319953670204033,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 24,
+      "head": 12,
+      "mean_enrichment": 3.4888243886859827,
+      "max_enrichment": 31.006490476381103,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 25,
+      "head": 0,
+      "mean_enrichment": 3.8345602215652503,
+      "max_enrichment": 32.28569388176729,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 25,
+      "head": 3,
+      "mean_enrichment": 2.057763827506434,
+      "max_enrichment": 20.535972680628504,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 25,
+      "head": 6,
+      "mean_enrichment": 2.4044764466864605,
+      "max_enrichment": 19.280788993233525,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 25,
+      "head": 7,
+      "mean_enrichment": 2.206548493281718,
+      "max_enrichment": 12.224270491121183,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 25,
+      "head": 9,
+      "mean_enrichment": 2.1134581854380965,
+      "max_enrichment": 10.885319271048015,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 25,
+      "head": 11,
+      "mean_enrichment": 3.533103454342099,
+      "max_enrichment": 27.95520952377312,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 25,
+      "head": 12,
+      "mean_enrichment": 2.632662118505158,
+      "max_enrichment": 14.55803156973398,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 25,
+      "head": 14,
+      "mean_enrichment": 2.772348879682146,
+      "max_enrichment": 13.47343959306598,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 0,
+      "mean_enrichment": 3.437832823125179,
+      "max_enrichment": 29.116788408780184,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 1,
+      "mean_enrichment": 3.388060698822383,
+      "max_enrichment": 28.601508165884702,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 2,
+      "mean_enrichment": 2.3666208909417863,
+      "max_enrichment": 13.2798795902738,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 4,
+      "mean_enrichment": 2.3471919958247907,
+      "max_enrichment": 11.479348097150414,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 5,
+      "mean_enrichment": 2.2488805712056794,
+      "max_enrichment": 13.936247244952266,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 7,
+      "mean_enrichment": 3.976320053454029,
+      "max_enrichment": 33.50062512233388,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 8,
+      "mean_enrichment": 2.6187759654074187,
+      "max_enrichment": 20.074667065779366,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 9,
+      "mean_enrichment": 2.4108821288766076,
+      "max_enrichment": 11.777656944262556,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 10,
+      "mean_enrichment": 3.637475961413866,
+      "max_enrichment": 31.738722803155163,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 12,
+      "mean_enrichment": 2.421322085575013,
+      "max_enrichment": 12.080143600105169,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 13,
+      "mean_enrichment": 2.095559591959906,
+      "max_enrichment": 11.496988449268128,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 26,
+      "head": 14,
+      "mean_enrichment": 2.3301382435454725,
+      "max_enrichment": 11.680598529572796,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 27,
+      "head": 0,
+      "mean_enrichment": 2.450583826431493,
+      "max_enrichment": 11.252967512212935,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 27,
+      "head": 8,
+      "mean_enrichment": 3.093415157276523,
+      "max_enrichment": 23.362958734013446,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 27,
+      "head": 9,
+      "mean_enrichment": 3.539941479400096,
+      "max_enrichment": 27.2487714644613,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 27,
+      "head": 11,
+      "mean_enrichment": 2.26940503029805,
+      "max_enrichment": 11.431027565665337,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 27,
+      "head": 13,
+      "mean_enrichment": 3.2009951747885568,
+      "max_enrichment": 22.62434060406431,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 27,
+      "head": 15,
+      "mean_enrichment": 3.528040461977966,
+      "max_enrichment": 25.925953195050706,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 0,
+      "mean_enrichment": 2.269447630640621,
+      "max_enrichment": 12.656240249751209,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 4,
+      "mean_enrichment": 2.1518295582305207,
+      "max_enrichment": 11.504472885247521,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 8,
+      "mean_enrichment": 4.198220161808756,
+      "max_enrichment": 34.13237331708988,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 9,
+      "mean_enrichment": 2.3373603029673684,
+      "max_enrichment": 16.61557018298231,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 11,
+      "mean_enrichment": 3.103402379844933,
+      "max_enrichment": 22.892432757523412,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 12,
+      "mean_enrichment": 3.001363133892544,
+      "max_enrichment": 24.36259227720952,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 13,
+      "mean_enrichment": 2.6068243458827336,
+      "max_enrichment": 16.458456036012947,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 14,
+      "mean_enrichment": 2.2102714063523248,
+      "max_enrichment": 13.186288735372656,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 15,
+      "mean_enrichment": 2.1516125913875648,
+      "max_enrichment": 9.885397122164091,
+      "n_pairs": 1772
+    }
+  ],
+  "top_heads": [
+    {
+      "layer": 16,
+      "head": 6,
+      "mean_enrichment": 4.305207791793094,
+      "max_enrichment": 35.99887534976843,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 6,
+      "head": 0,
+      "mean_enrichment": 4.237727524151807,
+      "max_enrichment": 35.73826977805592,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 16,
+      "head": 13,
+      "mean_enrichment": 4.2208393277289655,
+      "max_enrichment": 35.36853048675857,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 14,
+      "mean_enrichment": 4.205513981358353,
+      "max_enrichment": 35.11683414044355,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 28,
+      "head": 8,
+      "mean_enrichment": 4.198220161808756,
+      "max_enrichment": 34.13237331708988,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 15,
+      "mean_enrichment": 4.183086759862995,
+      "max_enrichment": 35.302934383579085,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 15,
+      "head": 4,
+      "mean_enrichment": 4.165999012865234,
+      "max_enrichment": 35.952425927278206,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 16,
+      "head": 10,
+      "mean_enrichment": 4.160670210975235,
+      "max_enrichment": 35.87406036351576,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 4,
+      "mean_enrichment": 4.14898836460787,
+      "max_enrichment": 35.057385660280396,
+      "n_pairs": 1772
+    },
+    {
+      "layer": 19,
+      "head": 6,
+      "mean_enrichment": 4.133218574768786,
+      "max_enrichment": 35.62152931376152,
+      "n_pairs": 1772
+    }
+  ],
+  "mean_enrichment_all": 1.491629624000199,
+  "mean_enrichment_grammar": 2.9855719666107157
+}

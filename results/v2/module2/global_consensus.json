@@ -1,0 +1,10 @@
+{
+  "mean_consensus": 0.43255338240731683,
+  "median_consensus": 0.4299433106575963,
+  "frac_high_consensus": 0.024060317108326866,
+  "frac_contested": 0.12074509369109658,
+  "mean_spacing_correlation": 0.28938132843198866,
+  "mean_orientation_agreement": 0.8484310899212772,
+  "n_rules_total": 9019,
+  "n_enhancers": 500
+}

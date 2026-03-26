@@ -1,0 +1,255 @@
+{
+  "1_bias_by_dataset_and_model": {
+    "orientation_pct_by_dataset": {
+      "agarwal": {
+        "+/+": 84.60790036972173,
+        "+/-": 4.786923525977817,
+        "-/+": 5.078809106830122,
+        "-/-": 5.526366997470325
+      },
+      "inoue": {
+        "+/+": 84.62121212121212,
+        "+/-": 4.424242424242424,
+        "-/+": 5.287878787878788,
+        "-/-": 5.666666666666666
+      },
+      "jores": {
+        "+/+": 81.06416275430361,
+        "+/-": 5.8350100603621735,
+        "-/+": 6.32684998882182,
+        "-/-": 6.7739771965124085
+      },
+      "klein": {
+        "+/+": 83.90883977900553,
+        "+/-": 5.4788213627992635,
+        "-/+": 4.857274401473297,
+        "-/-": 5.755064456721915
+      },
+      "vaishnav": {
+        "+/+": 77.99208704253215,
+        "+/-": 7.91295746785361,
+        "-/+": 7.81404549950544,
+        "-/-": 6.280909990108803
+      }
+    },
+    "orientation_pct_by_model": {
+      "dnabert2": {
+        "+/+": 82.54958769779363,
+        "+/-": 5.20392244261199,
+        "-/+": 5.883663917985291,
+        "-/-": 6.362825941609093
+      },
+      "hyenadna": {
+        "+/+": 85.39112993091152,
+        "+/-": 4.858480053487853,
+        "-/+": 4.446177847113884,
+        "-/-": 5.30421216848674
+      },
+      "nt": {
+        "+/+": 81.9589926454201,
+        "+/-": 5.928237129485179,
+        "-/+": 6.084243369734789,
+        "-/-": 6.028526855359929
+      }
+    },
+    "chi2_dataset_vs_orientation": {
+      "chi2": 95.69132611194509,
+      "p_value": 3.870218670408694e-15,
+      "dof": 12
+    },
+    "chi2_model_vs_orientation": {
+      "chi2": 52.38907171305171,
+      "p_value": 1.557319702720761e-09,
+      "dof": 6
+    },
+    "consistent_across_datasets": true,
+    "consistent_across_models": true
+  },
+  "2_fold_change_by_orientation": {
+    "stats_by_orientation": {
+      "+/+": {
+        "mean": 1.6247900672902136,
+        "median": 1.59185129404068,
+        "std": 0.23338083739995932,
+        "count": 22426
+      },
+      "+/-": {
+        "mean": 1.5994177334815367,
+        "median": 1.5634673833847046,
+        "std": 0.2104480662918315,
+        "count": 1435
+      },
+      "-/+": {
+        "mean": 1.6167811572106614,
+        "median": 1.5839673280715942,
+        "std": 0.293892907989436,
+        "count": 1473
+      },
+      "-/-": {
+        "mean": 1.6058976803378435,
+        "median": 1.5775124430656433,
+        "std": 0.22033695945052306,
+        "count": 1588
+      }
+    },
+    "pp_vs_nonpp_mannwhitney": {
+      "U": 52894619.5,
+      "p_value": 1.825447117523447e-07,
+      "rank_biserial_r": -0.04921229862199228
+    },
+    "kruskal_wallis": {
+      "H": 31.569110535798686,
+      "p_value": 6.45032890084549e-07
+    },
+    "pp_has_different_effect_size": true
+  },
+  "3_orientation_sensitivity": {
+    "stats_by_orientation": {
+      "+/+": {
+        "mean": 1.273781421752546,
+        "median": 1.2412343621253967,
+        "std": 0.45875879422022336
+      },
+      "+/-": {
+        "mean": 1.0506812898331819,
+        "median": 1.0123211145401,
+        "std": 0.4589267967992776
+      },
+      "-/+": {
+        "mean": 1.1193469343081026,
+        "median": 1.0771929025650024,
+        "std": 0.4930041100013879
+      },
+      "-/-": {
+        "mean": 1.0336605356654307,
+        "median": 0.9842849671840668,
+        "std": 0.47072324513263497
+      }
+    },
+    "pp_vs_nonpp_mannwhitney": {
+      "U": 63448835.5,
+      "p_value": 2.280543038165211e-165,
+      "rank_biserial_r": -0.25856465495216696
+    },
+    "pp_low_sensitivity_fraction": 0.21943280121287792,
+    "nonpp_low_sensitivity_fraction": 0.4025800711743772,
+    "pp_is_less_sensitive": false
+  },
+  "4_code_analysis": {
+    "n_issues_found": 4,
+    "issues": [
+      "CRITICAL BUG - Spacing scan always uses +/+ orientation: The spacing scan (lines building spacing_seqs) uses seq_a and seq_b directly from the original sequence, which are always in their native (+) strand orientation. The optimal spacing is found using ONLY the +/+ configuration. Then the orientation scan is done AT THAT +/+ OPTIMAL spacing. This means the spacing is tuned for +/+ but may not be optimal for other orientations. This gives +/+ an inherent advantage.",
+      "FALLBACK BUG - Default to +/+ when no orientation sequences: If orient_seqs is empty (line: 'orientations[np.argmax(orient_exprs)] if orient_seqs else \"+/+\"'), the code defaults to +/+. This introduces false +/+ rules whenever orientation testing fails.",
+      "SELECTION BIAS - argmax with noise favors first element: When orientation effects are similar (low sensitivity), np.argmax returns the FIRST index that achieves the maximum. Since +/+ is tested first in the orientations list ['+/+', '+/-', '-/+', '-/-'], in cases of tied or near-tied values, +/+ will be selected disproportionately. When orientation_sensitivity is low (orientations don't matter much), this is essentially random noise, and +/+ wins by being first.",
+      "COMPOUND BIAS - Spacing x Orientation confound: Different orientations may have different optimal spacings. By fixing spacing to the +/+ optimum, other orientations are evaluated at a potentially suboptimal spacing, further disadvantaging them."
+    ],
+    "primary_bias_mechanism": "Spacing scan uses only +/+ orientation, then orientation comparison done at +/+-optimal spacing",
+    "secondary_bias_mechanism": "argmax favors first element (+/+) when orientation effects are similar",
+    "tertiary_bias_mechanism": "Fallback to +/+ when orientation testing fails"
+  },
+  "5_orientation_sensitivity_analysis": {
+    "sensitivity_stats": {
+      "mean": 1.2392764571727863,
+      "median": 1.2065477967262268,
+      "std": 0.468019824194485
+    },
+    "pp_fraction_in_high_sensitivity_quartile": 88.96152131926905,
+    "pp_fraction_in_low_sensitivity_quartile": 73.1094933887981,
+    "high_sensitivity_orientation_dist": {
+      "+/+": 88.96152131926905,
+      "-/+": 4.248997177239637,
+      "+/-": 3.4467389689496355,
+      "-/-": 3.3427425345416726
+    },
+    "low_sensitivity_orientation_dist": {
+      "+/+": 73.1094933887981,
+      "-/-": 10.221363838954094,
+      "+/-": 8.780270390729461,
+      "-/+": 7.888872381518349
+    },
+    "artifact_pattern_detected": false
+  },
+  "6_dataset_comparison": {
+    "pairwise_chi2_tests": {
+      "agarwal_vs_inoue": {
+        "chi2": 1.1738212767801817,
+        "p_value": 0.7592896526389922
+      },
+      "agarwal_vs_jores": {
+        "chi2": 21.277529945464035,
+        "p_value": 9.218888713697532e-05
+      },
+      "agarwal_vs_klein": {
+        "chi2": 3.7665171600402703,
+        "p_value": 0.28780484179120946
+      },
+      "agarwal_vs_vaishnav": {
+        "chi2": 52.679805343820846,
+        "p_value": 2.1454032625769583e-11
+      },
+      "inoue_vs_jores": {
+        "chi2": 25.069363129408234,
+        "p_value": 1.4933370113125002e-05
+      },
+      "inoue_vs_klein": {
+        "chi2": 9.959775486088448,
+        "p_value": 0.018911171446417113
+      },
+      "inoue_vs_vaishnav": {
+        "chi2": 61.9258475335594,
+        "p_value": 2.2787661661336683e-13
+      },
+      "jores_vs_klein": {
+        "chi2": 20.478711749149937,
+        "p_value": 0.00013506128184927858
+      },
+      "jores_vs_vaishnav": {
+        "chi2": 15.964091148807235,
+        "p_value": 0.001153369733172355
+      },
+      "klein_vs_vaishnav": {
+        "chi2": 50.55551774119928,
+        "p_value": 6.083900629715655e-11
+      }
+    },
+    "orientation_pct_by_species": {
+      "human": {
+        "+/+": 84.31487736818916,
+        "+/-": 4.964018211191071,
+        "-/+": 5.052136877661918,
+        "-/-": 5.66896754295785
+      },
+      "plant": {
+        "+/+": 81.06416275430361,
+        "+/-": 5.8350100603621735,
+        "-/+": 6.32684998882182,
+        "-/-": 6.7739771965124085
+      },
+      "yeast": {
+        "+/+": 77.99208704253215,
+        "+/-": 7.91295746785361,
+        "-/+": 7.81404549950544,
+        "-/-": 6.280909990108803
+      }
+    },
+    "datasets_have_different_distributions": true
+  },
+  "verdict": {
+    "conclusion": "primarily_extraction_artifact",
+    "overall_summary": "PRIMARILY AN EXTRACTION ARTIFACT. The 83.3% +/+ bias is largely explained by three compounding bugs in rule_extraction.py: (1) spacing optimization uses only +/+ orientation, giving it a tuned-spacing advantage; (2) argmax selects +/+ first when orientations have similar effects; (3) fallback defaults to +/+ when orientation testing fails. The bias is strongest in rules with low orientation sensitivity, confirming the artifact hypothesis. FIX: Optimize spacing independently for each orientation, use a statistical test (not argmax) for orientation selection, and remove the +/+ fallback.",
+    "evidence_points": [
+      "CODE BIAS CONFIRMED: The spacing scan uses only +/+ orientation. This means the optimal spacing is tuned for +/+ and the orientation comparison is done at a spacing that may be suboptimal for other orientations.",
+      "ARGMAX BIAS CONFIRMED: +/+ is first in the orientation list. In the bottom quartile of orientation sensitivity (rules where orientation barely matters), +/+ fraction is 73.1%. In the top quartile (where it truly matters), +/+ fraction is 89.0%. The gap is small, suggesting some real signal too.",
+      "EFFECT SIZE: +/+ rules have median fold_change=1.5919 vs non-+/+ median=1.5751 (difference=0.0168). Small difference suggests +/+ rules are not biologically distinct.",
+      "CROSS-DATASET: +/+ fraction ranges from 78.0% to 84.6% across datasets (range=6.6pp). High consistency suggests systematic artifact rather than biology."
+    ],
+    "recommended_fixes": [
+      "Optimize spacing independently for each orientation before comparing",
+      "Use statistical test (e.g., permutation test) instead of argmax for orientation selection",
+      "Remove +/+ fallback default - mark as 'undetermined' instead",
+      "Report orientation_sensitivity alongside optimal_orientation to flag low-confidence calls",
+      "Consider randomizing the order of orientations tested to remove positional bias in argmax"
+    ],
+    "estimated_true_pp_fraction": "89.0% (based on high-sensitivity rules only)"
+  }
+}

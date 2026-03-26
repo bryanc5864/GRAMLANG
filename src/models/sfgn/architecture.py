@@ -160,6 +160,10 @@ class DisentangledFusion(nn.Module):
             beta: (batch,) composition weight
             orthogonality_loss: scalar
         """
+        # Handle NaN/Inf inputs by replacing with zeros
+        grammar_vector = torch.nan_to_num(grammar_vector, nan=0.0, posinf=0.0, neginf=0.0)
+        composition_vector = torch.nan_to_num(composition_vector, nan=0.0, posinf=0.0, neginf=0.0)
+
         # Transform to common space
         g_transformed = self.grammar_transform(grammar_vector)
         c_transformed = self.composition_transform(composition_vector)
@@ -178,10 +182,14 @@ class DisentangledFusion(nn.Module):
 
         # Orthogonality loss: penalize correlation between g and c
         # Use cosine similarity as measure of correlation
-        g_norm = F.normalize(g_transformed, dim=-1)
-        c_norm = F.normalize(c_transformed, dim=-1)
+        g_norm = F.normalize(g_transformed, dim=-1, eps=1e-8)
+        c_norm = F.normalize(c_transformed, dim=-1, eps=1e-8)
         cosine_sim = (g_norm * c_norm).sum(dim=-1)  # (batch,)
         orthogonality_loss = cosine_sim.abs().mean()
+
+        # Handle potential NaN in loss
+        if torch.isnan(orthogonality_loss):
+            orthogonality_loss = torch.tensor(0.0, device=orthogonality_loss.device)
 
         return prediction, alpha, beta, orthogonality_loss
 

@@ -1,0 +1,60 @@
+{
+  "agarwal": {
+    "n_enhancers": 500,
+    "mean_gsi": 1.6889782322155753,
+    "median_gsi": 0.3325263261795044,
+    "frac_significant": 1.0,
+    "models": [
+      "dnabert2",
+      "nt",
+      "hyenadna",
+      "enformer"
+    ]
+  },
+  "inoue": {
+    "n_enhancers": 500,
+    "mean_gsi": 0.0872497400405174,
+    "median_gsi": 0.045449405908584595,
+    "frac_significant": 1.0,
+    "models": [
+      "dnabert2",
+      "nt",
+      "hyenadna",
+      "enformer"
+    ]
+  },
+  "vaishnav": {
+    "n_enhancers": 500,
+    "mean_gsi": 0.0805718427275618,
+    "median_gsi": 0.0835447832942009,
+    "frac_significant": 1.0,
+    "models": [
+      "dnabert2",
+      "nt",
+      "hyenadna"
+    ]
+  },
+  "jores": {
+    "n_enhancers": 500,
+    "mean_gsi": 0.1269567574808995,
+    "median_gsi": 0.11811978742480278,
+    "frac_significant": 1.0,
+    "models": [
+      "dnabert2",
+      "nt",
+      "hyenadna"
+    ]
+  },
+  "klein": {
+    "n_enhancers": 500,
+    "mean_gsi": 2.147039327796785,
+    "median_gsi": 0.5972892343997955,
+    "frac_significant": 1.0,
+    "models": [
+      "dnabert2",
+      "nt",
+      "hyenadna",
+      "enformer"
+    ]
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "n_sequences": 500,
+  "n_grammar_rich": 25,
+  "n_grammar_poor": 475,
+  "gsi_threshold": 0.1601417552649916,
+  "gsi_distribution": {
+    "p5": 0.057594152912497525,
+    "p25": 0.0635435814037919,
+    "p50": 0.06785717327147722,
+    "p75": 0.07262266334146261,
+    "p95": 0.1601417552649916,
+    "p99": 0.37637735173710707
+  },
+  "gsi_mean": 0.08275106330938234,
+  "gsi_std": 0.06926204056405975,
+  "gsi_skewness": 7.769297239795935,
+  "gsi_kurtosis": 76.18200675481418,
+  "feature_comparison": {
+    "seq_length": {
+      "rich_mean": 200.0,
+      "poor_mean": 200.0,
+      "difference": 0.0,
+      "mannwhitney_p": 1.0
+    },
+    "gc_content": {
+      "rich_mean": 0.5342,
+      "poor_mean": 0.5250947368421053,
+      "difference": 0.009105263157894727,
+      "mannwhitney_p": 0.5574204420871136
+    },
+    "expression": {
+      "rich_mean": 0.8970739238014587,
+      "poor_mean": 0.9518196527981985,
+      "difference": -0.054745728996739795,
+      "mannwhitney_p": 0.29720779258196195
+    },
+    "n_motifs": {
+      "rich_mean": 12.64,
+      "poor_mean": 12.317894736842105,
+      "difference": 0.322105263157896,
+      "mannwhitney_p": 0.6878977476486889
+    },
+    "n_unique_motifs": {
+      "rich_mean": 9.32,
+      "poor_mean": 8.964210526315789,
+      "difference": 0.35578947368421154,
+      "mannwhitney_p": 0.5834435154600957
+    },
+    "motif_density": {
+      "rich_mean": 6.32,
+      "poor_mean": 6.158947368421052,
+      "difference": 0.161052631578948,
+      "mannwhitney_p": 0.6878977476486889
+    },
+    "motif_coverage": {
+      "rich_mean": 0.3588,
+      "poor_mean": 0.35584210526315785,
+      "difference": 0.0029578947368421593,
+      "mannwhitney_p": 0.9903674509907489
+    },
+    "mean_motif_distance": {
+      "rich_mean": 16.390676236380838,
+      "poor_mean": 17.101508735946254,
+      "difference": -0.7108324995654165,
+      "mannwhitney_p": 0.561805053355815
+    },
+    "min_motif_distance": {
+      "rich_mean": 3.28,
+      "poor_mean": 2.8463157894736844,
+      "difference": 0.43368421052631545,
+      "mannwhitney_p": 0.20942351048445773
+    },
+    "motif_clustering": {
+      "rich_mean": 15.836398308491557,
+      "poor_mean": 18.973885225233374,
+      "difference": -3.1374869167418176,
+      "mannwhitney_p": 0.22626660978604374
+    },
+    "dinuc_AA": {
+      "rich_mean": 0.06311557788944723,
+      "poor_mean": 0.06895530282993916,
+      "difference": -0.005839724940491925,
+      "mannwhitney_p": 0.42924937903310456
+    },
+    "dinuc_AC": {
+      "rich_mean": 0.04080402010050252,
+      "poor_mean": 0.041798466014281936,
+      "difference": -0.0009944459137794168,
+      "mannwhitney_p": 0.5114937236351605
+    },
+    "dinuc_AG": {
+      "rich_mean": 0.08221105527638191,
+      "poor_mean": 0.07687913250462841,
+      "difference": 0.005331922771753497,
+      "mannwhitney_p": 0.22188719266799461
+    },
+    "dinuc_AT": {
+      "rich_mean": 0.04100502512562814,
+      "poor_mean": 0.0493731816979635,
+      "difference": -0.008368156572335361,
+      "mannwhitney_p": 0.03836927994667525
+    },
+    "dinuc_CA": {
+      "rich_mean": 0.07035175879396985,
+      "poor_mean": 0.06895530282993918,
+      "difference": 0.0013964559640306656,
+      "mannwhitney_p": 0.7882847431053728
+    },
+    "dinuc_CC": {
+      "rich_mean": 0.08221105527638192,
+      "poor_mean": 0.08611478444855858,
+      "difference": -0.0039037291721766565,
+      "mannwhitney_p": 0.8311432457763783
+    },
+    "dinuc_CG": {
+      "rich_mean": 0.02994974874371859,
+      "poor_mean": 0.030647976725733935,
+      "difference": -0.0006982279820153467,
+      "mannwhitney_p": 0.536342847767709
+    },
+    "dinuc_CT": {
+      "rich_mean": 0.08,
+      "poor_mean": 0.07885744512033854,
+      "difference": 0.0011425548796614587,
+      "mannwhitney_p": 0.8015942421099631
+    },
+    "dinuc_GA": {
+      "rich_mean": 0.062110552763819084,
+      "poor_mean": 0.06127479502777043,
+      "difference": 0.0008357577360486521,
+      "mannwhitney_p": 0.9909059505118697
+    },
+    "dinuc_GC": {
+      "rich_mean": 0.07396984924623115,
+      "poor_mean": 0.07370536895001323,
+      "difference": 0.0002644802962179227,
+      "mannwhitney_p": 0.8420430974851861
+    },
+    "dinuc_GG": {
+      "rich_mean": 0.08924623115577889,
+      "poor_mean": 0.08473948690822533,
+      "difference": 0.004506744247553554,
+      "mannwhitney_p": 0.7052546015382652
+    },
+    "dinuc_GT": {
+      "rich_mean": 0.0464321608040201,
+      "poor_mean": 0.04099444591377942,
+      "difference": 0.005437714890240683,
+      "mannwhitney_p": 0.06837812511463749
+    },
+    "dinuc_TA": {
+      "rich_mean": 0.03236180904522613,
+      "poor_mean": 0.037429251520761694,
+      "difference": -0.005067442475535568,
+      "mannwhitney_p": 0.14079676076747133
+    },
+    "dinuc_TC": {
+      "rich_mean": 0.06472361809045227,
+      "poor_mean": 0.06289341444062417,
+      "difference": 0.0018302036498280966,
+      "mannwhitney_p": 0.5477349559779149
+    },
+    "dinuc_TG": {
+      "rich_mean": 0.07015075376884422,
+      "poor_mean": 0.06838402539010845,
+      "difference": 0.001766728378735774,
+      "mannwhitney_p": 0.8286017697352672
+    },
+    "dinuc_TT": {
+      "rich_mean": 0.07135678391959799,
+      "poor_mean": 0.06899761967733402,
+      "difference": 0.0023591642422639697,
+      "mannwhitney_p": 0.6542262182160912
+    },
+    "cpg_ratio": {
+      "rich_mean": 0.34715325664758284,
+      "poor_mean": 0.3822018257006598,
+      "difference": -0.03504856905307696,
+      "mannwhitney_p": 0.3793365652763433
+    }
+  },
+  "predictor_r2_cv": -0.4963578878330216,
+  "predictor_r2_std": 0.5795701591849752,
+  "feature_importances": {
+    "cpg_ratio": 0.12646050412699536,
+    "mean_motif_distance": 0.0835738184698223,
+    "dinuc_CA": 0.0695694121819742,
+    "dinuc_GG": 0.05256508713266073,
+    "dinuc_CT": 0.048123363284662046,
+    "expression": 0.04744235448739684,
+    "dinuc_TA": 0.04450004497996713,
+    "dinuc_GC": 0.044065023507156964,
+    "motif_coverage": 0.04340980507927191,
+    "dinuc_TC": 0.042702275910816365,
+    "dinuc_CC": 0.04188169231881049,
+    "dinuc_AC": 0.034551773614502415,
+    "gc_content": 0.03135565259410788,
+    "dinuc_GT": 0.03119345251965859,
+    "motif_density": 0.02905941489887407
+  },
+  "grammar_types": {
+    "high_density": 15,
+    "moderate_density": 9,
+    "sparse": 1
+  }
+}

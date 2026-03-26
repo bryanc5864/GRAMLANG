@@ -1,0 +1,11 @@
+{
+  "vocabulary_r2": 0.1050470793724931,
+  "vocab_plus_simple_grammar_r2": 0.10600291058014857,
+  "vocab_plus_full_grammar_r2": 0.10600291058014857,
+  "full_model_r2": 0.3898078625946871,
+  "replicate_r2": 0.85,
+  "grammar_contribution": 0.0012830759920376463,
+  "grammar_gap": 0.2838049520145385,
+  "grammar_completeness": 0.12470930656488068,
+  "n_samples": 5000
+}
