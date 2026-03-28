@@ -210,15 +210,24 @@ def main():
             spacer = res.get('spacer_contribution', 0)
             print(f"  {method:20s}: GSI={gsi:.4f}, SF-GSI={sf_gsi:.4f}, Spacer={spacer:.2%}")
 
-    # Save results
+    # Save results (convert numpy types to Python floats)
+    def convert_to_serializable(obj):
+        if isinstance(obj, dict):
+            return {k: convert_to_serializable(v) for k, v in obj.items()}
+        elif isinstance(obj, (np.floating, np.integer)):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return obj
+
     output_path = output_dir / f'{args.dataset}_sf_gsi.json'
     with open(output_path, 'w') as f:
-        json.dump({
+        json.dump(convert_to_serializable({
             'dataset': args.dataset,
             'n_sequences': len(sequences),
             'n_shuffles': args.n_shuffles,
             'results': results,
-        }, f, indent=2)
+        }), f, indent=2)
 
     print(f"\nResults saved to {output_path}")
 

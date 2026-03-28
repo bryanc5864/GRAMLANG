@@ -1,0 +1,31 @@
+{
+  "dataset": "agarwal",
+  "n_sequences": 100,
+  "n_shuffles": 30,
+  "results": {
+    "motif_only": {
+      "gsi": 1.056311845779419,
+      "sf_gsi": 1.4451028108596802,
+      "spacer_contribution": 0,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 0.03791297599673271,
+      "grammar_variance": 0.07095794379711151
+    },
+    "matched": {
+      "gsi": 1.056311845779419,
+      "sf_gsi": 1.0281620025634766,
+      "spacer_contribution": 0.05258830264210701,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 0.03791297599673271,
+      "grammar_variance": 0.0359191969037056
+    },
+    "regression": {
+      "gsi": 1.056311845779419,
+      "sf_gsi": 0.6488521375194514,
+      "spacer_contribution": 0.6226823056499524,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 0.03791297599673271,
+      "grammar_variance": 0.014305236689035885
+    }
+  }
+}
