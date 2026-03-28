@@ -1,0 +1,31 @@
+{
+  "dataset": "jores",
+  "n_sequences": 100,
+  "n_shuffles": 30,
+  "results": {
+    "motif_only": {
+      "gsi": 0.43694719672203064,
+      "sf_gsi": 0.3725025951862335,
+      "spacer_contribution": 0.2732236683368683,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 1.0701953172683716,
+      "grammar_variance": 0.7777926325798035
+    },
+    "matched": {
+      "gsi": 0.43694719672203064,
+      "sf_gsi": 0.43553584814071655,
+      "spacer_contribution": 0.006449382286518812,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 1.0701953172683716,
+      "grammar_variance": 1.063293218612671
+    },
+    "regression": {
+      "gsi": 0.43694719672203064,
+      "sf_gsi": 0.2712785609052829,
+      "spacer_contribution": 0.6145455262864864,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 1.0701953172683716,
+      "grammar_variance": 0.4125115727883469
+    }
+  }
+}

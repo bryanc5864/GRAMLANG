@@ -1,0 +1,31 @@
+{
+  "dataset": "klein",
+  "n_sequences": 100,
+  "n_shuffles": 30,
+  "results": {
+    "motif_only": {
+      "gsi": 1.2427732944488525,
+      "sf_gsi": 1.4815688133239746,
+      "spacer_contribution": 0,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 0.12024136632680893,
+      "grammar_variance": 0.17088884115219116
+    },
+    "matched": {
+      "gsi": 1.2427732944488525,
+      "sf_gsi": 1.230993628501892,
+      "spacer_contribution": 0.01886727847158909,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 0.12024136632680893,
+      "grammar_variance": 0.11797273904085159
+    },
+    "regression": {
+      "gsi": 1.2427732944488525,
+      "sf_gsi": 0.7251756217803941,
+      "spacer_contribution": 0.6595114246469038,
+      "grammar_pvalue": 1.1102230246251565e-16,
+      "total_variance": 0.12024136632680893,
+      "grammar_variance": 0.04094081151912492
+    }
+  }
+}
