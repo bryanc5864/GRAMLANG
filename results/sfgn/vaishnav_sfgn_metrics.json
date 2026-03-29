@@ -1,0 +1,19 @@
+{
+  "dataset": "vaishnav",
+  "best_val_r2": 0.04033571481704712,
+  "final_metrics": {
+    "mse": 5.356193542480469,
+    "pearson_r": 0.2511512784379434,
+    "spearman_rho": 0.2484465714478835,
+    "r2": 0.02799159288406372,
+    "mean_alpha": 0.9999696016311646,
+    "mean_beta": 3.0433559004450217e-05,
+    "std_alpha": 1.3041977581451647e-05
+  },
+  "config": {
+    "epochs": 30,
+    "batch_size": 16,
+    "lr": 3e-05,
+    "orthogonality_weight": 0.1
+  }
+}
