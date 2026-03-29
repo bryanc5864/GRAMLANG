@@ -1,0 +1,19 @@
+{
+  "dataset": "jores",
+  "best_val_r2": 0.14352965354919434,
+  "final_metrics": {
+    "mse": 1.5902049541473389,
+    "pearson_r": 0.42333637641554067,
+    "spearman_rho": 0.5047388484805305,
+    "r2": 0.14112287759780884,
+    "mean_alpha": 0.7098182439804077,
+    "mean_beta": 0.2901817262172699,
+    "std_alpha": 0.15986928343772888
+  },
+  "config": {
+    "epochs": 30,
+    "batch_size": 16,
+    "lr": 3e-05,
+    "orthogonality_weight": 0.1
+  }
+}
