@@ -1,0 +1,19 @@
+{
+  "dataset": "klein",
+  "best_val_r2": 0.016402900218963623,
+  "final_metrics": {
+    "mse": 0.5359328389167786,
+    "pearson_r": 0.21223756445989458,
+    "spearman_rho": 0.15111834823908513,
+    "r2": -0.2627464532852173,
+    "mean_alpha": 0.8799859881401062,
+    "mean_beta": 0.12001404911279678,
+    "std_alpha": 0.0640195906162262
+  },
+  "config": {
+    "epochs": 30,
+    "batch_size": 16,
+    "lr": 3e-05,
+    "orthogonality_weight": 0.1
+  }
+}
