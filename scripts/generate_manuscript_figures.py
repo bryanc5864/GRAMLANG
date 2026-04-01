@@ -333,12 +333,14 @@ def fig4_compositionality():
 
 
 def fig5_transfer():
-    """Figure 5: Transfer (1x2, compact)."""
+    """Figure 5: Transfer heatmap + variance decomposition lollipop."""
     transfer_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module4', 'transfer_matrix.parquet'))
-    fig, axes = plt.subplots(1, 2, figsize=(5.5, 2.2))
-    plt.subplots_adjust(wspace=0.45)
 
-    # (A) Heatmap
+    fig, axes = plt.subplots(1, 2, figsize=(5.5, 2.2),
+                             gridspec_kw={'width_ratios': [1, 1.4]})
+    plt.subplots_adjust(wspace=0.5)
+
+    # ── Panel A: Transfer R² heatmap (restyled) ──
     ax = axes[0]
     species = sorted(transfer_df['source'].unique())
     n = len(species)
@@ -348,29 +350,83 @@ def fig5_transfer():
         j = species.index(row['target'])
         matrix[i, j] = row['transfer_r2']
     species_labels = [s.capitalize() for s in species]
-    sns.heatmap(matrix, xticklabels=species_labels, yticklabels=species_labels,
-                annot=True, fmt='.3f', cmap='YlOrRd', vmin=0, vmax=0.25, ax=ax,
-                cbar_kws={'label': '$R^2$', 'shrink': 0.8}, annot_kws={'size': 5})
-    ax.set_xlabel('Target', fontsize=6)
-    ax.set_ylabel('Source', fontsize=6)
-    ax.set_title('(A) Transfer $R^2$')
-    ax.tick_params(labelsize=5)
 
-    # (B) Within vs cross-species
+    sns.heatmap(matrix, xticklabels=species_labels, yticklabels=species_labels,
+                cmap='Blues', vmin=0, vmax=0.25, ax=ax, annot=False,
+                linewidths=1.0, linecolor='white',
+                cbar_kws={'label': '$R^2$', 'shrink': 0.75, 'aspect': 12})
+
+    # Custom annotations: bold diagonal, gray off-diagonal
+    for i in range(n):
+        for j in range(n):
+            val = matrix[i, j]
+            if i == j:
+                ax.text(j + 0.5, i + 0.5, f'{val:.3f}',
+                        ha='center', va='center', fontsize=6.5,
+                        fontweight='bold', color='white' if val > 0.12 else 'black')
+                # Highlight diagonal with border
+                ax.add_patch(plt.Rectangle((j, i), 1, 1, fill=False,
+                             edgecolor='black', linewidth=1.5))
+            else:
+                ax.text(j + 0.5, i + 0.5, f'{val:.3f}',
+                        ha='center', va='center', fontsize=5.5, color='#888888')
+
+    ax.set_xlabel('Target', fontsize=6.5)
+    ax.set_ylabel('Source', fontsize=6.5)
+    ax.set_title('(A) Cross-Species Transfer $R^2$', fontsize=7.5)
+    ax.tick_params(labelsize=6)
+
+    # ── Panel B: Variance decomposition lollipop ──
     ax = axes[1]
-    cats = ['Within-Species', 'Cross-Species']
-    vals = [0.955, 1.888]
-    colors_b = [C_POS, C_NEG]
-    bars = ax.bar(cats, vals, color=colors_b, edgecolor='black',
-                  linewidth=0.3, width=0.45)
-    for bar, val in zip(bars, vals):
-        ax.text(bar.get_x() + bar.get_width() / 2., bar.get_height() + 0.03,
-                f'{val:.2f}', ha='center', va='bottom', fontsize=6, fontweight='bold')
-    ax.set_ylabel("Cohen's $d$")
-    ax.set_title("(B) Within vs Cross-Species")
-    ax.text(0.5, 0.88, '$2\\times$ ratio ($p = 0.035$)', transform=ax.transAxes,
-            ha='center', fontsize=5, color='#555555', style='italic')
-    ax.tick_params(axis='x', labelsize=5.5)
+    ds_order = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
+    ds_labels = ['Agar.', 'deAlm.', 'Vaish.', 'Jores', 'Klein']
+    cdata = {}
+    for ds in ds_order:
+        path = os.path.join(RESULTS_DIR, 'module6', f'{ds}_completeness.json')
+        if os.path.exists(path):
+            with open(path) as f:
+                cdata[ds] = json.load(f)
+
+    levels = [
+        ('vocabulary_r2',                'Vocab',      C_NEG,    'o',  5),
+        ('vocab_plus_full_grammar_r2',   '+Grammar',   C_WARN,   's',  5),
+        ('full_model_r2',                'Full Model', C_POS,    'D',  4.5),
+        ('replicate_r2',                 'Replicate',  C_ACCENT, 'o',  6),
+    ]
+
+    y_pos = np.arange(len(ds_order))
+
+    # Draw connecting lines and gap shading per dataset
+    for yi, ds in enumerate(ds_order):
+        d = cdata[ds]
+        vocab = d['vocabulary_r2']
+        repl = d['replicate_r2']
+        model = d['full_model_r2']
+
+        # Gray shaded gap: full model → replicate
+        ax.fill_betweenx([yi - 0.15, yi + 0.15], model, repl,
+                         color='#e0e0e0', alpha=0.5, zorder=0)
+        # Connecting line
+        ax.plot([vocab, repl], [yi, yi], color='#aaaaaa', linewidth=0.8,
+                zorder=1, solid_capstyle='round')
+
+    # Plot markers per level (so legend groups correctly)
+    for key, label, color, marker, ms in levels:
+        vals = [cdata[ds][key] for ds in ds_order]
+        ax.scatter(vals, y_pos, color=color, marker=marker, s=ms**2,
+                   label=label, zorder=3, edgecolors='white', linewidths=0.3)
+
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(ds_labels, fontsize=6)
+    ax.set_xlabel('$R^2$', fontsize=7)
+    ax.set_title('(B) Variance Decomposition', fontsize=7.5)
+    ax.set_xlim(-0.02, 0.95)
+    ax.invert_yaxis()
+
+    # Replicate ceiling line
+    ax.axvline(x=0.85, color=C_ACCENT, linewidth=0.6, linestyle=':', alpha=0.5)
+
+    _legend(ax, loc='lower right', fontsize=5, ncol=2, markerscale=0.9)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_transfer.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_transfer.png'))
