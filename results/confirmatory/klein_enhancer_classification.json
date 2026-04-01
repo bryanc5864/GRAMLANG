@@ -1,0 +1,2097 @@
+{
+  "dataset": "klein",
+  "model": "dnabert2",
+  "n_enhancers": 297,
+  "n_shuffles": 50,
+  "classifications": {
+    "billboard": 281,
+    "soft": 12,
+    "strong": 4
+  },
+  "percentages": {
+    "billboard": 94.61279461279462,
+    "soft": 4.040404040404041,
+    "strong": 1.3468013468013467
+  },
+  "per_enhancer_results": [
+    {
+      "seq_id": "klein_876",
+      "gsi": 0.639480710029602,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "klein_1022",
+      "gsi": 1.6328305006027222,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_1238",
+      "gsi": 1.1474761962890625,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 23
+    },
+    {
+      "seq_id": "klein_1246",
+      "gsi": 8.001365661621094,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_1250",
+      "gsi": 0.49401354789733887,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 38
+    },
+    {
+      "seq_id": "klein_429",
+      "gsi": 2.06809663772583,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_1370",
+      "gsi": 1.3888378143310547,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_125",
+      "gsi": 0.2319091260433197,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 29
+    },
+    {
+      "seq_id": "klein_1263",
+      "gsi": 0.7758694291114807,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1847",
+      "gsi": 0.45790228247642517,
+      "p_value": 0.4,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_1918",
+      "gsi": 0.7144355177879333,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_1880",
+      "gsi": 1.150478720664978,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_882",
+      "gsi": 1.1022635698318481,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 26
+    },
+    {
+      "seq_id": "klein_273",
+      "gsi": 1.3294552564620972,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_112",
+      "gsi": 0.22645191848278046,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 32
+    },
+    {
+      "seq_id": "klein_2055",
+      "gsi": 1.0669883489608765,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_1617",
+      "gsi": 9.429547309875488,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_654",
+      "gsi": 0.2864392101764679,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 36
+    },
+    {
+      "seq_id": "klein_1081",
+      "gsi": 0.8382565975189209,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 22
+    },
+    {
+      "seq_id": "klein_1072",
+      "gsi": 0.5653523802757263,
+      "p_value": 0.8,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_1981",
+      "gsi": 1.5934276580810547,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_74",
+      "gsi": 13.409773826599121,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_584",
+      "gsi": 0.35584962368011475,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_2187",
+      "gsi": 20.506099700927734,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "klein_1490",
+      "gsi": 5.511422634124756,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_2241",
+      "gsi": 0.20438656210899353,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_1266",
+      "gsi": 0.7863050699234009,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_2044",
+      "gsi": 0.6516165137290955,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_614",
+      "gsi": 0.4133833944797516,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1335",
+      "gsi": 0.36837607622146606,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "klein_907",
+      "gsi": 1.2373857498168945,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "klein_396",
+      "gsi": 0.8926277756690979,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_1968",
+      "gsi": 0.9578703045845032,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1908",
+      "gsi": 0.541430652141571,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_1690",
+      "gsi": 0.7998278737068176,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 34
+    },
+    {
+      "seq_id": "klein_680",
+      "gsi": 0.9785323143005371,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_368",
+      "gsi": 0.48766544461250305,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_113",
+      "gsi": 1.4686614274978638,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_1888",
+      "gsi": 0.8530586957931519,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_304",
+      "gsi": 1.017088532447815,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_1134",
+      "gsi": 0.7947733402252197,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_360",
+      "gsi": 0.6660924553871155,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_975",
+      "gsi": 1.814893126487732,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "klein_1964",
+      "gsi": 0.30544713139533997,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_1129",
+      "gsi": 1.0640161037445068,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_813",
+      "gsi": 3.2964305877685547,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_447",
+      "gsi": 0.5017774105072021,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_1197",
+      "gsi": 1.294126272201538,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_1938",
+      "gsi": 0.27327990531921387,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "klein_425",
+      "gsi": 0.460813969373703,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_1296",
+      "gsi": 10.411703109741211,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_357",
+      "gsi": 2.2660911083221436,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_511",
+      "gsi": 0.3823845386505127,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 35
+    },
+    {
+      "seq_id": "klein_1218",
+      "gsi": 1.1007096767425537,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_431",
+      "gsi": 3.9496800899505615,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_550",
+      "gsi": 0.7852614521980286,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_1844",
+      "gsi": 7.860626220703125,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1665",
+      "gsi": 417.8851318359375,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_909",
+      "gsi": 0.15499867498874664,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 43
+    },
+    {
+      "seq_id": "klein_1700",
+      "gsi": 1.174880027770996,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_1156",
+      "gsi": 1.2063627243041992,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_724",
+      "gsi": 0.38368353247642517,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 32
+    },
+    {
+      "seq_id": "klein_314",
+      "gsi": 0.6605234742164612,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 27
+    },
+    {
+      "seq_id": "klein_311",
+      "gsi": 7.824312686920166,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_933",
+      "gsi": 3.8651578426361084,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_1643",
+      "gsi": 0.414542019367218,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_1047",
+      "gsi": 3.535036563873291,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_432",
+      "gsi": 0.8721793293952942,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_971",
+      "gsi": 0.67889404296875,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_2",
+      "gsi": 3.8975424766540527,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_421",
+      "gsi": 1.015852689743042,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "klein_1428",
+      "gsi": 1.1702052354812622,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_2154",
+      "gsi": 0.9652662873268127,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_1277",
+      "gsi": 1.6446239948272705,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "klein_78",
+      "gsi": 1.6365036964416504,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_350",
+      "gsi": 7.6584930419921875,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_613",
+      "gsi": 0.6044839024543762,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_1710",
+      "gsi": 6.3802690505981445,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_1623",
+      "gsi": 2.5256569385528564,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_2078",
+      "gsi": 0.6649246215820312,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_743",
+      "gsi": 0.5296791791915894,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_262",
+      "gsi": 1.2533549070358276,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_238",
+      "gsi": 0.5783615708351135,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_666",
+      "gsi": 0.24898865818977356,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_659",
+      "gsi": 2.792682647705078,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_2111",
+      "gsi": 1.1327720880508423,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_200",
+      "gsi": 0.5785180330276489,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "klein_555",
+      "gsi": 25.060453414916992,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_160",
+      "gsi": 6.300931930541992,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_2065",
+      "gsi": 0.6448482275009155,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_919",
+      "gsi": 0.2640548348426819,
+      "p_value": 0.4,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_973",
+      "gsi": 0.22579452395439148,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_662",
+      "gsi": 0.5971209406852722,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_1641",
+      "gsi": 1.1412358283996582,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_1070",
+      "gsi": 0.4254724085330963,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_391",
+      "gsi": 9.797585487365723,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_2080",
+      "gsi": 0.4283371567726135,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 35
+    },
+    {
+      "seq_id": "klein_182",
+      "gsi": 0.48620185256004333,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_353",
+      "gsi": 2.1803743839263916,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_953",
+      "gsi": 15.026330947875977,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_1806",
+      "gsi": 2.15960955619812,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 24
+    },
+    {
+      "seq_id": "klein_1140",
+      "gsi": 0.6599364280700684,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 31
+    },
+    {
+      "seq_id": "klein_547",
+      "gsi": 9.09952449798584,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_1614",
+      "gsi": 0.3390662372112274,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1548",
+      "gsi": 0.3839077949523926,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 31
+    },
+    {
+      "seq_id": "klein_1887",
+      "gsi": 0.6793325543403625,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_261",
+      "gsi": 0.6832312941551208,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "klein_1260",
+      "gsi": 0.6965669393539429,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_1697",
+      "gsi": 1.3305248022079468,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_441",
+      "gsi": 0.6694918274879456,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 28
+    },
+    {
+      "seq_id": "klein_1657",
+      "gsi": 2.430752754211426,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_759",
+      "gsi": 1.8418941497802734,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_2102",
+      "gsi": 0.3276064395904541,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_1174",
+      "gsi": 7.883819580078125,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_2246",
+      "gsi": 4.276264190673828,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1766",
+      "gsi": 0.6832455396652222,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_1826",
+      "gsi": 0.3863784968852997,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 23
+    },
+    {
+      "seq_id": "klein_1565",
+      "gsi": 0.7331355214118958,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_2093",
+      "gsi": 1.948347806930542,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_644",
+      "gsi": 0.22806204855442047,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 26
+    },
+    {
+      "seq_id": "klein_2143",
+      "gsi": 2.6815457344055176,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_794",
+      "gsi": 2.6863973140716553,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "klein_657",
+      "gsi": 0.3643825650215149,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1269",
+      "gsi": 1.1748554706573486,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1907",
+      "gsi": 3.560669422149658,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_678",
+      "gsi": 0.15284524857997894,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 33
+    },
+    {
+      "seq_id": "klein_2128",
+      "gsi": 2.0055463314056396,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 31
+    },
+    {
+      "seq_id": "klein_284",
+      "gsi": 0.5278169512748718,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1358",
+      "gsi": 0.2933518886566162,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 30
+    },
+    {
+      "seq_id": "klein_1294",
+      "gsi": 0.5566971302032471,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_931",
+      "gsi": 3.1328601837158203,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 25
+    },
+    {
+      "seq_id": "klein_37",
+      "gsi": 2.1312406063079834,
+      "p_value": 0.8,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_1417",
+      "gsi": 10.904691696166992,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1701",
+      "gsi": 0.25529077649116516,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "klein_167",
+      "gsi": 0.4794428050518036,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_1553",
+      "gsi": 0.33837631344795227,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_610",
+      "gsi": 0.16907136142253876,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 30
+    },
+    {
+      "seq_id": "klein_535",
+      "gsi": 1.0685428380966187,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "klein_2018",
+      "gsi": 1.9991707801818848,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_860",
+      "gsi": 0.6832727193832397,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_282",
+      "gsi": 0.8613107204437256,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_2168",
+      "gsi": 3.359870433807373,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_283",
+      "gsi": 3.8025834560394287,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1195",
+      "gsi": 19.674087524414062,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_1460",
+      "gsi": 1.3071810007095337,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_1743",
+      "gsi": 2.911105155944824,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_2015",
+      "gsi": 0.6456621885299683,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1315",
+      "gsi": 0.8511692881584167,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_123",
+      "gsi": 0.3295568823814392,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 26
+    },
+    {
+      "seq_id": "klein_404",
+      "gsi": 0.7034140229225159,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1102",
+      "gsi": 8.800151824951172,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_820",
+      "gsi": 1.2143174409866333,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 22
+    },
+    {
+      "seq_id": "klein_754",
+      "gsi": 1.0834863185882568,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_2189",
+      "gsi": 8.166321754455566,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_1380",
+      "gsi": 1.0153650045394897,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_109",
+      "gsi": 0.3697671592235565,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 24
+    },
+    {
+      "seq_id": "klein_117",
+      "gsi": 18.33460807800293,
+      "p_value": 0.8,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_49",
+      "gsi": 0.4204603433609009,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_102",
+      "gsi": 2.195863723754883,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_1304",
+      "gsi": 1.9010090827941895,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_269",
+      "gsi": 0.5466515421867371,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_1914",
+      "gsi": 1.9152642488479614,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_57",
+      "gsi": 1.5098896026611328,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_260",
+      "gsi": 1.471001386642456,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_859",
+      "gsi": 1.2480683326721191,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_2255",
+      "gsi": 0.6572861075401306,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_766",
+      "gsi": 0.7791886925697327,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "klein_1009",
+      "gsi": 13.27680778503418,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_1574",
+      "gsi": 2.1205413341522217,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_2223",
+      "gsi": 2.382084846496582,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_15",
+      "gsi": 0.6681322455406189,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1686",
+      "gsi": 1.3622527122497559,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_620",
+      "gsi": 0.23386305570602417,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 25
+    },
+    {
+      "seq_id": "klein_1325",
+      "gsi": 0.41784876585006714,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_1414",
+      "gsi": 1.9765901565551758,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_1799",
+      "gsi": 0.9212818741798401,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_285",
+      "gsi": 2.297778606414795,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "klein_966",
+      "gsi": 1.0556392669677734,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 24
+    },
+    {
+      "seq_id": "klein_135",
+      "gsi": 0.9895539283752441,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_205",
+      "gsi": 0.7635675668716431,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 22
+    },
+    {
+      "seq_id": "klein_1577",
+      "gsi": 1.547166109085083,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_345",
+      "gsi": 1.677557349205017,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_354",
+      "gsi": 2.291078567504883,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_826",
+      "gsi": 0.2994346618652344,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_2205",
+      "gsi": 1.3379497528076172,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1357",
+      "gsi": 1.0091606378555298,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1600",
+      "gsi": 16.524702072143555,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_2034",
+      "gsi": 0.4425829350948334,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "klein_240",
+      "gsi": 0.8173725605010986,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_635",
+      "gsi": 0.21194222569465637,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 38
+    },
+    {
+      "seq_id": "klein_525",
+      "gsi": 2.0380518436431885,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_1245",
+      "gsi": 0.6783800721168518,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_72",
+      "gsi": 0.4150254428386688,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 22
+    },
+    {
+      "seq_id": "klein_1089",
+      "gsi": 0.6803975105285645,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_1636",
+      "gsi": 0.44961416721343994,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "klein_938",
+      "gsi": 1.0447529554367065,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "klein_52",
+      "gsi": 0.7782817482948303,
+      "p_value": 0.4,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_5",
+      "gsi": 3.0387494564056396,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_1347",
+      "gsi": 0.4745064973831177,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_533",
+      "gsi": 1.4405055046081543,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_905",
+      "gsi": 0.9867494106292725,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_787",
+      "gsi": 0.4566495418548584,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_1822",
+      "gsi": 0.6810168027877808,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_1817",
+      "gsi": 2.5686280727386475,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_1483",
+      "gsi": 0.9289793968200684,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_1432",
+      "gsi": 0.6927785277366638,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "klein_2258",
+      "gsi": 12.948728561401367,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_1797",
+      "gsi": 2.1518137454986572,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 26
+    },
+    {
+      "seq_id": "klein_612",
+      "gsi": 0.9340104460716248,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1561",
+      "gsi": 1.765711784362793,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_2076",
+      "gsi": 5.437734127044678,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_149",
+      "gsi": 0.6536793112754822,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_2263",
+      "gsi": 7.5039191246032715,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_1188",
+      "gsi": 0.7935225963592529,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1784",
+      "gsi": 0.7879079580307007,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_940",
+      "gsi": 0.37007230520248413,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 24
+    },
+    {
+      "seq_id": "klein_1498",
+      "gsi": 134.19842529296875,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 33
+    },
+    {
+      "seq_id": "klein_957",
+      "gsi": 0.6940218210220337,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 37
+    },
+    {
+      "seq_id": "klein_20",
+      "gsi": 1.6376149654388428,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1179",
+      "gsi": 1.3625093698501587,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_1413",
+      "gsi": 0.6069450974464417,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_941",
+      "gsi": 0.6435846090316772,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_286",
+      "gsi": 1.504746437072754,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 36
+    },
+    {
+      "seq_id": "klein_1668",
+      "gsi": 1.3767434358596802,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_152",
+      "gsi": 1.2436200380325317,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_2230",
+      "gsi": 0.9658066630363464,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "klein_375",
+      "gsi": 0.6265363097190857,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_1761",
+      "gsi": 168.97474670410156,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_2004",
+      "gsi": 0.5992767810821533,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_435",
+      "gsi": 6.507430076599121,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_1591",
+      "gsi": 0.5470843315124512,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1583",
+      "gsi": 0.6974698901176453,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_218",
+      "gsi": 1.5522041320800781,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_1707",
+      "gsi": 0.8703992366790771,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1075",
+      "gsi": 0.8045409321784973,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_208",
+      "gsi": 31.945159912109375,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_293",
+      "gsi": 1.5486713647842407,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_1290",
+      "gsi": 0.9382911920547485,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_977",
+      "gsi": 1.1071985960006714,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_1320",
+      "gsi": 2.21337890625,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_872",
+      "gsi": 8.197927474975586,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_575",
+      "gsi": 0.1579117476940155,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_717",
+      "gsi": 0.5252065062522888,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1732",
+      "gsi": 2.2623629570007324,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_388",
+      "gsi": 0.4436354637145996,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "klein_893",
+      "gsi": 1.6539353132247925,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "klein_1021",
+      "gsi": 1.1107465028762817,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_2043",
+      "gsi": 0.5342753529548645,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_1449",
+      "gsi": 2.5685529708862305,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_629",
+      "gsi": 0.2699982225894928,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_865",
+      "gsi": 0.2796463370323181,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "klein_1843",
+      "gsi": 1.1432359218597412,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "klein_1912",
+      "gsi": 1.8757609128952026,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_557",
+      "gsi": 7.104019641876221,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_1669",
+      "gsi": 12.623804092407227,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_2245",
+      "gsi": 0.7317028641700745,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_385",
+      "gsi": 0.346554160118103,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "klein_773",
+      "gsi": 0.8209502100944519,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "klein_1554",
+      "gsi": 0.4727987051010132,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_1239",
+      "gsi": 0.5428021550178528,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_320",
+      "gsi": 14.671320915222168,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "klein_309",
+      "gsi": 1.228549599647522,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1474",
+      "gsi": 0.7500651478767395,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_70",
+      "gsi": 2.3189353942871094,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "klein_1433",
+      "gsi": 0.518559455871582,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_903",
+      "gsi": 0.7843508720397949,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "klein_1327",
+      "gsi": 2.087695837020874,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_294",
+      "gsi": 0.7781199812889099,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_1185",
+      "gsi": 1.3736752271652222,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_1606",
+      "gsi": 0.6795305013656616,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_351",
+      "gsi": 1.7929127216339111,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "klein_151",
+      "gsi": 0.7258706092834473,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_967",
+      "gsi": 0.8087306618690491,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_1006",
+      "gsi": 0.6818639039993286,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_2206",
+      "gsi": 0.9460008144378662,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_1213",
+      "gsi": 1.2398310899734497,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_1122",
+      "gsi": 1.0781214237213135,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_2139",
+      "gsi": 0.6641829013824463,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_334",
+      "gsi": 0.8671484589576721,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "klein_741",
+      "gsi": 1.9171220064163208,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "klein_2226",
+      "gsi": 5.134672164916992,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_2181",
+      "gsi": 0.8089733719825745,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_2219",
+      "gsi": 1.7612954378128052,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_47",
+      "gsi": 0.7661688327789307,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_369",
+      "gsi": 2.6355531215667725,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "klein_673",
+      "gsi": 0.5260488390922546,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "klein_1349",
+      "gsi": 1.191656470298767,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "klein_401",
+      "gsi": 8.010929107666016,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "klein_221",
+      "gsi": 1.6959987878799438,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "klein_1155",
+      "gsi": 1.9127421379089355,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_736",
+      "gsi": 0.1897677481174469,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 33
+    },
+    {
+      "seq_id": "klein_1297",
+      "gsi": 10.229969024658203,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "klein_924",
+      "gsi": 0.9059083461761475,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 30
+    },
+    {
+      "seq_id": "klein_2193",
+      "gsi": 0.4411906898021698,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "klein_2242",
+      "gsi": 0.2272414118051529,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 29
+    },
+    {
+      "seq_id": "klein_462",
+      "gsi": 38.455810546875,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "klein_2185",
+      "gsi": 5.794499397277832,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 11
+    }
+  ]
+}

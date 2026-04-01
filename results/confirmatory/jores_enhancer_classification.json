@@ -1,0 +1,1829 @@
+{
+  "dataset": "jores",
+  "model": "dnabert2",
+  "n_enhancers": 259,
+  "n_shuffles": 50,
+  "classifications": {
+    "billboard": 235,
+    "soft": 24
+  },
+  "percentages": {
+    "billboard": 90.73359073359073,
+    "soft": 9.266409266409266
+  },
+  "per_enhancer_results": [
+    {
+      "seq_id": "jores_42688",
+      "gsi": 0.07468973845243454,
+      "p_value": 0.02,
+      "classification": "billboard",
+      "n_motifs": 63
+    },
+    {
+      "seq_id": "jores_59083",
+      "gsi": 0.1709277480840683,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_31846",
+      "gsi": 0.1679007112979889,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_70428",
+      "gsi": 0.09762370586395264,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_49732",
+      "gsi": 0.12203340977430344,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_36249",
+      "gsi": 0.10575596988201141,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_21156",
+      "gsi": 0.13413994014263153,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_56166",
+      "gsi": 0.15703245997428894,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_67727",
+      "gsi": 0.13135574758052826,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "jores_19791",
+      "gsi": 0.19424955546855927,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_114",
+      "gsi": 0.1270400583744049,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "jores_34476",
+      "gsi": 0.15528298914432526,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "jores_46224",
+      "gsi": 0.1696491539478302,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_44452",
+      "gsi": 0.15592080354690552,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_61973",
+      "gsi": 0.12786990404129028,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "jores_51359",
+      "gsi": 0.19653330743312836,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_20312",
+      "gsi": 0.21763373911380768,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "jores_32569",
+      "gsi": 0.12177726626396179,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_12048",
+      "gsi": 0.14926287531852722,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_75925",
+      "gsi": 0.09877267479896545,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_56936",
+      "gsi": 0.12117956578731537,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_74210",
+      "gsi": 0.07784734666347504,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 40
+    },
+    {
+      "seq_id": "jores_55344",
+      "gsi": 0.19491523504257202,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_75693",
+      "gsi": 0.06994839757680893,
+      "p_value": 0.0,
+      "classification": "billboard",
+      "n_motifs": 25
+    },
+    {
+      "seq_id": "jores_30336",
+      "gsi": 0.1931920349597931,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_2338",
+      "gsi": 0.21169452369213104,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_6347",
+      "gsi": 0.1695309430360794,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_35283",
+      "gsi": 0.13757842779159546,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "jores_53600",
+      "gsi": 0.24673563241958618,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "jores_73412",
+      "gsi": 0.08291134983301163,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "jores_33404",
+      "gsi": 0.17487816512584686,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_45458",
+      "gsi": 0.15051524341106415,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_266",
+      "gsi": 0.4999772012233734,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_42985",
+      "gsi": 0.27150672674179077,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_52659",
+      "gsi": 0.15677985548973083,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 25
+    },
+    {
+      "seq_id": "jores_16084",
+      "gsi": 0.13357578217983246,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "jores_44705",
+      "gsi": 0.2209445834159851,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_44300",
+      "gsi": 0.39025893807411194,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_46392",
+      "gsi": 0.15836642682552338,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_31883",
+      "gsi": 0.14570535719394684,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_72324",
+      "gsi": 0.10144545882940292,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_15644",
+      "gsi": 0.13828398287296295,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_8466",
+      "gsi": 0.1382797509431839,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_8750",
+      "gsi": 0.18262191116809845,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "jores_37718",
+      "gsi": 0.11808480322360992,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_74695",
+      "gsi": 0.09102658182382584,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 30
+    },
+    {
+      "seq_id": "jores_75253",
+      "gsi": 0.09383724629878998,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_33291",
+      "gsi": 0.1484496295452118,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_69961",
+      "gsi": 0.09237851202487946,
+      "p_value": 0.0,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_37527",
+      "gsi": 0.1083337664604187,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 25
+    },
+    {
+      "seq_id": "jores_35147",
+      "gsi": 0.18664248287677765,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "jores_70417",
+      "gsi": 0.17155054211616516,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "jores_38393",
+      "gsi": 0.12330904603004456,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_2114",
+      "gsi": 0.24272935092449188,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_37225",
+      "gsi": 0.1096210703253746,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 26
+    },
+    {
+      "seq_id": "jores_24165",
+      "gsi": 0.23900890350341797,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_41228",
+      "gsi": 0.09609629958868027,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "jores_52596",
+      "gsi": 0.12217987328767776,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_51833",
+      "gsi": 0.1704970747232437,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_61253",
+      "gsi": 0.1371399164199829,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_44201",
+      "gsi": 0.26804202795028687,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "jores_54697",
+      "gsi": 0.13744127750396729,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_61594",
+      "gsi": 0.11810874193906784,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "jores_42456",
+      "gsi": 0.0965443104505539,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 49
+    },
+    {
+      "seq_id": "jores_27443",
+      "gsi": 0.16207610070705414,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "jores_26458",
+      "gsi": 0.1825471669435501,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_11115",
+      "gsi": 0.2148839235305786,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_64542",
+      "gsi": 0.13100497424602509,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_16129",
+      "gsi": 0.1636902242898941,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_62161",
+      "gsi": 0.1089138463139534,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_64081",
+      "gsi": 0.16155199706554413,
+      "p_value": 0.4,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_22498",
+      "gsi": 0.11948227137327194,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_16421",
+      "gsi": 0.16408245265483856,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_57189",
+      "gsi": 0.1510125994682312,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_63088",
+      "gsi": 0.14415615797042847,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_15247",
+      "gsi": 0.17234450578689575,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_57725",
+      "gsi": 0.1596003919839859,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_39338",
+      "gsi": 0.10428737848997116,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_55492",
+      "gsi": 0.16984224319458008,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_30458",
+      "gsi": 0.12131106853485107,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_14442",
+      "gsi": 0.21727536618709564,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_30693",
+      "gsi": 0.18276342749595642,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_76070",
+      "gsi": 0.0859825611114502,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 34
+    },
+    {
+      "seq_id": "jores_29449",
+      "gsi": 0.11108563840389252,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_6851",
+      "gsi": 0.16602517664432526,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_70491",
+      "gsi": 0.09991459548473358,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_8169",
+      "gsi": 0.1236766129732132,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_47217",
+      "gsi": 0.16984014213085175,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_45973",
+      "gsi": 0.2069518119096756,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_5034",
+      "gsi": 0.17109951376914978,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "jores_65135",
+      "gsi": 0.15881730616092682,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "jores_24040",
+      "gsi": 0.15725918114185333,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_16801",
+      "gsi": 0.232047900557518,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_39231",
+      "gsi": 0.11114705353975296,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 53
+    },
+    {
+      "seq_id": "jores_1824",
+      "gsi": 0.2105407863855362,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_70154",
+      "gsi": 0.11774161458015442,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_14511",
+      "gsi": 0.17045672237873077,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_29083",
+      "gsi": 0.13573125004768372,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_11124",
+      "gsi": 0.2144777476787567,
+      "p_value": 0.4,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_69358",
+      "gsi": 0.1407947689294815,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_68097",
+      "gsi": 0.1536140888929367,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_59509",
+      "gsi": 0.14829017221927643,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_17484",
+      "gsi": 0.32863709330558777,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_4591",
+      "gsi": 0.1629127860069275,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "jores_41023",
+      "gsi": 0.08684029430150986,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "jores_17282",
+      "gsi": 0.33228135108947754,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_57368",
+      "gsi": 0.12036656588315964,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_17760",
+      "gsi": 0.2573942244052887,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_21372",
+      "gsi": 0.24724628031253815,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_29339",
+      "gsi": 0.1703280508518219,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_41064",
+      "gsi": 0.07044044882059097,
+      "p_value": 0.0,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_63006",
+      "gsi": 0.12768732011318207,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_48089",
+      "gsi": 0.16812317073345184,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_24878",
+      "gsi": 0.18325544893741608,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "jores_61728",
+      "gsi": 0.2244618684053421,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_13464",
+      "gsi": 0.17788545787334442,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "jores_45148",
+      "gsi": 0.2589268386363983,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_30483",
+      "gsi": 0.10043443739414215,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_18111",
+      "gsi": 0.18070432543754578,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_67532",
+      "gsi": 0.11652851104736328,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "jores_63320",
+      "gsi": 0.11876730620861053,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_31464",
+      "gsi": 0.14209505915641785,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_4143",
+      "gsi": 0.17882651090621948,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_9844",
+      "gsi": 0.25662630796432495,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_72236",
+      "gsi": 0.10605140775442123,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "jores_48441",
+      "gsi": 0.14009204506874084,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_67788",
+      "gsi": 0.12454162538051605,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "jores_43975",
+      "gsi": 0.21564938127994537,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_62208",
+      "gsi": 0.10946547985076904,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_49791",
+      "gsi": 0.33950889110565186,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "jores_23329",
+      "gsi": 0.14326046407222748,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_60767",
+      "gsi": 0.14270924031734467,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_48806",
+      "gsi": 0.20666444301605225,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_38739",
+      "gsi": 0.10728000104427338,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 38
+    },
+    {
+      "seq_id": "jores_39415",
+      "gsi": 0.09300713986158371,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_32534",
+      "gsi": 0.16243161261081696,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_29752",
+      "gsi": 0.2244734764099121,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 26
+    },
+    {
+      "seq_id": "jores_70797",
+      "gsi": 0.10280667990446091,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_24293",
+      "gsi": 0.13333575427532196,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_33807",
+      "gsi": 0.1319124400615692,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_74375",
+      "gsi": 0.1202712282538414,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 24
+    },
+    {
+      "seq_id": "jores_75970",
+      "gsi": 0.125522181391716,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "jores_71136",
+      "gsi": 0.1033456102013588,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_10813",
+      "gsi": 0.3041803240776062,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_46306",
+      "gsi": 0.17659057676792145,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_35883",
+      "gsi": 0.1299244910478592,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "jores_15897",
+      "gsi": 0.14050671458244324,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "jores_63637",
+      "gsi": 0.129816472530365,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_6738",
+      "gsi": 0.16973371803760529,
+      "p_value": 0.4,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_3804",
+      "gsi": 0.2298566699028015,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_10307",
+      "gsi": 0.178328737616539,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_10835",
+      "gsi": 0.2659526765346527,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "jores_55992",
+      "gsi": 0.1441638171672821,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_74716",
+      "gsi": 0.09818673133850098,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 28
+    },
+    {
+      "seq_id": "jores_75241",
+      "gsi": 0.08154421299695969,
+      "p_value": 0.0,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_25889",
+      "gsi": 0.14629028737545013,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_33196",
+      "gsi": 0.10567193478345871,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_943",
+      "gsi": 0.29541072249412537,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "jores_18457",
+      "gsi": 0.24441896378993988,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "jores_40763",
+      "gsi": 0.08301311731338501,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_7161",
+      "gsi": 0.19044724106788635,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_22599",
+      "gsi": 0.15661002695560455,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "jores_28681",
+      "gsi": 0.13064776360988617,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_10610",
+      "gsi": 0.21629400551319122,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_48407",
+      "gsi": 0.2287895381450653,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_51650",
+      "gsi": 0.13739266991615295,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_4157",
+      "gsi": 0.16878290474414825,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_11906",
+      "gsi": 0.242336705327034,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_10746",
+      "gsi": 0.18246057629585266,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_14112",
+      "gsi": 0.1456187665462494,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "jores_29518",
+      "gsi": 0.1232437789440155,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_6698",
+      "gsi": 0.19646918773651123,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_18641",
+      "gsi": 0.14151422679424286,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_60693",
+      "gsi": 0.1306328922510147,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_6585",
+      "gsi": 0.27380815148353577,
+      "p_value": 0.8,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_5442",
+      "gsi": 0.21466511487960815,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_32578",
+      "gsi": 0.18354880809783936,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 38
+    },
+    {
+      "seq_id": "jores_52543",
+      "gsi": 0.1354520618915558,
+      "p_value": 0.8,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_14858",
+      "gsi": 0.12849894165992737,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "jores_456",
+      "gsi": 0.3622029721736908,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_72291",
+      "gsi": 0.09718305617570877,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 31
+    },
+    {
+      "seq_id": "jores_7722",
+      "gsi": 0.24507194757461548,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 25
+    },
+    {
+      "seq_id": "jores_22350",
+      "gsi": 0.190816268324852,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_57936",
+      "gsi": 0.11161477863788605,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_69344",
+      "gsi": 0.10779700428247452,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_11756",
+      "gsi": 0.1755353957414627,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_59917",
+      "gsi": 0.12159481644630432,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_29886",
+      "gsi": 0.17645376920700073,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_65308",
+      "gsi": 0.11702556908130646,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_10329",
+      "gsi": 0.1263432800769806,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_67617",
+      "gsi": 0.12293661385774612,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_46191",
+      "gsi": 0.2639527916908264,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "jores_70622",
+      "gsi": 0.1046842634677887,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_74015",
+      "gsi": 0.08752432465553284,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "jores_1805",
+      "gsi": 0.33956238627433777,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "jores_56703",
+      "gsi": 0.20396660268306732,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_74056",
+      "gsi": 0.11701209843158722,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "jores_33862",
+      "gsi": 0.11071303486824036,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_23058",
+      "gsi": 0.1440475583076477,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_74426",
+      "gsi": 0.08054591715335846,
+      "p_value": 0.0,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_63160",
+      "gsi": 0.12207641452550888,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 39
+    },
+    {
+      "seq_id": "jores_11471",
+      "gsi": 0.19145289063453674,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 25
+    },
+    {
+      "seq_id": "jores_61123",
+      "gsi": 0.15734529495239258,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_73789",
+      "gsi": 0.11354673653841019,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 44
+    },
+    {
+      "seq_id": "jores_31806",
+      "gsi": 0.152012899518013,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_70750",
+      "gsi": 0.08748861402273178,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_23751",
+      "gsi": 0.20996859669685364,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "jores_46618",
+      "gsi": 0.13428139686584473,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "jores_54259",
+      "gsi": 0.16175779700279236,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_36465",
+      "gsi": 0.12657056748867035,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "jores_69367",
+      "gsi": 0.1315494030714035,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_24864",
+      "gsi": 0.1950775384902954,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_17128",
+      "gsi": 0.28679415583610535,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "jores_43690",
+      "gsi": 0.17582982778549194,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_57605",
+      "gsi": 0.14551271498203278,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_19258",
+      "gsi": 0.2780615985393524,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_3137",
+      "gsi": 0.16741898655891418,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_61200",
+      "gsi": 0.11316738277673721,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 50
+    },
+    {
+      "seq_id": "jores_46372",
+      "gsi": 0.19895970821380615,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "jores_51691",
+      "gsi": 0.17637087404727936,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_72687",
+      "gsi": 0.14430879056453705,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 35
+    },
+    {
+      "seq_id": "jores_41663",
+      "gsi": 0.097806915640831,
+      "p_value": 0.8,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_19927",
+      "gsi": 0.17103888094425201,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 28
+    },
+    {
+      "seq_id": "jores_71486",
+      "gsi": 0.1270609200000763,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_73551",
+      "gsi": 0.09977837651968002,
+      "p_value": 0.0,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_60221",
+      "gsi": 0.10508489608764648,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "jores_50040",
+      "gsi": 0.13036642968654633,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_54013",
+      "gsi": 0.15863828361034393,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_67638",
+      "gsi": 0.10847855359315872,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_29528",
+      "gsi": 0.11976535618305206,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "jores_64118",
+      "gsi": 0.1228170096874237,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "jores_72723",
+      "gsi": 0.09813112765550613,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "jores_40515",
+      "gsi": 0.08473752439022064,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_22527",
+      "gsi": 0.14698319137096405,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "jores_72469",
+      "gsi": 0.09536779671907425,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 29
+    },
+    {
+      "seq_id": "jores_22611",
+      "gsi": 0.2240389734506607,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_67037",
+      "gsi": 0.12777601182460785,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "jores_40256",
+      "gsi": 0.08490956574678421,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_21769",
+      "gsi": 0.20032720267772675,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_46165",
+      "gsi": 0.16517043113708496,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_8788",
+      "gsi": 0.2040478140115738,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "jores_18352",
+      "gsi": 0.1905822604894638,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_1574",
+      "gsi": 0.4174019396305084,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_17687",
+      "gsi": 0.1525784283876419,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_70045",
+      "gsi": 0.13623099029064178,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 33
+    },
+    {
+      "seq_id": "jores_5897",
+      "gsi": 0.2563657760620117,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "jores_50569",
+      "gsi": 0.1266339123249054,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "jores_34824",
+      "gsi": 0.10554612427949905,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "jores_62268",
+      "gsi": 0.1223396509885788,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_27334",
+      "gsi": 0.17725694179534912,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "jores_64865",
+      "gsi": 0.10311160236597061,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "jores_8246",
+      "gsi": 0.23585326969623566,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "jores_47041",
+      "gsi": 0.1210787445306778,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "jores_15975",
+      "gsi": 0.15021397173404694,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "jores_39546",
+      "gsi": 0.13819019496440887,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "jores_19101",
+      "gsi": 0.2628154158592224,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "jores_49232",
+      "gsi": 0.28136950731277466,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "jores_33261",
+      "gsi": 0.15996579825878143,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "jores_41309",
+      "gsi": 0.09842280298471451,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 4
+    }
+  ]
+}
