@@ -1,0 +1,40 @@
+{
+  "datasets": [
+    "agarwal",
+    "jores",
+    "klein"
+  ],
+  "per_dataset_results": [
+    {
+      "dataset": "agarwal",
+      "billboard_pct": 83.8487972508591,
+      "soft_pct": 10.996563573883162,
+      "moderate_pct": 2.405498281786942,
+      "strong_pct": 2.7491408934707904,
+      "n_enhancers": 291
+    },
+    {
+      "dataset": "jores",
+      "billboard_pct": 90.73359073359073,
+      "soft_pct": 9.266409266409266,
+      "moderate_pct": 0,
+      "strong_pct": 0,
+      "n_enhancers": 259
+    },
+    {
+      "dataset": "klein",
+      "billboard_pct": 94.61279461279462,
+      "soft_pct": 4.040404040404041,
+      "moderate_pct": 0,
+      "strong_pct": 1.3468013468013467,
+      "n_enhancers": 297
+    }
+  ],
+  "cross_dataset_statistics": {
+    "mean_billboard_pct": 89.73172753241482,
+    "std_billboard_pct": 4.451120249056522,
+    "min_billboard_pct": 83.8487972508591,
+    "max_billboard_pct": 94.61279461279462,
+    "consistent": true
+  }
+}

@@ -1,0 +1,2057 @@
+{
+  "dataset": "agarwal",
+  "model": "dnabert2",
+  "n_enhancers": 291,
+  "n_shuffles": 50,
+  "classifications": {
+    "soft": 32,
+    "billboard": 244,
+    "moderate": 7,
+    "strong": 8
+  },
+  "percentages": {
+    "soft": 10.996563573883162,
+    "billboard": 83.8487972508591,
+    "moderate": 2.405498281786942,
+    "strong": 2.7491408934707904
+  },
+  "per_enhancer_results": [
+    {
+      "seq_id": "peak53913",
+      "gsi": 0.24266231060028076,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak71672",
+      "gsi": 0.2575639486312866,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak27088",
+      "gsi": 15.098899841308594,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "GATA1_944",
+      "gsi": 0.15473231673240662,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak60278",
+      "gsi": 94.51287841796875,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak60658",
+      "gsi": 0.3061408996582031,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak66025",
+      "gsi": 0.9336265325546265,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "LMO2_2757",
+      "gsi": 0.3209763467311859,
+      "p_value": 0.0,
+      "classification": "moderate",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak50051",
+      "gsi": 0.35599327087402344,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak36932",
+      "gsi": 0.22725732624530792,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak81116",
+      "gsi": 0.2244599461555481,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak36643",
+      "gsi": 0.463949978351593,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "peak22369",
+      "gsi": 2.051818609237671,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak70442",
+      "gsi": 0.508898913860321,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak44013",
+      "gsi": 0.481834352016449,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak43458",
+      "gsi": 0.5322458744049072,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak64229",
+      "gsi": 0.4899483919143677,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak16552",
+      "gsi": 1.1586030721664429,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "peak42245",
+      "gsi": 0.4893183708190918,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak49259",
+      "gsi": 0.5563383102416992,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "LMO2_983",
+      "gsi": 0.42910075187683105,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak83947",
+      "gsi": 0.42004653811454773,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak50083",
+      "gsi": 2.0150349140167236,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak37892",
+      "gsi": 0.7295823097229004,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak62980",
+      "gsi": 0.2957460284233093,
+      "p_value": 0.46,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak32377",
+      "gsi": 0.5976988077163696,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak30059",
+      "gsi": 0.30215975642204285,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "ENSG00000111860",
+      "gsi": 1.6721597909927368,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "ENSG00000184408",
+      "gsi": 0.3055029511451721,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak21589",
+      "gsi": 0.5686274170875549,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "RBM38_8395",
+      "gsi": 0.450485497713089,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "GATA1_5168",
+      "gsi": 0.4295082688331604,
+      "p_value": 0.0,
+      "classification": "moderate",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak5971",
+      "gsi": 0.9359495639801025,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak38248",
+      "gsi": 0.447162002325058,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 22
+    },
+    {
+      "seq_id": "peak74280",
+      "gsi": 0.24447880685329437,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak38465",
+      "gsi": 2.2760400772094727,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "ENSG00000004948",
+      "gsi": 0.22075867652893066,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak43282",
+      "gsi": 0.787848949432373,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "peak70549",
+      "gsi": 0.6986469626426697,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak3158",
+      "gsi": 3.2006611824035645,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "ENSG00000184831",
+      "gsi": 1.1956266164779663,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak1290",
+      "gsi": 0.36271461844444275,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "peak33109",
+      "gsi": 0.3615735173225403,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 48
+    },
+    {
+      "seq_id": "peak21054",
+      "gsi": 0.1791922003030777,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak69483",
+      "gsi": 0.4280403256416321,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak41517",
+      "gsi": 0.7895900011062622,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "HBE1_9225",
+      "gsi": 0.16361701488494873,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak33257",
+      "gsi": 2.1291635036468506,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "peak39225",
+      "gsi": 0.5745717287063599,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 22
+    },
+    {
+      "seq_id": "peak59750",
+      "gsi": 0.2925896644592285,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "RBM38_724",
+      "gsi": 0.22351253032684326,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak50296",
+      "gsi": 0.8124011754989624,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "peak3257",
+      "gsi": 0.45527803897857666,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "peak56364",
+      "gsi": 0.4909304678440094,
+      "p_value": 0.0,
+      "classification": "moderate",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak47996",
+      "gsi": 0.7212071418762207,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak83114",
+      "gsi": 0.8326151967048645,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak12120",
+      "gsi": 0.4366472065448761,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak31293",
+      "gsi": 5.396480083465576,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak27027",
+      "gsi": 0.26123708486557007,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "ENSG00000144681",
+      "gsi": 0.9962391257286072,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "ENSG00000154743",
+      "gsi": 32.75651931762695,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "ENSG00000137504",
+      "gsi": 0.5365843176841736,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak5954",
+      "gsi": 2.2180335521698,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "LMO2_367",
+      "gsi": 0.2041037529706955,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak50079",
+      "gsi": 0.38363951444625854,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "ENSG00000149742",
+      "gsi": 0.19598034024238586,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak47419",
+      "gsi": 0.8056925535202026,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak52611",
+      "gsi": 0.2866877615451813,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak7584",
+      "gsi": 0.23869569599628448,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak35051",
+      "gsi": 1.6656477451324463,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 28
+    },
+    {
+      "seq_id": "peak56791",
+      "gsi": 0.3961542844772339,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak87362",
+      "gsi": 0.25035589933395386,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak18361",
+      "gsi": 0.7461779117584229,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak34141",
+      "gsi": 0.7043660879135132,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "peak59970",
+      "gsi": 0.5079606771469116,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "MYC_1262",
+      "gsi": 0.27827951312065125,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak41763",
+      "gsi": 0.5111261606216431,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 38
+    },
+    {
+      "seq_id": "ENSG00000144063",
+      "gsi": 2.259110689163208,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "peak39534",
+      "gsi": 2.7225501537323,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak35100",
+      "gsi": 0.21732652187347412,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak37438",
+      "gsi": 1.8329298496246338,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak86193",
+      "gsi": 0.7412915825843811,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak56507",
+      "gsi": 0.3504321873188019,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak18347",
+      "gsi": 2.82915997505188,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak70629",
+      "gsi": 0.4922698438167572,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak48342",
+      "gsi": 0.3388417363166809,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak70753",
+      "gsi": 0.9345253109931946,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak55922",
+      "gsi": 0.8521538376808167,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "peak1994",
+      "gsi": 0.4981277883052826,
+      "p_value": 0.0,
+      "classification": "moderate",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak19951",
+      "gsi": 0.41913872957229614,
+      "p_value": 0.0,
+      "classification": "moderate",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak25536",
+      "gsi": 0.7992734313011169,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak43239",
+      "gsi": 0.5211605429649353,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak243",
+      "gsi": 0.88676518201828,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak17511",
+      "gsi": 0.4067445397377014,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak38863",
+      "gsi": 0.3964037001132965,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "peak15716",
+      "gsi": 0.3404526114463806,
+      "p_value": 0.42,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak70634",
+      "gsi": 0.44140252470970154,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "peak42741",
+      "gsi": 0.31636178493499756,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak67283",
+      "gsi": 0.6748677492141724,
+      "p_value": 0.64,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak22498",
+      "gsi": 0.33537980914115906,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak49659",
+      "gsi": 0.3826691210269928,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak14331",
+      "gsi": 0.26714572310447693,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "LMO2_6428",
+      "gsi": 0.534217357635498,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak313",
+      "gsi": 0.39268866181373596,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "ENSG00000161277",
+      "gsi": 0.9785516262054443,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "peak52432",
+      "gsi": 0.8043204545974731,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak760",
+      "gsi": 0.5834509134292603,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak27626",
+      "gsi": 0.2388179451227188,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "RBM38_1774",
+      "gsi": 0.22382082045078278,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak77511",
+      "gsi": 6.651022434234619,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak6103",
+      "gsi": 0.1678081899881363,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "ENSG00000033867",
+      "gsi": 0.46993154287338257,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak17957",
+      "gsi": 0.8813558220863342,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 21
+    },
+    {
+      "seq_id": "peak68277",
+      "gsi": 0.39078041911125183,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak51531",
+      "gsi": 1.8821766376495361,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak82787",
+      "gsi": 0.29979005455970764,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak61140",
+      "gsi": 0.2940071225166321,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak44445",
+      "gsi": 0.29596781730651855,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak34890",
+      "gsi": 0.2547624707221985,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "RBM38_2326",
+      "gsi": 0.4443517327308655,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "HBE1_9206",
+      "gsi": 0.6684749722480774,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak77993",
+      "gsi": 0.4887672960758209,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak71245",
+      "gsi": 0.5117242336273193,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak42160",
+      "gsi": 1.8824642896652222,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "ENSG00000183625",
+      "gsi": 0.4392869472503662,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak82315",
+      "gsi": 0.38078129291534424,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "ENSG00000154611",
+      "gsi": 0.5384324789047241,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "ENSG00000243489",
+      "gsi": 0.6580474972724915,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak82375",
+      "gsi": 0.398353636264801,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak30310",
+      "gsi": 0.28282612562179565,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "BCL11A_858",
+      "gsi": 0.3081497848033905,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak69174",
+      "gsi": 1.7960748672485352,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak80370",
+      "gsi": 0.24594217538833618,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak37848",
+      "gsi": 1.2585108280181885,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "peak77790",
+      "gsi": 0.6594034433364868,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "ENSG00000198945",
+      "gsi": 1.1832808256149292,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak83618",
+      "gsi": 0.7440130114555359,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak64556",
+      "gsi": 0.385597825050354,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "peak34340",
+      "gsi": 0.9352651238441467,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak10452",
+      "gsi": 0.22544781863689423,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak17531",
+      "gsi": 1.6103835105895996,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "MYC_7532",
+      "gsi": 0.21720759570598602,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "HBA2_4693",
+      "gsi": 0.504025936126709,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "peak4506",
+      "gsi": 0.7627685070037842,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak64703",
+      "gsi": 0.3870731294155121,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak3112",
+      "gsi": 0.1676146239042282,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak72125",
+      "gsi": 0.5251049399375916,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak7696",
+      "gsi": 1.1674818992614746,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "GATA1_2095",
+      "gsi": 0.17731431126594543,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak53320",
+      "gsi": 0.9539007544517517,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak52960",
+      "gsi": 0.5949698686599731,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "ENSG00000161955",
+      "gsi": 3.1696367263793945,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "peak66724",
+      "gsi": 1.6748321056365967,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak79047",
+      "gsi": 0.28419917821884155,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak23376",
+      "gsi": 0.2797621488571167,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak31989",
+      "gsi": 1.0132076740264893,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "ENSG00000196712",
+      "gsi": 0.32664233446121216,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak76986",
+      "gsi": 0.7021792531013489,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak5257",
+      "gsi": 0.44672727584838867,
+      "p_value": 0.0,
+      "classification": "moderate",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak29668",
+      "gsi": 0.8716152906417847,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak3574",
+      "gsi": 0.7746292352676392,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak54315",
+      "gsi": 0.22485874593257904,
+      "p_value": 0.92,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak78029",
+      "gsi": 0.3768467903137207,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak44461",
+      "gsi": 0.5298178195953369,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "ENSG00000090534",
+      "gsi": 0.34579476714134216,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "peak85947",
+      "gsi": 0.4981399476528168,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "ENSG00000213999",
+      "gsi": 2.8371782302856445,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "peak39087",
+      "gsi": 0.9521500468254089,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 44
+    },
+    {
+      "seq_id": "peak18053",
+      "gsi": 0.7418875694274902,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak19232",
+      "gsi": 1.140684962272644,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak45144",
+      "gsi": 0.499975323677063,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak45945",
+      "gsi": 0.6855862736701965,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "HBE1_5307",
+      "gsi": 0.2679198980331421,
+      "p_value": 0.4,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak77836",
+      "gsi": 2.2715821266174316,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak49337",
+      "gsi": 0.38320961594581604,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 20
+    },
+    {
+      "seq_id": "GATA1_61",
+      "gsi": 0.7811666131019592,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak59069",
+      "gsi": 0.5653281211853027,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "GATA1_3992",
+      "gsi": 0.19974425435066223,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "MYC_2978",
+      "gsi": 0.302592396736145,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak27871",
+      "gsi": 0.1893850415945053,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "HBA2_2267",
+      "gsi": 0.5534105896949768,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak87346",
+      "gsi": 0.600079357624054,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak48498",
+      "gsi": 0.40111827850341797,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak18229",
+      "gsi": 0.40216782689094543,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak42876",
+      "gsi": 0.5307456254959106,
+      "p_value": 0.4,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak12544",
+      "gsi": 2.329400062561035,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak4928",
+      "gsi": 0.2416764497756958,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "MYC_7415",
+      "gsi": 0.20777343213558197,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "LMO2_174",
+      "gsi": 0.35679101943969727,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "RBM38_3922",
+      "gsi": 0.6938284635543823,
+      "p_value": 0.38,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "MYC_2880",
+      "gsi": 1.018513798713684,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "peak62216",
+      "gsi": 0.38928520679473877,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak51163",
+      "gsi": 1.095283031463623,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "range_80_6",
+      "gsi": 1.8359227180480957,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 23
+    },
+    {
+      "seq_id": "BCL11A_1499",
+      "gsi": 0.3428235948085785,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "peak87328",
+      "gsi": 0.22565755248069763,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak58119",
+      "gsi": 0.6946941614151001,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak12731",
+      "gsi": 0.42553117871284485,
+      "p_value": 0.8,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak76881",
+      "gsi": 0.3935387134552002,
+      "p_value": 0.62,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak2055",
+      "gsi": 1.0976229906082153,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak78136",
+      "gsi": 1.037724494934082,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 3
+    },
+    {
+      "seq_id": "GATA1_9996",
+      "gsi": 0.4770050346851349,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "ENSG00000132664",
+      "gsi": 1.0620380640029907,
+      "p_value": 0.86,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak71217",
+      "gsi": 0.5521881580352783,
+      "p_value": 0.66,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak8499",
+      "gsi": 0.2938695549964905,
+      "p_value": 0.54,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak22300",
+      "gsi": 0.5893089771270752,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "ENSG00000168280",
+      "gsi": 0.8964129090309143,
+      "p_value": 0.2,
+      "classification": "billboard",
+      "n_motifs": 23
+    },
+    {
+      "seq_id": "peak40565",
+      "gsi": 0.9575518369674683,
+      "p_value": 0.7,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak21700",
+      "gsi": 0.8911616802215576,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak54008",
+      "gsi": 0.48071885108947754,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "peak52878",
+      "gsi": 0.524158775806427,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak13902",
+      "gsi": 1.3357105255126953,
+      "p_value": 0.96,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak18583",
+      "gsi": 1.9966717958450317,
+      "p_value": 0.36,
+      "classification": "billboard",
+      "n_motifs": 23
+    },
+    {
+      "seq_id": "peak85395",
+      "gsi": 0.3985808193683624,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak8032",
+      "gsi": 0.660977840423584,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "peak8375",
+      "gsi": 0.7934086322784424,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak69318",
+      "gsi": 1.044481873512268,
+      "p_value": 0.94,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak16457",
+      "gsi": 1.4349972009658813,
+      "p_value": 0.08,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak29964",
+      "gsi": 0.2905201315879822,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak54612",
+      "gsi": 0.2269286960363388,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak44666",
+      "gsi": 0.3811935484409332,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "HBA2_4082",
+      "gsi": 2.691983222961426,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak81006",
+      "gsi": 0.36242106556892395,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "RBM38_1095",
+      "gsi": 0.31369420886039734,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "HBE1_8428",
+      "gsi": 0.20717981457710266,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak60431",
+      "gsi": 0.2548920810222626,
+      "p_value": 0.82,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "peak15809",
+      "gsi": 8.577178955078125,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "peak16122",
+      "gsi": 1.0753276348114014,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak5822",
+      "gsi": 0.9186708331108093,
+      "p_value": 0.34,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "peak74989",
+      "gsi": 0.6406270861625671,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "peak24310",
+      "gsi": 0.28261181712150574,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak13673",
+      "gsi": 0.29838064312934875,
+      "p_value": 0.24,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "MYC_822",
+      "gsi": 0.19849610328674316,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "peak81081",
+      "gsi": 0.6114677786827087,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak79073",
+      "gsi": 4.65150785446167,
+      "p_value": 0.44,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak19561",
+      "gsi": 0.597720205783844,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak76733",
+      "gsi": 1.379794716835022,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "ENSG00000211598",
+      "gsi": 0.2883877456188202,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 17
+    },
+    {
+      "seq_id": "BCL11A_1605",
+      "gsi": 0.2692364454269409,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "ENSG00000180720",
+      "gsi": 15.067414283752441,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 35
+    },
+    {
+      "seq_id": "peak35449",
+      "gsi": 0.4649263024330139,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak77181",
+      "gsi": 0.544715404510498,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak60410",
+      "gsi": 0.44973212480545044,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "RBM38_4035",
+      "gsi": 1.5399383306503296,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "seq33776_shuffled_0",
+      "gsi": 0.7020553350448608,
+      "p_value": 0.06,
+      "classification": "billboard",
+      "n_motifs": 23
+    },
+    {
+      "seq_id": "peak68439",
+      "gsi": 0.5740633606910706,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 25
+    },
+    {
+      "seq_id": "peak74730",
+      "gsi": 0.5133756995201111,
+      "p_value": 0.48,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak6825",
+      "gsi": 0.19276423752307892,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak56195",
+      "gsi": 1.0281883478164673,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak30245",
+      "gsi": 1.1082013845443726,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 19
+    },
+    {
+      "seq_id": "peak78558",
+      "gsi": 1.2360550165176392,
+      "p_value": 0.26,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "peak74666",
+      "gsi": 2.1108195781707764,
+      "p_value": 0.58,
+      "classification": "billboard",
+      "n_motifs": 26
+    },
+    {
+      "seq_id": "HBE1_9693",
+      "gsi": 0.543075442314148,
+      "p_value": 0.9,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "MYC_3685",
+      "gsi": 0.25004202127456665,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 6
+    },
+    {
+      "seq_id": "ENSG00000204301",
+      "gsi": 0.7723820209503174,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak6722",
+      "gsi": 0.38914555311203003,
+      "p_value": 0.3,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak42238",
+      "gsi": 1.414942741394043,
+      "p_value": 0.28,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "ENSG00000196636",
+      "gsi": 0.19218088686466217,
+      "p_value": 0.0,
+      "classification": "soft",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak51088",
+      "gsi": 0.5140091776847839,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "peak38502",
+      "gsi": 0.39812472462654114,
+      "p_value": 0.72,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak6835",
+      "gsi": 0.21602708101272583,
+      "p_value": 0.74,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "LMO2_2862",
+      "gsi": 0.2732204794883728,
+      "p_value": 0.84,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak26206",
+      "gsi": 1.1653773784637451,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 39
+    },
+    {
+      "seq_id": "peak13083",
+      "gsi": 0.37067145109176636,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak56450",
+      "gsi": 0.49601805210113525,
+      "p_value": 0.56,
+      "classification": "billboard",
+      "n_motifs": 15
+    },
+    {
+      "seq_id": "HBA2_4399",
+      "gsi": 6.698184013366699,
+      "p_value": 0.8,
+      "classification": "billboard",
+      "n_motifs": 12
+    },
+    {
+      "seq_id": "peak46972",
+      "gsi": 0.8042701482772827,
+      "p_value": 0.78,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak25791",
+      "gsi": 0.32927852869033813,
+      "p_value": 0.68,
+      "classification": "billboard",
+      "n_motifs": 16
+    },
+    {
+      "seq_id": "peak85569",
+      "gsi": 0.4555974006652832,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak81927",
+      "gsi": 0.46348169445991516,
+      "p_value": 0.0,
+      "classification": "moderate",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak55993",
+      "gsi": 0.38394466042518616,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 2
+    },
+    {
+      "seq_id": "HBE1_7719",
+      "gsi": 0.1915542185306549,
+      "p_value": 0.04,
+      "classification": "soft",
+      "n_motifs": 9
+    },
+    {
+      "seq_id": "peak65210",
+      "gsi": 0.6482827663421631,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak45349",
+      "gsi": 0.37968382239341736,
+      "p_value": 0.12,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak18109",
+      "gsi": 0.8004090189933777,
+      "p_value": 0.22,
+      "classification": "billboard",
+      "n_motifs": 23
+    },
+    {
+      "seq_id": "MYC_8892",
+      "gsi": 0.27468475699424744,
+      "p_value": 0.88,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak38702",
+      "gsi": 0.9011107683181763,
+      "p_value": 0.52,
+      "classification": "billboard",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "peak45897",
+      "gsi": 0.3981083929538727,
+      "p_value": 0.5,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "ENSG00000198901",
+      "gsi": 0.7710143327713013,
+      "p_value": 0.76,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak8686",
+      "gsi": 0.36079543828964233,
+      "p_value": 0.18,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "peak61122",
+      "gsi": 0.25511497259140015,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 7
+    },
+    {
+      "seq_id": "peak79517",
+      "gsi": 4.2138590812683105,
+      "p_value": 0.16,
+      "classification": "billboard",
+      "n_motifs": 10
+    },
+    {
+      "seq_id": "peak2640",
+      "gsi": 0.9636386036872864,
+      "p_value": 0.32,
+      "classification": "billboard",
+      "n_motifs": 13
+    },
+    {
+      "seq_id": "peak83091",
+      "gsi": 0.3047197461128235,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 5
+    },
+    {
+      "seq_id": "peak54758",
+      "gsi": 0.4332844018936157,
+      "p_value": 0.02,
+      "classification": "soft",
+      "n_motifs": 18
+    },
+    {
+      "seq_id": "LMO2_3109",
+      "gsi": 0.27010783553123474,
+      "p_value": 0.98,
+      "classification": "billboard",
+      "n_motifs": 4
+    },
+    {
+      "seq_id": "ENSG00000102043",
+      "gsi": 0.46792784333229065,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak18274",
+      "gsi": 0.5098385214805603,
+      "p_value": 0.6,
+      "classification": "billboard",
+      "n_motifs": 11
+    },
+    {
+      "seq_id": "peak4587",
+      "gsi": 0.28840887546539307,
+      "p_value": 0.14,
+      "classification": "billboard",
+      "n_motifs": 14
+    },
+    {
+      "seq_id": "peak899",
+      "gsi": 0.5213587284088135,
+      "p_value": 0.1,
+      "classification": "billboard",
+      "n_motifs": 8
+    },
+    {
+      "seq_id": "peak58347",
+      "gsi": 0.4035939574241638,
+      "p_value": 1.0,
+      "classification": "billboard",
+      "n_motifs": 4
+    }
+  ]
+}
