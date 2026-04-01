@@ -2,26 +2,32 @@
 
 ## Executive Summary
 
-This study investigates whether regulatory DNA follows compositional grammar rules using foundation models as oracles. We find that **the standard computational methodology for measuring regulatory grammar is fundamentally confounded by spacer DNA composition effects**.
+This study investigates whether foundation models learn regulatory grammar (motif arrangement rules) or operate via a simpler "billboard" framework (motif identity only). We find that **models learn using the billboard framework** — they encode composition, not syntax.
 
 ### Core Discovery
 
-**Spacer DNA changes account for 78-86% of expression variance** during vocabulary-preserving shuffles. What we call "grammar sensitivity" is primarily spacer composition sensitivity, NOT motif arrangement sensitivity.
+**Foundation models learn regulatory DNA as billboards**: motif identity matters, but arrangement does not contribute to predictions. ~90% of enhancers show no model-detectable grammar effects.
 
-### Key Findings
+### Key Findings (What Models Learn)
 
 | Finding | Evidence |
 |---------|----------|
-| Grammar effects ARE real | Positive control shows p < 1e-117 for orientation changes with controlled spacers |
-| But GSI measures spacer, not grammar | Factorial decomposition: spacer = 78-86% of shuffle variance |
-| Simple features dominate predictions | GC content + dinucleotides explain 40-80% of model output |
-| GC-expression relationship is species-specific | Human K562: r = +0.66; Plant: r = -0.73 |
-| Models agree on significance rarity | 6-11% nominal, 0.17% FDR-corrected, across all architectures |
-| Billboard model confirmed | Motif permutation has smallest effect (Δ = 0.03-0.09) |
+| Models learn composition, not syntax | GC + dinucleotides explain 40-80% of predictions |
+| GSI measures spacer, not grammar | Spacer changes = 78-86% of shuffle variance |
+| ~90% of enhancers are billboard-like | Per-enhancer classification across 3 species |
+| Billboard learning is architecture-independent | CNN, transformer, SSM all show 6-11% significance |
+| Grammar is learnable but not predictive | SFGN: α → 0.7-1.0 but R² stays near zero |
 
-### Reframing
+### Two Proposed Interpretations
 
-This is not "grammar doesn't exist" but rather **"the standard computational method can't measure grammar because of the spacer confound."** With controlled experimental design (Georgakopoulos-Soares data), grammar is clearly detectable.
+| Interpretation | Claim |
+|----------------|-------|
+| **A: Biology is billboard-like** | Regulatory DNA genuinely works this way — arrangement minimally affects expression |
+| **B: Models fail to learn grammar** | Complex grammar exists but current models can't capture it |
+
+### Important Limitation
+
+All evidence is based on model predictions. We cannot distinguish between interpretations A and B without experimental validation (MPRA with controlled grammar variants).
 
 ---
 
@@ -356,45 +362,58 @@ Grammar information is encoded in later transformer layers, consistent with the 
 
 ### Primary Finding
 
-The standard computational approach to measuring regulatory grammar (vocabulary-preserving shuffles + expression prediction) is **fundamentally confounded by spacer DNA composition effects**. This is a methodological finding, not a biological claim.
+Foundation models learn regulatory DNA using the **billboard framework**: they encode motif identity (vocabulary) but not motif arrangement (grammar). This is a finding about what models learn, not a definitive claim about biology.
 
-### What This Study Shows
+### What This Study Confirms (Model Behavior)
 
-1. **Grammar is real but masked**: With controlled experimental design (identical spacers), models detect grammar clearly (p < 1e-117)
+1. **Models learn composition, not syntax**: GC content and dinucleotides explain 40-80% of model predictions
 
-2. **GSI measures the wrong thing**: 78-86% of GSI variance comes from spacer changes, not motif arrangement
+2. **GSI measures spacer effects**: 78-86% of GSI variance comes from spacer changes, not motif arrangement
 
-3. **Models learn composition, not syntax**: GC content and dinucleotides explain 40-80% of predictions
+3. **Billboard learning is architecture-independent**: CNN (PARM) and transformers (DNABERT-2, NT) show identical patterns
 
-4. **Billboard model is supported**: Motif identity matters; arrangement adds noise in standard assays
+4. **~90% of enhancers classified as billboard**: Models show no grammar sensitivity for the vast majority of sequences
 
-5. **Architecture-independent**: CNN (PARM) and transformers (DNABERT-2, NT) show identical significance rates
+5. **Grammar is learnable but not predictive**: SFGN learns high grammar weights (α → 0.7-1.0) but validation R² stays near zero
+
+### What This Study Proposes (Two Interpretations)
+
+**Interpretation A - Biology is billboard-like:**
+Regulatory DNA genuinely operates via a billboard model — transcription factor binding site identity matters, but their precise arrangement contributes minimally to expression. Evolution has not strongly selected for complex grammar.
+
+**Interpretation B - Models fail to learn grammar:**
+Complex regulatory grammar exists in biology, but current foundation models only learn up to the billboard level. The models' inductive biases (attention patterns, training objectives) prevent them from capturing higher-order syntax that may be biologically relevant.
+
+### What We Cannot Determine
+
+This study uses model predictions throughout. We cannot distinguish between Interpretations A and B without:
+- MPRA experiments with controlled grammar variants (same motifs, different arrangements)
+- Direct measurement of expression changes from grammar perturbations
+- Wet-lab validation of specific grammar rules
 
 ### Implications for the Field
 
-Future computational studies of regulatory grammar must:
-- Use controlled experimental designs with constant spacers
-- Avoid vocabulary-preserving shuffles as the primary grammar metric
-- Account for species-specific GC-expression relationships
-- Consider that "grammar sensitivity" may be composition sensitivity
+1. **For computational studies**: Vocabulary-preserving shuffles are confounded by spacer effects; controlled experimental designs are needed
+2. **For model development**: Current architectures may have systematic blind spots for grammar; new approaches needed
+3. **For biological interpretation**: Model-based grammar claims should be validated experimentally
 
 ---
 
 ## Key Sentences for Publication
 
-1. "The standard computational approach to measuring grammar is confounded by spacer DNA composition, which accounts for **78-86%** of the variance attributed to grammar."
+1. "Foundation models learn regulatory DNA using a **billboard framework**: vocabulary (motif identity) explains 8-22% of expression variance, while grammar (arrangement) explains only 0-1.6%."
 
-2. "With controlled spacers, models detect grammar (orientation effect p < 1e-117), proving the confound is methodological, not biological."
+2. "The standard GSI metric is confounded by spacer DNA composition, which accounts for **78-86%** of the variance attributed to grammar."
 
-3. "GC content and dinucleotide frequencies explain **40-80%** of foundation model predictions, with GC-expression direction **reversing across species** (+0.66 human, -0.73 plant)."
+3. "Per-enhancer classification shows **~90% of enhancers are billboard-like** — models detect no significant grammar effects for the vast majority of regulatory sequences."
 
-4. "Grammar is detectable but rarely significant: **0.17%** of enhancers survive FDR correction (BH q<0.05), consistent across transformers (DNABERT-2, NT), SSMs (HyenaDNA), and CNNs (PARM)."
+4. "GC content and dinucleotide frequencies explain **40-80%** of model predictions, with GC-expression direction **reversing across species** (+0.66 human, -0.73 plant)."
 
-5. "ANOVA decomposition shows vocabulary (motif identity) explains **8-22%** of expression variance; grammar (motif arrangement) explains **0-1.6%**."
+5. "This billboard learning is architecture-independent: CNNs (PARM), transformers (DNABERT-2, NT), and SSMs (HyenaDNA) all show 6-11% grammar significance rates."
 
-6. "Regulatory grammar is **context-sensitive** (compositionality gap = 0.99) and **completely species-specific** (cross-species transfer R² = 0.0)."
+6. "We propose two interpretations: (A) biology genuinely operates via billboard-like regulation, or (B) current models fail to learn complex grammar that may exist."
 
-7. "The billboard model is confirmed: motif permutation alone (Δ = 0.03-0.09) produces 2-6× smaller effects than spacer perturbations (Δ = 0.12-0.55)."
+7. "Experimental validation is needed: model-based grammar claims cannot distinguish whether grammar doesn't exist or whether models simply don't learn it."
 
 ---
 
