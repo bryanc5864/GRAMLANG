@@ -1,0 +1,141 @@
+\documentclass[10pt]{article}
+
+\usepackage[letterpaper, top=0.55in, bottom=0.55in, left=0.65in, right=0.65in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage[font=scriptsize,labelfont=bf,skip=2pt]{caption}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{wrapfig}
+\usepackage{float}
+
+% Tight section spacing
+\titlespacing*{\section}{0pt}{5pt}{1pt}
+\titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection.}{0.4em}{}
+
+\setlength{\parskip}{2pt}
+\setlength{\parindent}{0pt}
+\setlength{\textfloatsep}{4pt}
+\setlength{\floatsep}{3pt}
+\setlength{\intextsep}{3pt}
+\setlength{\abovecaptionskip}{2pt}
+\setlength{\belowcaptionskip}{0pt}
+\setlength{\columnsep}{8pt}
+
+\graphicspath{{../results/manuscript_figures/}{../results/figures/}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\large \textbf{Spacer composition, not motif arrangement, dominates apparent
+regulatory grammar detected by DNA foundation models}}
+\vspace{3pt}
+
+{\small
+Bryan Cheng\textsuperscript{1,*}, Austin Jin\textsuperscript{1}\quad
+\textsuperscript{1}Cold Spring Harbor Laboratory, Cold Spring Harbor, NY, USA\quad
+\textsuperscript{*}bcbc7264@gmail.com
+}
+\end{center}
+\vspace{1pt}
+\hrule
+\vspace{3pt}
+
+\section*{Motivation}
+
+Whether the spatial arrangement of transcription factor (TF) binding sites encodes functional information---a ``regulatory grammar''---or whether enhancers operate as ``billboards'' where only TF identity matters remains debated~[1,2].
+DNA foundation models enable systematic \textit{in silico} perturbation of enhancer architecture, but standard grammar sensitivity metrics confound motif arrangement with spacer DNA composition.
+We introduce a \textbf{spacer-factored grammar sensitivity framework (SF-GSI)} applied across four foundation models, five MPRA datasets, and four organisms to quantify the true contribution of motif arrangement to gene expression.
+
+\vspace{-2pt}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{fig1_spacer_confound.pdf}
+\vspace{-4pt}
+\caption{\textbf{Spacer composition dominates apparent grammar effects.}
+\textbf{(A)}~Factorial decomposition: spacer composition accounts for the majority of expression variance.
+\textbf{(B)}~Spacer-level perturbations drive larger expression changes than motif rearrangement.
+\textbf{(C)}~Compositional features predict 40--80\% of model $R^2$.
+\textbf{(D)}~GC--expression correlation reverses across species ($r\!=\!{+}0.63$ human vs.\ $r\!=\!{-}0.76$ plant).}
+\label{fig:spacer}
+\end{figure}
+
+\vspace{-4pt}
+\section*{Methods}
+
+\textbf{Grammar Sensitivity Index (GSI).}
+TF motifs are identified via FIMO against JASPAR 2024~[3]; 1{,}000 vocabulary-preserving shuffles permute motif order while holding identity constant.
+GSI~$= \sigma(\hat{y}) / |\mu(\hat{y})|$.
+\textbf{Spacer-Factored GSI (SF-GSI).}
+A factorial design isolates: (i)~motif position/orientation (true grammar), (ii)~spacer composition (confound), (iii)~flanking-context effects via matched-spacer shuffles and regression residuals.
+\textbf{Rule Extraction.}
+Pairwise rules via spacing scans (2--50~bp), four orientation configurations, and helical phasing at ${\sim}$10.5~bp.
+\textbf{Variance Decomposition.}
+Hierarchical ANOVA: vocabulary $\rightarrow$ +grammar $\rightarrow$ +higher-order $\rightarrow$ full model.
+\textbf{Models \& Data.}
+DNABERT-2, Nucleotide Transformer v2-500M (transformers), HyenaDNA (SSM), PARM (CNN); five MPRA datasets across human, yeast, and plant (${\sim}$7{,}650 enhancers)~[4,5].
+
+\vspace{-2pt}
+\section*{Results}
+
+\textbf{The spacer confound.}
+Spacer DNA composition accounts for 78--86\% of measured GSI variance (Fig.~\ref{fig:spacer}A--B). Simple compositional statistics explain 40--80\% of predictions (Fig.~\ref{fig:spacer}C), and the GC--expression relationship reverses between species (Fig.~\ref{fig:spacer}D).
+
+\vspace{-2pt}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{fig3_gsi_census.pdf}
+\vspace{-4pt}
+\caption{\textbf{Statistical correction eliminates grammar signal.}
+\textbf{(A)}~GSI distributions across models. \textbf{(B)}~Median GSI by dataset.
+\textbf{(C)}~Significant enhancers: 100\% (naive) $\to$ 8.3\% ($z$-score) $\to$ \textbf{0.17\%} (FDR).
+\textbf{(D)}~Cross-model agreement ($\rho\!\approx\!0.74$).}
+\label{fig:census}
+\end{figure}
+
+\vspace{-4pt}
+\textbf{Correction cascade.}
+Naive testing yields 100\% ``grammatical'' enhancers; $z$-score normalization reduces this to 8.3\%, and FDR correction to \textbf{0.17\%}---a three-order-of-magnitude drop consistent across all architectures (Fig.~\ref{fig:census}C--D).
+
+\textbf{Positive controls.}
+With spacer composition held constant, orientation effects are detected at $p < 10^{-117}$ with 100\% detection rate (vs.\ 8.3\% under standard shuffles), confirming methodological sensitivity; the null result reflects biology.
+
+\textbf{Variance decomposition.}
+Motif identity explains 8--22\% of expression variance; grammar adds only 0--1.6\% $R^2$. Replicate ceilings (${\sim}$85\% $R^2$) indicate most variance is attributable to \textit{trans}-regulatory factors beyond enhancer sequence.
+
+\vspace{-2pt}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.62\textwidth]{fig5_transfer.pdf}
+\vspace{-4pt}
+\caption{\textbf{Grammar rules do not transfer across species.}
+\textbf{(A)}~Within-species $R^2\!=\!0.10$--$0.21$; cross-species $\approx\!0$.
+\textbf{(B)}~Cohen's $d$: $2\times$ larger cross-species ($1.89$ vs.\ $0.95$; $p\!=\!0.03$).}
+\label{fig:transfer}
+\end{figure}
+
+\vspace{-4pt}
+\textbf{Cross-species transfer.}
+Grammar rules from one organism predict near-zero effects in others (Fig.~\ref{fig:transfer}), consistent with the absence of conserved regulatory syntax.
+
+\section*{Conclusion}
+
+Regulatory DNA operates predominantly as a \textit{billboard}: TF identity, not arrangement, determines enhancer activity. Apparent grammar is largely spacer composition---a confound inflating sensitivity ${\sim}$1{,}000$\times$. Findings hold across four architectures, five datasets, and four organisms.
+SF-GSI provides the statistical machinery to separate grammatical effects from compositional confounds in regulatory genomics.
+Code: \url{https://github.com/bryanc5864/GRAMLANG}.
+
+\vspace{2pt}
+{\scriptsize
+\textbf{References:}
+[1]~Arnosti \& Kulkarni, \textit{J.~Cell.~Biochem.} 94:890, 2005.\
+[2]~Long et~al., \textit{Cell} 167:1170, 2016.\
+[3]~Castro-Mondragon et~al., \textit{Nucleic Acids Res.} 52:D142, 2024.\
+[4]~Agarwal et~al., \textit{Science} 380:eadh0559, 2023.\
+[5]~Jores et~al., \textit{Nat.~Plants} 7:842, 2021.
+}
+
+\end{document}
