@@ -1,0 +1,666 @@
+{
+  "agarwal": {
+    "n_same_vocab_pairs": 30,
+    "mean_expr_diff": 0.4786333333333333,
+    "max_expr_diff": 1.2349999999999999,
+    "frac_large_diff": 0.4,
+    "top_pairs": [
+      {
+        "seq_id_1": "peak73346",
+        "seq_id_2": "peak46701",
+        "vocabulary": [
+          "FOXG1",
+          "Foxj2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.876,
+        "expr_2": 0.359,
+        "expr_diff": 1.2349999999999999
+      },
+      {
+        "seq_id_1": "peak61913",
+        "seq_id_2": "peak67798",
+        "vocabulary": [
+          "EWSR1-FLI1",
+          "KLF16"
+        ],
+        "n_motifs": 2,
+        "expr_1": 0.067,
+        "expr_2": 1.225,
+        "expr_diff": 1.1580000000000001
+      },
+      {
+        "seq_id_1": "peak6149",
+        "seq_id_2": "peak61743",
+        "vocabulary": [
+          "TFAP4",
+          "TFAP4"
+        ],
+        "n_motifs": 2,
+        "expr_1": 0.71,
+        "expr_2": -0.41,
+        "expr_diff": 1.1199999999999999
+      },
+      {
+        "seq_id_1": "peak61267",
+        "seq_id_2": "peak10169",
+        "vocabulary": [
+          "KLF16",
+          "KLF5"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.557,
+        "expr_2": 0.407,
+        "expr_diff": 0.964
+      },
+      {
+        "seq_id_1": "peak47227",
+        "seq_id_2": "GATA1_9734",
+        "vocabulary": [
+          "ZNF135",
+          "ZNF135",
+          "ZNF460"
+        ],
+        "n_motifs": 3,
+        "expr_1": 0.336,
+        "expr_2": -0.568,
+        "expr_diff": 0.9039999999999999
+      },
+      {
+        "seq_id_1": "peak61267",
+        "seq_id_2": "peak40354",
+        "vocabulary": [
+          "KLF16",
+          "KLF5"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.557,
+        "expr_2": 0.326,
+        "expr_diff": 0.883
+      },
+      {
+        "seq_id_1": "peak52527",
+        "seq_id_2": "peak21589",
+        "vocabulary": [
+          "JDP2",
+          "JDP2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.985,
+        "expr_2": -0.197,
+        "expr_diff": 0.788
+      },
+      {
+        "seq_id_1": "peak20293",
+        "seq_id_2": "peak20034",
+        "vocabulary": [
+          "Ascl2",
+          "KLF5"
+        ],
+        "n_motifs": 2,
+        "expr_1": 0.216,
+        "expr_2": -0.506,
+        "expr_diff": 0.722
+      },
+      {
+        "seq_id_1": "peak52527",
+        "seq_id_2": "peak64159",
+        "vocabulary": [
+          "JDP2",
+          "JDP2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.985,
+        "expr_2": -0.27,
+        "expr_diff": 0.715
+      },
+      {
+        "seq_id_1": "GATA1_5799",
+        "seq_id_2": "peak3625",
+        "vocabulary": [
+          "FOXB1",
+          "FOXC1"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.594,
+        "expr_2": 0.034,
+        "expr_diff": 0.628
+      },
+      {
+        "seq_id_1": "ENSG00000080166",
+        "seq_id_2": "peak45124",
+        "vocabulary": [
+          "TP53",
+          "TP53",
+          "TP63",
+          "TP63"
+        ],
+        "n_motifs": 4,
+        "expr_1": -0.575,
+        "expr_2": -0.042,
+        "expr_diff": 0.5329999999999999
+      },
+      {
+        "seq_id_1": "peak59847",
+        "seq_id_2": "peak21589",
+        "vocabulary": [
+          "JDP2",
+          "JDP2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.727,
+        "expr_2": -0.197,
+        "expr_diff": 0.53
+      },
+      {
+        "seq_id_1": "peak57750",
+        "seq_id_2": "peak26215",
+        "vocabulary": [
+          "EWSR1-FLI1",
+          "SREBF1",
+          "SREBF2"
+        ],
+        "n_motifs": 3,
+        "expr_1": -0.583,
+        "expr_2": -0.095,
+        "expr_diff": 0.488
+      },
+      {
+        "seq_id_1": "LMO2_6313",
+        "seq_id_2": "GATA1_3516",
+        "vocabulary": [
+          "POU3F2",
+          "POU3F3",
+          "POU3F4",
+          "POU5F1B"
+        ],
+        "n_motifs": 4,
+        "expr_1": -0.41,
+        "expr_2": -0.888,
+        "expr_diff": 0.47800000000000004
+      },
+      {
+        "seq_id_1": "peak3928",
+        "seq_id_2": "peak60431",
+        "vocabulary": [
+          "ZNF418",
+          "ZNF707"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.643,
+        "expr_2": -0.17,
+        "expr_diff": 0.473
+      },
+      {
+        "seq_id_1": "peak59847",
+        "seq_id_2": "peak64159",
+        "vocabulary": [
+          "JDP2",
+          "JDP2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.727,
+        "expr_2": -0.27,
+        "expr_diff": 0.45699999999999996
+      },
+      {
+        "seq_id_1": "peak66146",
+        "seq_id_2": "peak3625",
+        "vocabulary": [
+          "FOXB1",
+          "FOXC1"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.32,
+        "expr_2": 0.034,
+        "expr_diff": 0.354
+      },
+      {
+        "seq_id_1": "GATA1_5799",
+        "seq_id_2": "peak66146",
+        "vocabulary": [
+          "FOXB1",
+          "FOXC1"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.594,
+        "expr_2": -0.32,
+        "expr_diff": 0.27399999999999997
+      },
+      {
+        "seq_id_1": "peak59847",
+        "seq_id_2": "peak52527",
+        "vocabulary": [
+          "JDP2",
+          "JDP2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.727,
+        "expr_2": -0.985,
+        "expr_diff": 0.258
+      },
+      {
+        "seq_id_1": "peak63024",
+        "seq_id_2": "peak82578",
+        "vocabulary": [
+          "EWSR1-FLI1",
+          "JDP2",
+          "JDP2"
+        ],
+        "n_motifs": 3,
+        "expr_1": -0.163,
+        "expr_2": -0.397,
+        "expr_diff": 0.234
+      }
+    ]
+  },
+  "jores": {
+    "n_same_vocab_pairs": 326,
+    "mean_expr_diff": 1.2390860736802045,
+    "max_expr_diff": 6.284556998728661,
+    "frac_large_diff": 0.7638036809815951,
+    "top_pairs": [
+      {
+        "seq_id_1": "jores_55149",
+        "seq_id_2": "jores_44731",
+        "vocabulary": [
+          "AP1",
+          "PI"
+        ],
+        "n_motifs": 2,
+        "expr_1": 1.80491687848026,
+        "expr_2": -4.4796401202484,
+        "expr_diff": 6.284556998728661
+      },
+      {
+        "seq_id_1": "jores_38527",
+        "seq_id_2": "jores_2980",
+        "vocabulary": [
+          "At3g11280",
+          "At3g11280"
+        ],
+        "n_motifs": 2,
+        "expr_1": -2.67300111493311,
+        "expr_2": 3.18954386461861,
+        "expr_diff": 5.8625449795517195
+      },
+      {
+        "seq_id_1": "jores_54013",
+        "seq_id_2": "jores_70132",
+        "vocabulary": [
+          "TGA4",
+          "bZIP911"
+        ],
+        "n_motifs": 2,
+        "expr_1": 1.26504109894523,
+        "expr_2": -3.08576922315408,
+        "expr_diff": 4.35081032209931
+      },
+      {
+        "seq_id_1": "jores_28112",
+        "seq_id_2": "jores_66288",
+        "vocabulary": [
+          "E2FD",
+          "E2FE"
+        ],
+        "n_motifs": 2,
+        "expr_1": 0.0132227522534807,
+        "expr_2": -4.1702893275204,
+        "expr_diff": 4.18351207977388
+      },
+      {
+        "seq_id_1": "jores_55149",
+        "seq_id_2": "jores_14784",
+        "vocabulary": [
+          "AP1",
+          "PI"
+        ],
+        "n_motifs": 2,
+        "expr_1": 1.80491687848026,
+        "expr_2": -2.3082112133927,
+        "expr_diff": 4.1131280918729605
+      },
+      {
+        "seq_id_1": "jores_24407",
+        "seq_id_2": "jores_48299",
+        "vocabulary": [
+          "AGL27",
+          "AP1"
+        ],
+        "n_motifs": 2,
+        "expr_1": 1.29825613773651,
+        "expr_2": -2.75643749262158,
+        "expr_diff": 4.05469363035809
+      },
+      {
+        "seq_id_1": "jores_2742",
+        "seq_id_2": "jores_44731",
+        "vocabulary": [
+          "AP1",
+          "PI"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.540821375919681,
+        "expr_2": -4.4796401202484,
+        "expr_diff": 3.9388187443287195
+      },
+      {
+        "seq_id_1": "jores_13471",
+        "seq_id_2": "jores_46392",
+        "vocabulary": [
+          "DOF3.6",
+          "TRP2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.964953052900799,
+        "expr_2": -4.74049740725159,
+        "expr_diff": 3.7755443543507914
+      },
+      {
+        "seq_id_1": "jores_7554",
+        "seq_id_2": "jores_29494",
+        "vocabulary": [
+          "TRP1",
+          "TRP2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.334800961892861,
+        "expr_2": -3.97221170019471,
+        "expr_diff": 3.637410738301849
+      },
+      {
+        "seq_id_1": "jores_7554",
+        "seq_id_2": "jores_51624",
+        "vocabulary": [
+          "TRP1",
+          "TRP2"
+        ],
+        "n_motifs": 2,
+        "expr_1": -0.334800961892861,
+        "expr_2": -3.82287850540029,
+        "expr_diff": 3.488077543507429
+      },
+      {
+        "seq_id_1": "jores_28112",
+        "seq_id_2": "jores_33088",
+        "vocabulary": [
+          "E2FD",
+          "E2FE"
+        ],
+        "n_motifs": 2,
+        "expr_1": 0.0132227522534807,
+        "expr_2": -3.41289526220865,
+        "expr_diff": 3.426118014462131
+      },
+      {
+        "seq_id_1": "jores_44731",
+        "seq_id_2": "jores_52131",
+        "vocabulary": [
+          "AP1",
+          "PI"
+        ],
+        "n_motifs": 2,
+        "expr_1": -4.4796401202484,
+        "expr_2": -1.08606318858682,
+        "expr_diff": 3.3935769316615803
+      },
+      {
+        "seq_id_1": "jores_4779",
+        "seq_id_2": "jores_24407",
+        "vocabulary": [
+          "AGL27",
+          "AP1"
+        ],
+        "n_motifs": 2,
+        "expr_1": -2.07662672867561,
+        "expr_2": 1.29825613773651,
+        "expr_diff": 3.37488286641212
+      },
+      {
+        "seq_id_1": "jores_28112",
+        "seq_id_2": "jores_22311",
+        "vocabulary": [
+          "E2FD",
+          "E2FE"
+        ],
+        "n_motifs": 2,
+        "expr_1": 0.0132227522534807,
+        "expr_2": -3.33626611920925,
+        "expr_diff": 3.349488871462731
+      },
+      {
+        "seq_id_1": "jores_35817",
+        "seq_id_2": "jores_47441",
+        "vocabulary": [
+          "E2FD",
+          "E2FE",
+          "ERF014"
+        ],
+        "n_motifs": 3,
+        "expr_1": 0.445251756814324,
+        "expr_2": -2.88486038376119,
+        "expr_diff": 3.330112140575514
+      },
+      {
+        "seq_id_1": "jores_24389",
+        "seq_id_2": "jores_51476",
+        "vocabulary": [
+          "BPC1",
+          "BPC5"
+        ],
+        "n_motifs": 2,
+        "expr_1": -1.22301552409875,
+        "expr_2": -4.53315613564272,
+        "expr_diff": 3.31014061154397
+      },
+      {
+        "seq_id_1": "jores_35817",
+        "seq_id_2": "jores_34504",
+        "vocabulary": [
+          "E2FD",
+          "E2FE",
+          "ERF014"
+        ],
+        "n_motifs": 3,
+        "expr_1": 0.445251756814324,
+        "expr_2": -2.77738044446542,
+        "expr_diff": 3.222632201279744
+      },
+      {
+        "seq_id_1": "jores_24389",
+        "seq_id_2": "jores_62268",
+        "vocabulary": [
+          "BPC1",
+          "BPC5"
+        ],
+        "n_motifs": 2,
+        "expr_1": -1.22301552409875,
+        "expr_2": -4.37699222168648,
+        "expr_diff": 3.1539766975877304
+      },
+      {
+        "seq_id_1": "jores_55149",
+        "seq_id_2": "jores_52131",
+        "vocabulary": [
+          "AP1",
+          "PI"
+        ],
+        "n_motifs": 2,
+        "expr_1": 1.80491687848026,
+        "expr_2": -1.08606318858682,
+        "expr_diff": 2.8909800670670798
+      },
+      {
+        "seq_id_1": "jores_21082",
+        "seq_id_2": "jores_66288",
+        "vocabulary": [
+          "E2FD",
+          "E2FE"
+        ],
+        "n_motifs": 2,
+        "expr_1": -1.2919086802882,
+        "expr_2": -4.1702893275204,
+        "expr_diff": 2.8783806472321993
+      }
+    ]
+  },
+  "klein": {
+    "n_same_vocab_pairs": 7,
+    "mean_expr_diff": 0.08499999999999998,
+    "max_expr_diff": 0.22699999999999998,
+    "frac_large_diff": 0.0,
+    "top_pairs": [
+      {
+        "seq_id_1": "klein_2258",
+        "seq_id_2": "klein_2259",
+        "vocabulary": [
+          "MGA",
+          "PITX2",
+          "TBX1",
+          "TBX15",
+          "TBX20",
+          "TBX4",
+          "TBX5",
+          "TP53",
+          "TP53",
+          "TP63",
+          "TP63",
+          "ZBTB32",
+          "ZNF8"
+        ],
+        "n_motifs": 13,
+        "expr_1": -0.358,
+        "expr_2": -0.585,
+        "expr_diff": 0.22699999999999998
+      },
+      {
+        "seq_id_1": "klein_2257",
+        "seq_id_2": "klein_2258",
+        "vocabulary": [
+          "MGA",
+          "PITX2",
+          "TBX1",
+          "TBX15",
+          "TBX20",
+          "TBX4",
+          "TBX5",
+          "TP53",
+          "TP53",
+          "TP63",
+          "TP63",
+          "ZBTB32",
+          "ZNF8"
+        ],
+        "n_motifs": 13,
+        "expr_1": -0.571,
+        "expr_2": -0.358,
+        "expr_diff": 0.21299999999999997
+      },
+      {
+        "seq_id_1": "klein_2248",
+        "seq_id_2": "klein_2249",
+        "vocabulary": [
+          "EWSR1-FLI1",
+          "KLF14",
+          "SP1",
+          "SP4",
+          "SREBF2",
+          "ZNF135",
+          "ZNF213",
+          "ZNF460"
+        ],
+        "n_motifs": 8,
+        "expr_1": -0.702,
+        "expr_2": -0.628,
+        "expr_diff": 0.07399999999999995
+      },
+      {
+        "seq_id_1": "klein_2268",
+        "seq_id_2": "klein_2269",
+        "vocabulary": [
+          "ESR2",
+          "KLF12",
+          "NFIC::TLX1",
+          "NFIC::TLX1",
+          "PROX1",
+          "SP2",
+          "Sox6",
+          "TEAD3",
+          "Tfcp2l1"
+        ],
+        "n_motifs": 9,
+        "expr_1": -0.574,
+        "expr_2": -0.531,
+        "expr_diff": 0.04299999999999993
+      },
+      {
+        "seq_id_1": "klein_2236",
+        "seq_id_2": "klein_2238",
+        "vocabulary": [
+          "EGR2",
+          "FERD3L",
+          "PGR",
+          "PGR",
+          "POU3F2",
+          "POU3F3",
+          "POU3F4",
+          "POU5F1B",
+          "TFAP2A",
+          "TFAP2A",
+          "TFAP2B",
+          "TFAP2B",
+          "TFAP2C",
+          "TFAP2C",
+          "ZBTB24",
+          "ZNF460",
+          "ZNF770"
+        ],
+        "n_motifs": 17,
+        "expr_1": 0.17,
+        "expr_2": 0.148,
+        "expr_diff": 0.02200000000000002
+      },
+      {
+        "seq_id_1": "klein_2257",
+        "seq_id_2": "klein_2259",
+        "vocabulary": [
+          "MGA",
+          "PITX2",
+          "TBX1",
+          "TBX15",
+          "TBX20",
+          "TBX4",
+          "TBX5",
+          "TP53",
+          "TP53",
+          "TP63",
+          "TP63",
+          "ZBTB32",
+          "ZNF8"
+        ],
+        "n_motifs": 13,
+        "expr_1": -0.571,
+        "expr_2": -0.585,
+        "expr_diff": 0.014000000000000012
+      },
+      {
+        "seq_id_1": "klein_2244",
+        "seq_id_2": "klein_2245",
+        "vocabulary": [
+          "EGR2",
+          "KLF10",
+          "KLF14",
+          "KLF5",
+          "MEIS2",
+          "SP1",
+          "SP2",
+          "ZNF707"
+        ],
+        "n_motifs": 8,
+        "expr_1": -0.537,
+        "expr_2": -0.539,
+        "expr_diff": 0.0020000000000000018
+      }
+    ]
+  }
+}

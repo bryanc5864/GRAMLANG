@@ -1,0 +1,34 @@
+{
+  "agarwal": {
+    "n_enhancers": 291,
+    "billboard_pct": 83.8487972508591,
+    "bootstrap_mean": 84.05910652920961,
+    "bootstrap_std": 2.140963963250662,
+    "ci_95_lower": 79.72508591065292,
+    "ci_95_upper": 87.98109965635739
+  },
+  "jores": {
+    "n_enhancers": 259,
+    "billboard_pct": 90.73359073359073,
+    "bootstrap_mean": 90.71737451737452,
+    "bootstrap_std": 1.7958539630485695,
+    "ci_95_lower": 87.25868725868726,
+    "ci_95_upper": 94.20849420849422
+  },
+  "klein": {
+    "n_enhancers": 297,
+    "billboard_pct": 94.61279461279462,
+    "bootstrap_mean": 94.67070707070707,
+    "bootstrap_std": 1.3257793702446723,
+    "ci_95_lower": 91.91919191919192,
+    "ci_95_upper": 97.3063973063973
+  },
+  "overall": {
+    "n_enhancers": 847,
+    "billboard_pct": 89.728453364817,
+    "bootstrap_mean": 89.74167650531288,
+    "bootstrap_std": 1.0591671483145682,
+    "ci_95_lower": 87.71841794569066,
+    "ci_95_upper": 91.73553719008265
+  }
+}
