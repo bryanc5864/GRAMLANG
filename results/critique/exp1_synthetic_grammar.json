@@ -1,0 +1,27 @@
+{
+  "experiment": "synthetic_grammar",
+  "model": "dnabert2",
+  "n_sequences": 150,
+  "motif_a": "GATAAGAT",
+  "motif_b": "CACGTGAC",
+  "predictions": {
+    "high_grammar_mean": -0.0025272101629525423,
+    "high_grammar_std": 0.10769423842430115,
+    "low_grammar_mean": 0.004467627499252558,
+    "low_grammar_std": 0.09587845206260681,
+    "no_grammar_mean": 0.010112335905432701,
+    "no_grammar_std": 0.10275135934352875
+  },
+  "statistical_tests": {
+    "high_vs_low_t": -0.3395790178165243,
+    "high_vs_low_p": 0.7349002531573512,
+    "high_vs_low_d": -0.06860532384610156,
+    "high_vs_no_t": -0.5944083444482493,
+    "high_vs_no_p": 0.5536088367504712,
+    "high_vs_no_d": -0.12008862123968735
+  },
+  "embedding_analysis": {
+    "centroid_similarity": 0.9973493814468384
+  },
+  "interpretation": "Model does NOT detect grammar"
+}

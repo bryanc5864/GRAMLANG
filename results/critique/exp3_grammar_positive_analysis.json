@@ -1,0 +1,108 @@
+{
+  "experiment": "grammar_positive_analysis",
+  "n_grammar_positive": 19,
+  "n_billboard": 760,
+  "grammar_positive_stats": {
+    "mean_gsi": 2.3038334313191866,
+    "std_gsi": 4.068311200087903,
+    "mean_n_motifs": 10.157894736842104,
+    "std_n_motifs": 7.371803734820206
+  },
+  "billboard_stats": {
+    "mean_gsi": 2.3295433474508553,
+    "std_gsi": 17.583376257351794,
+    "mean_n_motifs": 11.648684210526316,
+    "std_n_motifs": 8.499473566067312
+  },
+  "motif_count_comparison": {
+    "t_statistic": -0.756479318055462,
+    "p_value": 0.44959116749630723,
+    "interpretation": "No significant difference"
+  },
+  "dataset_distribution": {
+    "agarwal": 15,
+    "klein": 4
+  },
+  "top_grammar_positive": [
+    {
+      "dataset": "agarwal",
+      "seq_id": "ENSG00000180720",
+      "gsi": 15.067414283752441,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 35
+    },
+    {
+      "dataset": "klein",
+      "seq_id": "klein_1669",
+      "gsi": 12.623804092407227,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 5
+    },
+    {
+      "dataset": "klein",
+      "seq_id": "klein_2",
+      "gsi": 3.8975424766540527,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 11
+    },
+    {
+      "dataset": "klein",
+      "seq_id": "klein_1732",
+      "gsi": 2.2623629570007324,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 10
+    },
+    {
+      "dataset": "agarwal",
+      "seq_id": "peak37438",
+      "gsi": 1.8329298496246338,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 5
+    },
+    {
+      "dataset": "agarwal",
+      "seq_id": "peak56195",
+      "gsi": 1.0281883478164673,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 6
+    },
+    {
+      "dataset": "agarwal",
+      "seq_id": "ENSG00000144681",
+      "gsi": 0.9962391257286072,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 16
+    },
+    {
+      "dataset": "agarwal",
+      "seq_id": "peak86193",
+      "gsi": 0.7412915825843811,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 12
+    },
+    {
+      "dataset": "klein",
+      "seq_id": "klein_1583",
+      "gsi": 0.6974698901176453,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 7
+    },
+    {
+      "dataset": "agarwal",
+      "seq_id": "peak77181",
+      "gsi": 0.544715404510498,
+      "p_value": 0.0,
+      "classification": "strong",
+      "n_motifs": 5
+    }
+  ]
+}
