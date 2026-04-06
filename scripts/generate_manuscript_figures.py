@@ -116,15 +116,15 @@ def _legend(ax, **kwargs):
 
 
 def fig1_spacer_confound():
-    """Figure 1: Spacer Confound (2x2, compact)."""
-    fig, axes = plt.subplots(2, 2, figsize=(5.5, 3.8))
-    plt.subplots_adjust(hspace=0.55, wspace=0.4)
+    """Figure 1: Spacer Confound (1x4, compact)."""
+    fig, axes = plt.subplots(1, 4, figsize=(11, 2.6))
+    plt.subplots_adjust(wspace=0.45)
 
     datasets = ['agarwal', 'jores', 'inoue']
     ds_labels = [DS_LABELS[d] for d in datasets]
 
     # (A) Factorial decomposition
-    ax = axes[0, 0]
+    ax = axes[0]
     components = ['position', 'orientation', 'spacer']
     comp_labels = ['Position', 'Orientation', 'Spacer']
     x = np.arange(len(datasets))
@@ -144,7 +144,7 @@ def fig1_spacer_confound():
     ax.axhline(y=50, color='gray', linestyle=':', alpha=0.3, linewidth=0.5)
 
     # (B) Spacer ablation
-    ax = axes[0, 1]
+    ax = axes[1]
     ablation_data = load_json('v3/spacer_ablation/spacer_ablation_summary.json')
     effects = ['motif_only', 'dinuc_shuffle', 'gc_shift', 'random_replace']
     eff_labels = ['Motif', 'Dinuc', 'GC', 'Random']
@@ -159,7 +159,7 @@ def fig1_spacer_confound():
     _legend(ax, loc='upper left')
 
     # (C) Feature decomposition R^2
-    ax = axes[1, 0]
+    ax = axes[2]
     feat_data = load_json('v3/feature_decomposition/feature_decomposition_summary.json')
     fcs = ['gc_only', 'dinuc_only', 'shape_only', 'trinuc_only', 'all_features']
     fc_labels = ['GC', 'Dinuc', 'Shape', 'Trinuc', 'All']
@@ -176,7 +176,7 @@ def fig1_spacer_confound():
     _legend(ax, loc='upper left')
 
     # (D) GC-expression correlation reversal
-    ax = axes[1, 1]
+    ax = axes[3]
     gc_corrs = [feat_data[ds]['correlations']['gc_content']['r'] for ds in datasets]
     colors_bar = [C_NEG if v > 0 else C_ACCENT for v in gc_corrs]
     bars = ax.bar(ds_labels, gc_corrs, color=colors_bar, edgecolor='black',
@@ -254,8 +254,8 @@ def fig2_positive_control():
 def fig3_gsi_census():
     """Figure 3: GSI census redesign with cleaner statistical storytelling."""
     gsi_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module1', 'all_gsi_results.parquet'))
-    fig, axes = plt.subplots(2, 2, figsize=(5.5, 3.9))
-    plt.subplots_adjust(hspace=0.62, wspace=0.42)
+    fig, axes = plt.subplots(1, 4, figsize=(11, 2.6))
+    plt.subplots_adjust(wspace=0.45)
 
     models = ['dnabert2', 'nt', 'hyenadna']
     model_labels = {'dnabert2': 'DNABERT-2', 'nt': 'NT v2', 'hyenadna': 'HyenaDNA'}
@@ -266,7 +266,7 @@ def fig3_gsi_census():
     dset_labels = [DS_SHORT_LABELS[d] for d in dsets]
 
     # (A) Distribution by model: violins + median points
-    ax = axes[0, 0]
+    ax = axes[0]
     sns.violinplot(
         data=gsi_df,
         x='model_label',
@@ -290,7 +290,7 @@ def fig3_gsi_census():
     ax.set_ylim(0.02, 0.12)
 
     # (B) Dataset medians with connected model profiles
-    ax = axes[0, 1]
+    ax = axes[1]
     xpos = np.arange(len(dsets))
     for model in models:
         meds = [gsi_df[(gsi_df['model'] == model) & (gsi_df['dataset'] == ds)]['gsi'].median()
@@ -304,7 +304,7 @@ def fig3_gsi_census():
     _legend(ax, loc='upper left')
 
     # (C) Correction cascade as connected log-scale line
-    ax = axes[1, 0]
+    ax = axes[2]
     stages = ['v1 (F-test)', 'v2 (z-score)', 'v2 (FDR)']
     rates = [100, 8.3, 0.17]
     x = np.arange(len(stages))
@@ -326,7 +326,7 @@ def fig3_gsi_census():
     ax.tick_params(axis='x', labelsize=5)
 
     # (D) Pairwise correlations by dataset, no heatmap
-    ax = axes[1, 1]
+    ax = axes[3]
     pair_labels = ['B2 vs NT', 'B2 vs Hyena', 'NT vs Hyena']
     pair_colors = ['#1f4e79', '#6c8ebf', '#9fbad6']
     agreement = {
