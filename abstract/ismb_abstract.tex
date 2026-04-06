@@ -44,6 +44,7 @@ signals detected by DNA sequence models}}
 Whether the spatial arrangement of transcription factor (TF) binding sites encodes functional information---a ``regulatory grammar''---or whether enhancers operate as ``billboards'' where only TF identity matters remains debated~[1,2].
 DNA sequence models enable systematic \textit{in silico} perturbation of enhancer architecture, but standard grammar sensitivity metrics may confound motif arrangement with spacer DNA composition.
 We introduce a \textbf{spacer-factored grammar sensitivity framework (SF-GSI)} to separate these effects across four model architectures, five MPRA datasets, and four organisms.
+The practical question is not only whether grammar exists, but whether current computational assays isolate it. If spacer composition shifts model predictions more strongly than motif rearrangement, then naive shuffle-based ``grammar'' measurements may be systematically inflated and biologically misinterpreted.
 
 \vspace{-2pt}
 \begin{figure}[H]
@@ -66,18 +67,23 @@ TF motifs are identified via FIMO against JASPAR 2024~[3]; vocabulary-preserving
 GSI~$= \sigma(\hat{y}) / |\mu(\hat{y})|$.
 \textbf{Spacer-Factored GSI (SF-GSI).}
 A factorial design isolates: (i)~motif position/orientation (true grammar), (ii)~spacer composition (confound), (iii)~flanking-context effects via matched-spacer shuffles and regression residuals.
+\textbf{Probe setup.}
+Foundation-model embeddings are frozen and mapped to MPRA activity with shallow expression probes, allowing the same perturbation analysis to be applied across transformer, state-space, and MPRA-native architectures.
 \textbf{Rule Extraction.}
 Pairwise rules via spacing scans (2--50~bp), four orientation configurations, and helical phasing at ${\sim}$10.5~bp.
 \textbf{Variance Decomposition.}
 Hierarchical ANOVA: vocabulary $\rightarrow$ +grammar $\rightarrow$ +higher-order $\rightarrow$ full model.
 \textbf{Models \& Data.}
 DNABERT-2, Nucleotide Transformer v2-500M, HyenaDNA, Enformer, and MPRA-trained PARM; five MPRA datasets across human, yeast, and plant with 7{,}650 model--enhancer measurements in the main census plus controlled synthetic positive controls~[4,5].
+\textbf{Statistical testing.}
+Because shuffle distributions are not Gaussian in aggregate, we emphasize null-normalized statistics and FDR correction rather than raw detectability. This reframes the task from ``does any perturbation change the score?'' to ``does motif arrangement explain signal beyond the shuffle null and multiplicity burden?''
 
 \vspace{-2pt}
 \section*{Results}
 
 \textbf{The spacer confound.}
 Across datasets, spacer DNA composition accounts for 78--86\% of measured GSI variance (Fig.~\ref{fig:spacer}A--B). Simple compositional statistics explain 40--80\% of model predictions (Fig.~\ref{fig:spacer}C), and the GC--expression relationship reverses between species (Fig.~\ref{fig:spacer}D).
+Spacer perturbations also dominate direct ablations: motif-only rearrangements produce the smallest median expression changes, whereas GC shifts or random spacer replacement induce substantially larger effects. This pattern is exactly what one would expect if standard vocabulary-preserving shuffles perturb both architecture and sequence composition simultaneously, thereby attributing spacer sensitivity to ``grammar.''
 
 \vspace{-2pt}
 \begin{figure}[H]
@@ -94,17 +100,24 @@ Across datasets, spacer DNA composition accounts for 78--86\% of measured GSI va
 \vspace{-4pt}
 \textbf{Correction cascade.}
 In the 7{,}650-measurement census, naive thresholding marks all enhancers as grammar-sensitive, but null-normalized testing reduces this to 8.3\%, and FDR correction to \textbf{0.17\%} (13/7{,}550)---a three-order-of-magnitude drop consistent across architectures (Fig.~\ref{fig:census}C--D).
+The redesigned census view also clarifies two additional points. First, the ranking of model medians is stable: NT and DNABERT-2 generally exceed HyenaDNA, but all three remain in the same narrow GSI range after normalization. Second, high correlation between models is concentrated in some datasets and collapses in others, indicating that biological system and assay context matter more than architectural family when asking where apparent grammar signal is concentrated.
 
 \textbf{Positive controls.}
 When spacer sequence is held constant in controlled synthetic constructs, orientation effects remain detectable across models ($p \le 7.2\times10^{-15}$; two models reach numerical underflow), confirming that the framework can recover genuine grammar effects when the confound is removed.
+This distinction is central: our conclusion is not that regulatory grammar is absent, but that the prevailing \textit{in silico} measurement procedure is poorly identified. Under matched sequence backgrounds, the models do respond to orientation grammar; under unconstrained shuffles, that signal is overwhelmed by spacer composition.
 
 \textbf{Transfer \& variance decomposition.}
 Grammar rules from one organism predict near-zero effects in others. In ANOVA decompositions, motif vocabulary explains 8--22\% of variance, whereas arrangement contributes only 0--1.6\%. Learned embeddings outperform explicit grammar features by 16--42 percentage points of $R^2$, indicating that current motif-centric grammar summaries miss most predictive signal.
+These transfer results argue against a simple universal code of pairwise motif rules. Instead, whatever arrangement-dependent signal remains appears species- and assay-specific, while much of the predictive structure retained by sequence models is captured by features outside explicit motif vocabulary and handcrafted arrangement descriptors.
+
+\textbf{Interpretation \& limitations.}
+Our findings support a strong methodological caution for computational regulatory genomics. Shuffle-based assays can be useful, but only if they preserve the nuisance variables they intend to ignore. The present study is also limited by assay choice: MPRA measurements capture enhancer activity in a controlled reporter context rather than the full chromatin and \textit{trans}-regulatory environment. Consequently, the residual gap between sequence-based models and replicate ceilings should not be interpreted as ``missing grammar'' alone; it likely includes cell-state, chromatin, and assay-noise contributions.
 
 \section*{Conclusion}
 
 Across these datasets and models, most apparent regulatory grammar signal arises from spacer composition rather than motif arrangement. Genuine grammar effects are still detectable in spacer-controlled positive controls, but standard vocabulary-preserving shuffles substantially overestimate their prevalence.
-SF-GSI provides a practical route to separate grammatical effects from compositional confounds in regulatory genomics and offers a stronger benchmark for evaluating sequence models as mechanistic predictors.
+\textbf{Significance.}
+SF-GSI provides a practical route to separate grammatical effects from compositional confounds in regulatory genomics and offers a stronger benchmark for evaluating sequence models as mechanistic predictors. More broadly, it suggests that future computational studies of cis-regulatory grammar should treat background sequence control as a first-class design constraint rather than a secondary implementation detail.
 Code: \url{https://github.com/bryanc5864/GRAMLANG}.
 
 \vspace{1pt}
