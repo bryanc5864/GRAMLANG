@@ -73,16 +73,16 @@ CASCADE_COLORS = ['#c0392b', '#e67e22', '#27ae60']  # red, orange, green
 
 # ISMB / Bioinformatics style: Times New Roman
 plt.rcParams.update({
-    'font.size': 7,
+    'font.size': 10,
     'font.family': 'serif',
     'font.serif': ['Times New Roman', 'Times', 'DejaVu Serif'],
     'mathtext.fontset': 'stix',
-    'axes.labelsize': 7,
-    'axes.titlesize': 8,
+    'axes.labelsize': 10,
+    'axes.titlesize': 11,
     'axes.titleweight': 'bold',
-    'xtick.labelsize': 6,
-    'ytick.labelsize': 6,
-    'legend.fontsize': 5.5,
+    'xtick.labelsize': 9,
+    'ytick.labelsize': 9,
+    'legend.fontsize': 8,
     'figure.dpi': 150,
     'savefig.dpi': 300,
     'savefig.bbox': 'tight',
@@ -107,7 +107,7 @@ def load_json(path):
 def _legend(ax, **kwargs):
     """Compact legend with consistent spacing."""
     defaults = dict(
-        fontsize=5.5, frameon=False, handlelength=1.2,
+        fontsize=8, frameon=False, handlelength=1.2,
         handletextpad=0.4, columnspacing=0.8, labelspacing=0.3,
         borderaxespad=0.3,
     )
@@ -137,7 +137,7 @@ def fig1_spacer_confound():
         ax.bar(x + i * width, fracs, width, label=label, color=COMP_COLORS[comp],
                alpha=0.85, edgecolor='black', linewidth=0.2)
     ax.set_xticks(x + width)
-    ax.set_xticklabels(ds_labels, fontsize=6)
+    ax.set_xticklabels(ds_labels, fontsize=9)
     ax.set_ylabel('% of Full Variance')
     ax.set_title('(A) Factorial Decomposition')
     _legend(ax, loc='upper center', bbox_to_anchor=(0.72, 1.02))
@@ -153,7 +153,7 @@ def fig1_spacer_confound():
         ax.plot(range(len(effects)), deltas, 'o-', label=dl,
                 color=DS_PALETTE[ds], markersize=3)
     ax.set_xticks(range(len(effects)))
-    ax.set_xticklabels(eff_labels, fontsize=6)
+    ax.set_xticklabels(eff_labels, fontsize=9)
     ax.set_ylabel('Median |$\\Delta$ Expr|')
     ax.set_title('(B) Spacer Ablation')
     _legend(ax, loc='upper left')
@@ -170,7 +170,7 @@ def fig1_spacer_confound():
         ax.bar(x + datasets.index(ds) * width, r2s, width, label=dl,
                color=DS_PALETTE[ds], alpha=0.85, edgecolor='black', linewidth=0.2)
     ax.set_xticks(x + width)
-    ax.set_xticklabels(fc_labels, fontsize=6)
+    ax.set_xticklabels(fc_labels, fontsize=9)
     ax.set_ylabel('$R^2$')
     ax.set_title('(C) Feature Prediction of Expression')
     _legend(ax, loc='upper left')
@@ -185,7 +185,7 @@ def fig1_spacer_confound():
         y = bar.get_height() + (0.03 if val > 0 else -0.08)
         ax.text(bar.get_x() + bar.get_width() / 2., y, f'{val:+.2f}',
                 ha='center', va='bottom' if val > 0 else 'top',
-                fontsize=6, fontweight='bold')
+                fontsize=9, fontweight='bold')
     ax.axhline(y=0, color='black', linewidth=0.4)
     ax.set_ylabel('GC\u2013Expr Correlation ($r$)')
     ax.set_title('(D) GC Sensitivity Reversal')
@@ -221,13 +221,13 @@ def fig2_positive_control():
         if idx == 2:
             label = f'{val * 100:.0f}%'
         ax.text(bar.get_x() + bar.get_width() / 2., bar.get_height() + 0.01,
-                label, ha='center', va='bottom', fontsize=5.5, fontweight='bold')
+                label, ha='center', va='bottom', fontsize=9, fontweight='bold')
     ax.set_ylabel('Value')
     ax.set_title('(A) DNABERT-2 Positive Control')
-    ax.tick_params(axis='x', labelsize=5)
+    ax.tick_params(axis='x', labelsize=9)
     ax.set_ylim(0, 0.22)
     ax.text(0.95, 0.95, f'$p = {orient["p_value"]:.0e}$\n$n = {orient["n_pairs"]}$ pairs',
-            transform=ax.transAxes, ha='right', va='top', fontsize=5,
+            transform=ax.transAxes, ha='right', va='top', fontsize=9,
             bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
                       alpha=0.8, linewidth=0.3))
 
@@ -247,7 +247,7 @@ def fig2_positive_control():
                   linewidth=0.3, width=0.5)
     for bar, val in zip(bars, sig):
         ax.text(bar.get_x() + bar.get_width() / 2., bar.get_height() + 1.5,
-                f'{val}%', ha='center', va='bottom', fontsize=7, fontweight='bold')
+                f'{val}%', ha='center', va='bottom', fontsize=10, fontweight='bold')
     ax.set_ylabel('Detection Rate (%)')
     ax.set_title('(B) Confounded vs Controlled')
     ax.set_ylim(0, 118)
@@ -290,7 +290,7 @@ def fig3_gsi_census():
     medians = gsi_df.groupby('model_label')['gsi'].median().reindex([model_labels[m] for m in models])
     ax.scatter(range(len(medians)), medians.values, s=26, color='white', edgecolors='black', zorder=3, linewidths=0.6)
     for idx, val in enumerate(medians.values):
-        ax.text(idx, val + 0.004, f'{val:.3f}', ha='center', va='bottom', fontsize=5.5, fontweight='bold')
+        ax.text(idx, val + 0.004, f'{val:.3f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
     ax.set_xlabel('')
     ax.set_ylabel('GSI')
     ax.set_title('(A) Model-Wise GSI Distribution')
@@ -328,7 +328,7 @@ def fig3_gsi_census():
     ax.scatter(x, rates, s=[90, 70, 56], color=CASCADE_COLORS, edgecolors='black', linewidths=0.4, zorder=2)
     for xi, val in zip(x, rates):
         lbl = f'{val:.1f}%' if val >= 1 else f'{val:.2f}%'
-        ax.text(xi, val * 1.22, lbl, ha='center', va='bottom', fontsize=6, fontweight='bold')
+        ax.text(xi, val * 1.22, lbl, ha='center', va='bottom', fontsize=9, fontweight='bold')
     ax.annotate('', xy=(1, rates[1] * 1.02), xytext=(0, rates[0] / 1.02),
                 arrowprops=dict(arrowstyle='-|>', color='#666666', linewidth=0.8))
     ax.annotate('', xy=(2, rates[2] * 1.1), xytext=(1, rates[1] / 1.05),
@@ -339,7 +339,7 @@ def fig3_gsi_census():
     ax.set_title('(C) Correction Cascade')
     ax.set_yscale('log')
     ax.set_ylim(0.1, 200)
-    ax.tick_params(axis='x', labelsize=5)
+    ax.tick_params(axis='x', labelsize=9)
 
     # (D) Pairwise correlations by dataset, computed from data
     ax = axes[3]
@@ -371,13 +371,13 @@ def fig3_gsi_census():
         vals = [agreement[name][idx] for name in names]
         ax.scatter(vals, y + offset, s=22, color=color, edgecolors='white', linewidths=0.3, label=label, zorder=3)
     for yi, vals in enumerate(agreement.values()):
-        ax.text(max(vals) + 0.035, yi, f'{np.mean(vals):.2f}', fontsize=5.5, va='center')
+        ax.text(max(vals) + 0.035, yi, f'{np.mean(vals):.2f}', fontsize=9, va='center')
     ax.set_yticks(y)
     ax.set_yticklabels(names)
     ax.set_xlabel('Pairwise $\\rho$')
     ax.set_title('(D) Agreement Structure')
     ax.set_xlim(-0.22, 1.02)
-    _legend(ax, loc='lower left', fontsize=4.8)
+    _legend(ax, loc='lower left', fontsize=8)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.png'))
@@ -401,9 +401,9 @@ def fig4_compositionality():
     ax.set_ylabel('Compositionality Gap ($1 - R^2$)')
     ax.set_ylim(0.97, 1.002)
     ax.text(0.97, 0.70, 'Context-sensitive threshold', transform=ax.transAxes,
-            fontsize=5, va='center', ha='right', color=C_NEG)
+            fontsize=9, va='center', ha='right', color=C_NEG)
     ax.text(0.03, 0.08, 'Mean gap = 0.989\n77.5% non-additive',
-            transform=ax.transAxes, fontsize=5, va='bottom',
+            transform=ax.transAxes, fontsize=9, va='bottom',
             bbox=dict(boxstyle='round,pad=0.3', facecolor='lightyellow',
                       alpha=0.8, linewidth=0.3))
 
@@ -444,19 +444,19 @@ def fig5_transfer():
             val = matrix[i, j]
             if i == j:
                 ax.text(j + 0.5, i + 0.5, f'{val:.3f}',
-                        ha='center', va='center', fontsize=6.5,
+                        ha='center', va='center', fontsize=10,
                         fontweight='bold', color='white' if val > 0.12 else 'black')
                 # Highlight diagonal with border
                 ax.add_patch(plt.Rectangle((j, i), 1, 1, fill=False,
                              edgecolor='black', linewidth=1.5))
             else:
                 ax.text(j + 0.5, i + 0.5, f'{val:.3f}',
-                        ha='center', va='center', fontsize=5.5, color='#888888')
+                        ha='center', va='center', fontsize=9, color='#888888')
 
-    ax.set_xlabel('Target', fontsize=6.5)
-    ax.set_ylabel('Source', fontsize=6.5)
-    ax.set_title('(A) Cross-Species Transfer $R^2$', fontsize=7.5)
-    ax.tick_params(labelsize=6)
+    ax.set_xlabel('Target', fontsize=10)
+    ax.set_ylabel('Source', fontsize=10)
+    ax.set_title('(A) Cross-Species Transfer $R^2$', fontsize=11)
+    ax.tick_params(labelsize=9)
 
     # ── Panel B: Variance decomposition lollipop ──
     ax = axes[1]
@@ -499,9 +499,9 @@ def fig5_transfer():
                    label=label, zorder=3, edgecolors='white', linewidths=0.3)
 
     ax.set_yticks(y_pos)
-    ax.set_yticklabels(ds_labels, fontsize=6)
+    ax.set_yticklabels(ds_labels, fontsize=9)
     ax.set_xlabel('$R^2$', fontsize=7)
-    ax.set_title('(B) Variance Decomposition', fontsize=7.5)
+    ax.set_title('(B) Variance Decomposition', fontsize=11)
     ax.set_xlim(-0.02, 0.95)
     ax.invert_yaxis()
 
@@ -509,7 +509,7 @@ def fig5_transfer():
     ax.axvline(x=0.85, color=C_ACCENT, linewidth=0.6, linestyle=':', alpha=0.5)
 
     _legend(ax, loc='upper center', bbox_to_anchor=(0.5, -0.12),
-            fontsize=5, ncol=2, markerscale=0.9)
+            fontsize=9, ncol=2, markerscale=0.9)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_transfer.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_transfer.png'))
@@ -547,7 +547,7 @@ def fig6_completeness():
     ax.set_xticklabels(labels, fontsize=5)
     ax.set_ylabel('$R^2$')
     ax.set_title('(A) Hierarchical $R^2$ Decomposition')
-    _legend(ax, loc='upper center', bbox_to_anchor=(0.5, 1.01), fontsize=4.5, ncol=2)
+    _legend(ax, loc='upper center', bbox_to_anchor=(0.5, 1.01), fontsize=8, ncol=2)
     ax.set_ylim(0, 1.0)
 
     # (B) Completeness %
@@ -558,7 +558,7 @@ def fig6_completeness():
                   linewidth=0.3, width=0.55)
     for bar, val in zip(bars, pcts):
         ax.text(bar.get_x() + bar.get_width() / 2., bar.get_height() + 0.3,
-                f'{val:.0f}%', ha='center', va='bottom', fontsize=5, fontweight='bold')
+                f'{val:.0f}%', ha='center', va='bottom', fontsize=9, fontweight='bold')
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=5)
     ax.set_ylabel('Completeness (%)')
