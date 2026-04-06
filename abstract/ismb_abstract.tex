@@ -1,19 +1,30 @@
 \documentclass[10pt]{article}
 
 \usepackage[letterpaper, top=0.35in, bottom=0.35in, left=0.48in, right=0.48in]{geometry}
+\usepackage{iftex}
 \usepackage{graphicx}
 \usepackage{amsmath, amssymb}
 \usepackage{url}
 \usepackage{xcolor}
-\usepackage[font=scriptsize,labelfont=bf,skip=2pt]{caption}
+\usepackage[font=footnotesize,labelfont=bf,skip=3pt]{caption}
 \usepackage{titlesec}
 \usepackage{microtype}
 \usepackage{wrapfig}
 \usepackage{float}
 
+\ifXeTeX
+  \usepackage{fontspec}
+  \usepackage{unicode-math}
+  \setmainfont{Times New Roman}
+  \setsansfont{Arial}
+  \setmonofont{Consolas}
+  \setmathfont{Cambria Math}
+\fi
+
 % Tight section spacing
 \titlespacing*{\section}{0pt}{3pt}{0.5pt}
-\titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection.}{0.4em}{}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.4em}{}
+\captionsetup{justification=justified,singlelinecheck=false}
 
 \setlength{\parskip}{1pt}
 \setlength{\parindent}{0pt}
@@ -30,9 +41,9 @@
 \begin{document}
 
 \begin{center}
-{\large \textbf{Spacer composition dominates apparent regulatory grammar
+{\fontsize{16}{18}\selectfont \textbf{Spacer composition dominates apparent regulatory grammar
 signals detected by DNA sequence models}}
-\vspace{3pt}
+\vspace{4pt}
 \end{center}
 \vspace{1pt}
 \hrule
@@ -55,7 +66,10 @@ The practical question is not only whether grammar exists, but whether current c
 \textbf{(A)}~Factorial decomposition: spacer composition accounts for the majority of expression variance.
 \textbf{(B)}~Spacer-level perturbations drive larger expression changes than motif rearrangement.
 \textbf{(C)}~Compositional features predict 40--80\% of model $R^2$.
-\textbf{(D)}~GC--expression correlation reverses across species ($r\!=\!{+}0.66$ human vs.\ $r\!=\!{-}0.73$ plant).}
+\textbf{(D)}~GC--expression correlation reverses across species ($r\!=\!{+}0.66$ human vs.\ $r\!=\!{-}0.73$ plant).
+Taken together, these panels show that standard shuffle perturbations alter broad sequence composition far more strongly than they isolate motif architecture, explaining why naive grammar scores are inflated.
+The value of this figure is not only descriptive: it establishes the nuisance variable that motivates the rest of the paper.
+Once spacer sequence is recognized as the dominant source of perturbation-induced variance, any grammar statistic that does not explicitly factor it out becomes difficult to interpret mechanistically.}
 \label{fig:spacer}
 \end{figure}
 
@@ -93,7 +107,10 @@ Spacer perturbations also dominate direct ablations: motif-only rearrangements p
 \caption{\textbf{Statistical correction eliminates grammar signal.}
 \textbf{(A)}~Model-wise GSI distributions. \textbf{(B)}~Dataset-specific median profiles across models.
 \textbf{(C)}~Significant enhancers: 100\% (naive) $\to$ 8.3\% ($z$-score) $\to$ \textbf{0.17\%} (FDR).
-\textbf{(D)}~Pairwise cross-model correlations by dataset.}
+\textbf{(D)}~Pairwise cross-model correlations by dataset.
+The figure emphasizes that model-to-model agreement exists, but only after a correction cascade that collapses the apparent prevalence of grammar-sensitive enhancers by roughly three orders of magnitude.
+This makes the main inferential point of the study visually explicit: widespread detectability under naive thresholds does not survive null normalization and multiplicity control.
+What remains is a small residual set of candidates whose interpretation is far more credible because the dominant compositional confound has already been accounted for.}
 \label{fig:census}
 \end{figure}
 
