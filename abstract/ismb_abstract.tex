@@ -43,20 +43,23 @@
 
 \section*{Background}
 
-Whether enhancer activity is governed by motif arrangement or by a more permissive billboard logic remains a central question in cis-regulatory biology~[1,2].
-DNA foundation models make grammar perturbation easy \textit{in silico}, but standard vocabulary-preserving shuffles perturb both motif order and spacer DNA.
-We address that identification problem with a spacer-factored grammar sensitivity framework (SF-GSI) that separates arrangement effects from spacer-composition effects and tests which signal survives statistical control.
+The billboard model of enhancer function holds that regulatory activity depends on which transcription factor binding sites are present---their absolute identity and composition---rather than on their relative positions, orientations, or spacing~[1,2].
+This is a contrarian position: the prevailing view assumes that motif grammar (positional syntax) carries regulatory meaning, and DNA foundation models are increasingly benchmarked on their sensitivity to such arrangement.
+We test the billboard hypothesis directly.
+Standard vocabulary-preserving shuffles confound motif order with spacer DNA, making grammar sensitivity indistinguishable from compositional sensitivity.
+We resolve that confound with a spacer-factored grammar sensitivity framework (SF-GSI) that isolates arrangement effects from spacer-composition effects and asks: does positional context survive once absolute context is controlled?
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{fig1_spacer_confound.pdf}
-\caption{\textbf{Spacer composition dominates apparent grammar effects.} Spacer sequence explains most measured grammar sensitivity and induces larger prediction changes than motif rearrangement alone.}
+\caption{\textbf{Absolute context dominates apparent grammar effects.} Spacer composition (absolute context) explains most measured grammar sensitivity; motif rearrangement (positional context) induces substantially smaller prediction changes.}
 \label{fig:spacer}
 \end{figure}
 
 \section*{Methods}
 
-SF-GSI starts from the grammar sensitivity index, $GSI = \sigma(\hat{y}) / |\mu(\hat{y})|$, computed over vocabulary-preserving motif shuffles, and factors that response into motif position/orientation, spacer composition, and residual context effects using matched-spacer perturbations and null-normalized testing.
+SF-GSI starts from the grammar sensitivity index, $GSI = \sigma(\hat{y}) / |\mu(\hat{y})|$, computed over vocabulary-preserving motif shuffles, and factors that response into positional context (motif position/orientation) versus absolute context (spacer composition) using matched-spacer perturbations and null-normalized testing.
+The design directly operationalizes the billboard hypothesis: if positional context does not matter, then controlling for absolute context should collapse apparent grammar sensitivity to noise.
 To our knowledge, this is the first framework to factorially decompose apparent grammar sensitivity into arrangement and composition components in this setting.
 We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements: 3 foundation models $\times$ 5 datasets $\times$ 500 enhancers, plus Enformer on 3 human datasets $\times$ 50 enhancers.
 The model set spans transformer, state-space, and MPRA-native families, including DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[4--7]. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
@@ -70,22 +73,26 @@ The model set spans transformer, state-space, and MPRA-native families, includin
 \section*{Results}
 
 The dominant result is the correction cascade in Fig.~\ref{fig:census}: under naive thresholding, all tested enhancers appear grammar-sensitive, but this falls to 8.3\% after null normalization and to 0.17\% (13/7,650) after FDR correction.
-That three-order-of-magnitude drop shows that widespread detectability under unconstrained shuffle assays is largely an artifact of the assay itself rather than evidence for pervasive motif-order logic.
+That three-order-of-magnitude collapse is the signature predicted by the billboard model---once absolute context is controlled, the apparent prevalence of positional syntax vanishes.
 
-SF-GSI explains why that collapse occurs.
-As shown in Fig.~\ref{fig:spacer}, spacer DNA composition accounts for 78--86\% of measured grammar-sensitivity variance, while compositional features explain 40--80\% of expression-prediction variance.
-Motif-only rearrangements produce substantially smaller perturbation effects than spacer replacement or GC-shifting perturbations, showing that arrangement-dependent signal is present but dominated by nuisance variation when spacer sequence is not controlled.
+SF-GSI explains the mechanism.
+As shown in Fig.~\ref{fig:spacer}, absolute context (spacer DNA composition) accounts for 78--86\% of measured grammar-sensitivity variance, while compositional features explain 40--80\% of expression-prediction variance.
+Positional context---motif-only rearrangements---produces substantially smaller perturbation effects than spacer replacement or GC-shifting perturbations.
+These models have learned \textit{what} is present, not \textit{where} it is; the signal attributed to grammar is, in the vast majority of cases, a compositional signal misread as a positional one.
 
 The residual signal after correction is structured rather than random.
 Cross-model agreement is concentrated in specific biological contexts, indicating that dataset context matters more than nominal architecture when asking where credible grammar-sensitive candidates are enriched.
 Positive controls confirm that the framework does not erase genuine grammar: when spacer sequence is held fixed in synthetic constructs, orientation effects remain strongly detectable across models ($p \le 7.2\times10^{-15}$, with two models reaching numerical underflow).
-By contrast, cross-species transfer is near zero and variance decompositions assign only 0--1.6\% of explained variance to arrangement, versus 8--22\% to motif vocabulary.
-These findings matter beyond MPRA grammar analysis because benchmark perturbations that fail to control nuisance sequence variables can systematically misstate what regulatory foundation models have learned.
+However, these controlled cases are rare exceptions, not the rule.
+Variance decompositions assign only 0--1.6\% of explained variance to arrangement, versus 8--22\% to motif vocabulary---consistent with the billboard prediction that absolute identity, not positional syntax, is the dominant learned feature.
+Cross-species transfer is near zero, further suggesting that whatever positional logic models encode is not generalizable.
+These findings matter beyond MPRA grammar analysis because benchmark perturbations that fail to control for absolute context can systematically overstate the positional knowledge that regulatory foundation models have acquired.
 
 \section*{Conclusions}
 
-Spacer composition, not motif arrangement, explains most of the apparent regulatory grammar signal reported by standard shuffle-based assays.
-Matched-spacer positive controls still recover genuine grammar, but claims about regulatory grammar should be made only under perturbation schemes that explicitly control spacer sequence.
+Our results provide direct quantitative support for the billboard model of enhancer regulation as learned by DNA foundation models: these models encode absolute context---what binding sites and sequence features are present---but show negligible encoding of positional context once composition is controlled.
+Matched-spacer positive controls confirm that genuine arrangement sensitivity is detectable in principle, but it accounts for at most 1.6\% of explained variance in practice.
+Claims of learned regulatory grammar should be made only under perturbation designs that explicitly factor out absolute context; without that control, compositional signals masquerade as positional ones.
 
 \vspace{4pt}
 {\scriptsize
