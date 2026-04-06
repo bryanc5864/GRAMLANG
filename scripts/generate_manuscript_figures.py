@@ -140,7 +140,7 @@ def fig1_spacer_confound():
     ax.set_xticklabels(ds_labels, fontsize=9)
     ax.set_ylabel('% of Full Variance')
     ax.set_title('(A) Factorial Decomposition')
-    _legend(ax, loc='upper center', bbox_to_anchor=(0.72, 1.02))
+    _legend(ax, loc='upper right', bbox_to_anchor=(1.0, -0.15), ncol=3)
     ax.axhline(y=50, color='gray', linestyle=':', alpha=0.3, linewidth=0.5)
 
     # (B) Spacer ablation
@@ -170,10 +170,10 @@ def fig1_spacer_confound():
         ax.bar(x + datasets.index(ds) * width, r2s, width, label=dl,
                color=DS_PALETTE[ds], alpha=0.85, edgecolor='black', linewidth=0.2)
     ax.set_xticks(x + width)
-    ax.set_xticklabels(fc_labels, fontsize=9)
+    ax.set_xticklabels(fc_labels, fontsize=9, rotation=30, ha='right')
     ax.set_ylabel('$R^2$')
     ax.set_title('(C) Feature Prediction of Expression')
-    _legend(ax, loc='upper left')
+    _legend(ax, loc='upper right', bbox_to_anchor=(1.0, -0.15), ncol=3)
 
     # (D) GC-expression correlation reversal
     ax = axes[3]
@@ -328,7 +328,7 @@ def fig3_gsi_census():
     ax.scatter(x, rates, s=[90, 70, 56], color=CASCADE_COLORS, edgecolors='black', linewidths=0.4, zorder=2)
     for xi, val in zip(x, rates):
         lbl = f'{val:.1f}%' if val >= 1 else f'{val:.2f}%'
-        ax.text(xi, val * 1.22, lbl, ha='center', va='bottom', fontsize=9, fontweight='bold')
+        ax.text(xi, val * 1.6, lbl, ha='center', va='bottom', fontsize=9, fontweight='bold')
     ax.annotate('', xy=(1, rates[1] * 1.02), xytext=(0, rates[0] / 1.02),
                 arrowprops=dict(arrowstyle='-|>', color='#666666', linewidth=0.8))
     ax.annotate('', xy=(2, rates[2] * 1.1), xytext=(1, rates[1] / 1.05),
@@ -377,7 +377,7 @@ def fig3_gsi_census():
     ax.set_xlabel('Pairwise $\\rho$')
     ax.set_title('(D) Agreement Structure')
     ax.set_xlim(-0.22, 1.02)
-    _legend(ax, loc='lower left', fontsize=8)
+    _legend(ax, loc='upper right', bbox_to_anchor=(1.0, -0.15), ncol=3, fontsize=8)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.png'))
