@@ -43,9 +43,10 @@
 
 \section*{Background}
 
-The billboard model holds that enhancer activity depends on which binding sites are present---absolute identity---not on their relative positions or spacing~[1,2].
+The billboard model holds that enhancer activity depends on which transcription factor binding sites are present---their absolute identity and composition---not on their relative positions, orientations, or spacing~[1,2].
 This contrarian position challenges the prevailing assumption that motif grammar carries regulatory meaning and that DNA foundation models learn positional syntax.
-We test the billboard hypothesis directly using a spacer-factored grammar sensitivity framework (SF-GSI) that isolates positional context (motif arrangement) from absolute context (spacer composition)---resolving a confound in standard vocabulary-preserving shuffles, which perturb both simultaneously.
+If the billboard model is correct, then what these models have actually learned is absolute context: the compositional features of the sequence, rather than positional context encoding relational arrangement between regulatory elements.
+We test this hypothesis directly using a spacer-factored grammar sensitivity framework (SF-GSI) that isolates positional context (motif arrangement) from absolute context (spacer composition)---resolving a critical confound in standard vocabulary-preserving shuffles, which perturb both simultaneously and therefore cannot distinguish grammar from composition.
 
 \begin{figure}[H]
 \centering
@@ -57,8 +58,9 @@ We test the billboard hypothesis directly using a spacer-factored grammar sensit
 \section*{Methods}
 
 SF-GSI computes a grammar sensitivity index, $GSI = \sigma(\hat{y}) / |\mu(\hat{y})|$, over vocabulary-preserving motif shuffles and factors the response into positional versus absolute context using matched-spacer perturbations and null-normalized testing.
-The billboard prediction is concrete: controlling for absolute context should collapse apparent grammar sensitivity to noise.
-We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements across DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[4--7]. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
+The billboard prediction is concrete: if models encode only absolute context, then controlling for spacer composition should collapse apparent grammar sensitivity to noise---i.e., the residual positional signal should be statistically indistinguishable from a null distribution.
+We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements: 3 foundation models $\times$ 5 datasets $\times$ 500 enhancers, plus Enformer on 3 human datasets $\times$ 50 enhancers.
+The model set spans transformer, state-space, and MPRA-native architectures---DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[4--7]---ensuring that conclusions are not artifacts of a single model family. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{fig3_gsi_census.pdf}
@@ -69,18 +71,21 @@ We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jo
 \section*{Results}
 
 Under naive thresholding all tested enhancers appear grammar-sensitive, but this falls to 8.3\% after null normalization and to 0.17\% (13/7,650) after FDR correction (Fig.~\ref{fig:census}).
-That three-order-of-magnitude collapse is the signature predicted by the billboard model: once absolute context is controlled, apparent positional syntax vanishes.
-Absolute context (spacer composition) accounts for 78--86\% of grammar-sensitivity variance (Fig.~\ref{fig:spacer}), while positional context---motif-only rearrangements---produces substantially smaller effects.
-These models have learned \textit{what} is present, not \textit{where} it is.
+That three-order-of-magnitude collapse is the signature predicted by the billboard model: once absolute context is controlled, the apparent prevalence of positional syntax vanishes.
+Absolute context (spacer composition) accounts for 78--86\% of grammar-sensitivity variance (Fig.~\ref{fig:spacer}), while positional context---motif-only rearrangements---produces substantially smaller perturbation effects than spacer replacement or GC-shifting perturbations.
+These models have learned \textit{what} is present, not \textit{where} it is; the signal widely attributed to grammar is, in the vast majority of cases, a compositional signal misread as a positional one.
 
-Positive controls confirm the framework does not erase genuine grammar: with spacer sequence held fixed, orientation effects remain detectable ($p \le 7.2\times10^{-15}$).
-Yet these are rare exceptions; variance decompositions assign only 0--1.6\% to arrangement versus 8--22\% to motif vocabulary, consistent with the billboard prediction.
-Cross-species transfer is near zero, and cross-model agreement concentrates in specific biological contexts rather than reflecting architecture-general positional learning.
+Positive controls confirm the framework does not erase genuine grammar: with spacer sequence held fixed in synthetic constructs, orientation effects remain strongly detectable across models ($p \le 7.2\times10^{-15}$, with two models reaching numerical underflow).
+However, these controlled cases are rare exceptions, not the rule.
+Variance decompositions assign only 0--1.6\% of explained variance to arrangement versus 8--22\% to motif vocabulary---consistent with the billboard prediction that absolute identity, not positional syntax, is the dominant learned feature.
+Cross-species transfer is near zero, further suggesting that whatever positional logic models encode is not generalizable.
+Cross-model agreement concentrates in specific biological contexts rather than reflecting architecture-general positional learning, indicating that dataset provenance matters more than model design.
 
 \section*{Conclusions}
 
-These results provide direct quantitative support for the billboard model: DNA foundation models encode absolute context but show negligible positional context once composition is controlled.
-Claims of learned regulatory grammar should be made only under perturbation designs that factor out absolute context; without that control, compositional signals masquerade as positional ones.
+These results provide direct quantitative support for the billboard model of enhancer regulation as learned by DNA foundation models: these models encode absolute context---what binding sites and sequence features are present---but show negligible encoding of positional context once composition is controlled.
+The implications extend beyond MPRA grammar analysis: benchmark perturbations that fail to control for absolute context can systematically overstate the positional knowledge that foundation models have acquired.
+Claims of learned regulatory grammar should be made only under perturbation designs that explicitly factor out absolute context; without that control, compositional signals masquerade as positional ones.
 
 \vspace{4pt}
 {\scriptsize
