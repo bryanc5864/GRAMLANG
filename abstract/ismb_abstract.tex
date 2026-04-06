@@ -1,6 +1,6 @@
-\documentclass[10pt,twocolumn]{article}
+\documentclass[10pt]{article}
 
-\usepackage[letterpaper, top=0.55in, bottom=0.55in, left=0.55in, right=0.55in]{geometry}
+\usepackage[letterpaper, top=0.35in, bottom=0.35in, left=0.48in, right=0.48in]{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath, amssymb}
 \usepackage{url}
@@ -12,17 +12,16 @@
 \usepackage{float}
 
 % Tight section spacing
-\titlespacing*{\section}{0pt}{5pt}{1pt}
+\titlespacing*{\section}{0pt}{3pt}{0.5pt}
 \titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection.}{0.4em}{}
 
-\setlength{\parskip}{2pt}
+\setlength{\parskip}{1pt}
 \setlength{\parindent}{0pt}
-\setlength{\textfloatsep}{3pt}
-\setlength{\floatsep}{2pt}
-\setlength{\intextsep}{2pt}
-\setlength{\abovecaptionskip}{2pt}
+\setlength{\textfloatsep}{2pt}
+\setlength{\floatsep}{1pt}
+\setlength{\intextsep}{1pt}
+\setlength{\abovecaptionskip}{1pt}
 \setlength{\belowcaptionskip}{0pt}
-\setlength{\columnsep}{10pt}
 
 \graphicspath{{../results/manuscript_figures/}{../results/figures/}}
 
@@ -37,7 +36,8 @@ signals detected by DNA sequence models}}
 \end{center}
 \vspace{1pt}
 \hrule
-\vspace{3pt}
+\vspace{2pt}
+\small
 
 \section*{Motivation}
 
@@ -48,7 +48,7 @@ We introduce a \textbf{spacer-factored grammar sensitivity framework (SF-GSI)} t
 \vspace{-2pt}
 \begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig1_spacer_confound.pdf}
+\includegraphics[width=0.79\textwidth]{fig1_spacer_confound.pdf}
 \vspace{-4pt}
 \caption{\textbf{Spacer composition dominates apparent grammar effects.}
 \textbf{(A)}~Factorial decomposition: spacer composition accounts for the majority of expression variance.
@@ -82,12 +82,12 @@ Across datasets, spacer DNA composition accounts for 78--86\% of measured GSI va
 \vspace{-2pt}
 \begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig3_gsi_census.pdf}
+\includegraphics[width=0.79\textwidth]{fig3_gsi_census.pdf}
 \vspace{-4pt}
 \caption{\textbf{Statistical correction eliminates grammar signal.}
-\textbf{(A)}~GSI distributions across models. \textbf{(B)}~Median GSI by dataset.
+\textbf{(A)}~Model-wise GSI distributions. \textbf{(B)}~Dataset-specific median profiles across models.
 \textbf{(C)}~Significant enhancers: 100\% (naive) $\to$ 8.3\% ($z$-score) $\to$ \textbf{0.17\%} (FDR).
-\textbf{(D)}~Cross-model agreement ($\rho\!\approx\!0.74$).}
+\textbf{(D)}~Pairwise cross-model correlations by dataset.}
 \label{fig:census}
 \end{figure}
 
@@ -98,20 +98,8 @@ In the 7{,}650-measurement census, naive thresholding marks all enhancers as gra
 \textbf{Positive controls.}
 When spacer sequence is held constant in controlled synthetic constructs, orientation effects remain detectable across models ($p \le 7.2\times10^{-15}$; two models reach numerical underflow), confirming that the framework can recover genuine grammar effects when the confound is removed.
 
-\vspace{-2pt}
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{fig5_transfer.pdf}
-\vspace{-4pt}
-\caption{\textbf{No cross-species transfer; grammar explains minimal variance.}
-\textbf{(A)}~Transfer $R^2$: within-species on diagonal; off-diagonal $\approx\!0$.
-\textbf{(B)}~Vocabulary + grammar captures far less variance than experimental reproducibility.}
-\label{fig:transfer}
-\end{figure}
-
-\vspace{-4pt}
 \textbf{Transfer \& variance decomposition.}
-Grammar rules from one organism predict near-zero effects in others (Fig.~\ref{fig:transfer}A). In ANOVA decompositions, motif vocabulary explains 8--22\% of variance, whereas arrangement contributes only 0--1.6\%. Learned embeddings outperform explicit grammar features by 16--42 percentage points of $R^2$, indicating that current motif-centric grammar summaries miss most predictive signal (Fig.~\ref{fig:transfer}B).
+Grammar rules from one organism predict near-zero effects in others. In ANOVA decompositions, motif vocabulary explains 8--22\% of variance, whereas arrangement contributes only 0--1.6\%. Learned embeddings outperform explicit grammar features by 16--42 percentage points of $R^2$, indicating that current motif-centric grammar summaries miss most predictive signal.
 
 \section*{Conclusion}
 
@@ -119,7 +107,7 @@ Across these datasets and models, most apparent regulatory grammar signal arises
 SF-GSI provides a practical route to separate grammatical effects from compositional confounds in regulatory genomics and offers a stronger benchmark for evaluating sequence models as mechanistic predictors.
 Code: \url{https://github.com/bryanc5864/GRAMLANG}.
 
-\vspace{2pt}
+\vspace{1pt}
 {\scriptsize
 \textbf{References:}
 [1]~Arnosti \& Kulkarni, \textit{J.~Cell.~Biochem.} 94:890, 2005.\

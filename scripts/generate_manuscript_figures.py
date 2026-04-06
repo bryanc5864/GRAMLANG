@@ -252,80 +252,107 @@ def fig2_positive_control():
 
 
 def fig3_gsi_census():
-    """Figure 3: GSI Census (2x2, compact)."""
+    """Figure 3: GSI census redesign with cleaner statistical storytelling."""
     gsi_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module1', 'all_gsi_results.parquet'))
-    fig, axes = plt.subplots(2, 2, figsize=(5.5, 3.8))
-    plt.subplots_adjust(hspace=0.55, wspace=0.4)
+    fig, axes = plt.subplots(2, 2, figsize=(5.5, 3.9))
+    plt.subplots_adjust(hspace=0.62, wspace=0.42)
 
     models = ['dnabert2', 'nt', 'hyenadna']
     model_labels = {'dnabert2': 'DNABERT-2', 'nt': 'NT v2', 'hyenadna': 'HyenaDNA'}
+    gsi_df = gsi_df.copy()
+    gsi_df['dataset_label'] = gsi_df['dataset'].map(DS_SHORT_LABELS)
+    gsi_df['model_label'] = gsi_df['model'].map(model_labels)
+    dsets = ['agarwal', 'de_almeida', 'jores', 'klein', 'vaishnav']
+    dset_labels = [DS_SHORT_LABELS[d] for d in dsets]
 
-    # (A) GSI distribution by model
+    # (A) Distribution by model: violins + median points
     ax = axes[0, 0]
-    for model in models:
-        data = gsi_df[gsi_df['model'] == model]['gsi']
-        ax.hist(data, bins=40, alpha=0.45, label=model_labels[model],
-                color=MODEL_PALETTE[model])
-    ax.set_xlabel('GSI')
-    ax.set_ylabel('Count')
-    ax.set_title('(A) GSI Distribution')
-    _legend(ax)
+    sns.violinplot(
+        data=gsi_df,
+        x='model_label',
+        y='gsi',
+        hue='model_label',
+        order=[model_labels[m] for m in models],
+        palette=[MODEL_PALETTE[m] for m in models],
+        inner=None,
+        cut=0,
+        linewidth=0.5,
+        legend=False,
+        ax=ax,
+    )
+    medians = gsi_df.groupby('model_label')['gsi'].median().reindex([model_labels[m] for m in models])
+    ax.scatter(range(len(medians)), medians.values, s=26, color='white', edgecolors='black', zorder=3, linewidths=0.6)
+    for idx, val in enumerate(medians.values):
+        ax.text(idx, val + 0.004, f'{val:.3f}', ha='center', va='bottom', fontsize=5.5, fontweight='bold')
+    ax.set_xlabel('')
+    ax.set_ylabel('GSI')
+    ax.set_title('(A) Model-Wise GSI Distribution')
+    ax.set_ylim(0.02, 0.12)
 
-    # (B) GSI by dataset
+    # (B) Dataset medians with connected model profiles
     ax = axes[0, 1]
-    if 'dataset' in gsi_df.columns:
-        dsets = sorted(gsi_df['dataset'].unique())
-        pos = np.arange(len(dsets))
-        w = 0.25
-        for idx, model in enumerate(models):
-            meds = [gsi_df[(gsi_df['model'] == model) & (gsi_df['dataset'] == ds)]['gsi'].median()
-                    for ds in dsets]
-            ax.bar(pos + idx * w, meds, w, label=model_labels[model],
-                   color=MODEL_PALETTE[model], alpha=0.8)
-        ax.set_xticks(pos + w)
-        ax.set_xticklabels([DS_SHORT_LABELS[d] for d in dsets],
-                           fontsize=5.5, rotation=20)
-        ax.set_ylabel('Median GSI')
-        ax.set_title('(B) GSI by Dataset')
-        _legend(ax)
+    xpos = np.arange(len(dsets))
+    for model in models:
+        meds = [gsi_df[(gsi_df['model'] == model) & (gsi_df['dataset'] == ds)]['gsi'].median()
+                for ds in dsets]
+        ax.plot(xpos, meds, marker='o', color=MODEL_PALETTE[model], label=model_labels[model], linewidth=1.3)
+    ax.set_xticks(xpos)
+    ax.set_xticklabels(dset_labels, rotation=18)
+    ax.set_ylabel('Median GSI')
+    ax.set_title('(B) Dataset Profiles')
+    ax.set_ylim(0.035, 0.108)
+    _legend(ax, loc='upper left')
 
-    # (C) Significance cascade
+    # (C) Correction cascade as connected log-scale line
     ax = axes[1, 0]
     stages = ['v1 (F-test)', 'v2 (z-score)', 'v2 (FDR)']
     rates = [100, 8.3, 0.17]
-    bars = ax.bar(stages, rates, color=CASCADE_COLORS, edgecolor='black',
-                  linewidth=0.3, width=0.55)
-    for bar, val in zip(bars, rates):
+    x = np.arange(len(stages))
+    ax.plot(x, rates, color='#444444', linewidth=1.0, zorder=1)
+    ax.scatter(x, rates, s=[90, 70, 56], color=CASCADE_COLORS, edgecolors='black', linewidths=0.4, zorder=2)
+    for xi, val in zip(x, rates):
         lbl = f'{val:.1f}%' if val >= 1 else f'{val:.2f}%'
-        ax.text(bar.get_x() + bar.get_width() / 2., bar.get_height() * 1.15,
-                lbl, ha='center', va='bottom', fontsize=6, fontweight='bold')
+        ax.text(xi, val * 1.22, lbl, ha='center', va='bottom', fontsize=6, fontweight='bold')
+    ax.annotate('', xy=(1, rates[1] * 1.02), xytext=(0, rates[0] / 1.02),
+                arrowprops=dict(arrowstyle='-|>', color='#666666', linewidth=0.8))
+    ax.annotate('', xy=(2, rates[2] * 1.1), xytext=(1, rates[1] / 1.05),
+                arrowprops=dict(arrowstyle='-|>', color='#666666', linewidth=0.8))
+    ax.set_xticks(x)
+    ax.set_xticklabels(stages)
     ax.set_ylabel('Significant (%)')
     ax.set_title('(C) Correction Cascade')
     ax.set_yscale('log')
     ax.set_ylim(0.1, 200)
     ax.tick_params(axis='x', labelsize=5)
 
-    # (D) Cross-model agreement
+    # (D) Pairwise correlations by dataset, no heatmap
     ax = axes[1, 1]
+    pair_labels = ['B2 vs NT', 'B2 vs Hyena', 'NT vs Hyena']
+    pair_colors = ['#1f4e79', '#6c8ebf', '#9fbad6']
     agreement = {
-        'Agar.': [0.902, 0.702, 0.750], 'Klein': [0.879, 0.657, 0.671],
-        'Jores': [0.894, 0.645, 0.695], 'Vaish.': [0.565, -0.030, -0.076],
+        'Agar.': [0.902, 0.702, 0.750],
+        'Klein': [0.879, 0.657, 0.671],
+        'Jores': [0.894, 0.645, 0.695],
+        'Vaish.': [0.565, -0.030, -0.076],
         'Inoue': [-0.064, -0.164, 0.050],
     }
-    ds_key_map = {'Agar.': 'agarwal', 'Klein': 'klein', 'Jores': 'jores',
-                  'Vaish.': 'vaishnav', 'Inoue': 'de_almeida'}
     names = list(agreement.keys())
-    avgs = [np.mean(v) for v in agreement.values()]
-    colors_d = [DS_PALETTE[ds_key_map[n]] for n in names]
-    bars = ax.bar(names, avgs, color=colors_d, edgecolor='black', linewidth=0.3)
-    for bar, val in zip(bars, avgs):
-        ax.text(bar.get_x() + bar.get_width() / 2., max(val, 0) + 0.02,
-                f'{val:.2f}', ha='center', va='bottom', fontsize=5)
-    ax.axhline(y=0, color='black', linewidth=0.4)
-    ax.set_ylabel('Mean $\\rho$')
-    ax.set_title('(D) Cross-Model Agreement')
-    ax.set_ylim(-0.2, 1.0)
-    ax.tick_params(axis='x', labelsize=5.5)
+    y = np.arange(len(names))
+    offsets = [-0.18, 0.0, 0.18]
+    ax.axvline(0, color='#999999', linewidth=0.6, linestyle='--', zorder=0)
+    for yi, vals in enumerate(agreement.values()):
+        ax.hlines(yi, min(vals), max(vals), color='#d0d0d0', linewidth=1.0, zorder=1)
+    for idx, (label, color, offset) in enumerate(zip(pair_labels, pair_colors, offsets)):
+        vals = [agreement[name][idx] for name in names]
+        ax.scatter(vals, y + offset, s=22, color=color, edgecolors='white', linewidths=0.3, label=label, zorder=3)
+    for yi, vals in enumerate(agreement.values()):
+        ax.text(max(vals) + 0.035, yi, f'{np.mean(vals):.2f}', fontsize=5.5, va='center')
+    ax.set_yticks(y)
+    ax.set_yticklabels(names)
+    ax.set_xlabel('Pairwise $\\rho$')
+    ax.set_title('(D) Agreement Structure')
+    ax.set_xlim(-0.22, 1.02)
+    _legend(ax, loc='lower left', fontsize=4.8)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.png'))
