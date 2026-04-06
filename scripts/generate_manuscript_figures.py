@@ -328,17 +328,13 @@ def fig3_gsi_census():
     ax.scatter(x, rates, s=[90, 70, 56], color=CASCADE_COLORS, edgecolors='black', linewidths=0.4, zorder=2)
     for xi, val in zip(x, rates):
         lbl = f'{val:.1f}%' if val >= 1 else f'{val:.2f}%'
-        ax.text(xi, val * 1.6, lbl, ha='center', va='bottom', fontsize=9, fontweight='bold')
-    ax.annotate('', xy=(1, rates[1] * 1.02), xytext=(0, rates[0] / 1.02),
-                arrowprops=dict(arrowstyle='-|>', color='#666666', linewidth=0.8))
-    ax.annotate('', xy=(2, rates[2] * 1.1), xytext=(1, rates[1] / 1.05),
-                arrowprops=dict(arrowstyle='-|>', color='#666666', linewidth=0.8))
+        ax.text(xi + 0.15, val, lbl, ha='left', va='center', fontsize=9, fontweight='bold')
     ax.set_xticks(x)
     ax.set_xticklabels(stages)
     ax.set_ylabel('Significant (%)')
     ax.set_title('(C) Correction Cascade')
     ax.set_yscale('log')
-    ax.set_ylim(0.1, 200)
+    ax.set_ylim(0.05, 300)
     ax.tick_params(axis='x', labelsize=9)
 
     # (D) Pairwise correlations by dataset, computed from data
@@ -376,8 +372,8 @@ def fig3_gsi_census():
     ax.set_yticklabels(names)
     ax.set_xlabel('Pairwise $\\rho$')
     ax.set_title('(D) Agreement Structure')
-    ax.set_xlim(-0.22, 1.02)
-    _legend(ax, loc='upper right', bbox_to_anchor=(1.0, -0.15), ncol=3, fontsize=8)
+    ax.set_xlim(-0.25, 1.02)
+    _legend(ax, loc='upper left', fontsize=7)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.png'))
