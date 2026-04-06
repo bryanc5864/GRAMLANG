@@ -1,14 +1,15 @@
 \documentclass[10pt]{article}
 
-\usepackage[letterpaper, margin=0.9in]{geometry}
+\usepackage[letterpaper, margin=0.85in]{geometry}
 \usepackage{iftex}
 \usepackage{graphicx}
 \usepackage{amsmath, amssymb}
 \usepackage{url}
 \usepackage{xcolor}
-\usepackage[font=small,labelfont=bf,skip=4pt]{caption}
+\usepackage[font=footnotesize,labelfont=bf,skip=3pt]{caption}
 \usepackage{titlesec}
 \usepackage{microtype}
+\usepackage{float}
 
 \ifXeTeX
   \usepackage{fontspec}
@@ -25,8 +26,8 @@
 
 \setlength{\parskip}{2pt}
 \setlength{\parindent}{0pt}
-\setlength{\textfloatsep}{8pt}
-\setlength{\floatsep}{6pt}
+\setlength{\textfloatsep}{5pt}
+\setlength{\floatsep}{4pt}
 \setlength{\abovecaptionskip}{2pt}
 \setlength{\belowcaptionskip}{0pt}
 
@@ -42,23 +43,27 @@
 
 \section*{Background}
 
-Whether enhancer activity is governed by a regulatory ``grammar'' of motif arrangement or by a more permissive billboard logic remains a central question in cis-regulatory biology~[1,2].
-DNA foundation models now make it easy to test grammar \textit{in silico}, but standard vocabulary-preserving shuffle assays perturb both motif arrangement and the spacer DNA between motifs.
-That creates an identification problem: observed prediction changes may reflect background sequence composition rather than true motif grammar.
-We address this with a spacer-factored grammar sensitivity framework (SF-GSI) that explicitly separates arrangement effects from spacer-composition effects and asks which signal survives appropriate statistical control.
+Whether enhancer activity is governed by motif arrangement or by a more permissive billboard logic remains a central question in cis-regulatory biology~[1,2].
+DNA foundation models make grammar perturbation easy \textit{in silico}, but standard vocabulary-preserving shuffles perturb both motif order and spacer DNA.
+We address that identification problem with a spacer-factored grammar sensitivity framework (SF-GSI) that separates arrangement effects from spacer-composition effects and tests which signal survives statistical control.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{fig1_spacer_confound.pdf}
+\caption{\textbf{Spacer composition dominates apparent grammar effects.} Spacer sequence explains most measured grammar sensitivity and induces larger prediction changes than motif rearrangement alone.}
+\label{fig:spacer}
+\end{figure}
 
 \section*{Methods}
 
-SF-GSI starts from the grammar sensitivity index, $GSI = \sigma(\hat{y}) / |\mu(\hat{y})|$, computed over vocabulary-preserving motif shuffles, and then factors that response into motif position/orientation, spacer composition, and residual context effects using matched-spacer perturbations and null-normalized testing.
+SF-GSI starts from the grammar sensitivity index, $GSI = \sigma(\hat{y}) / |\mu(\hat{y})|$, computed over vocabulary-preserving motif shuffles, and factors that response into motif position/orientation, spacer composition, and residual context effects using matched-spacer perturbations and null-normalized testing.
 To our knowledge, this is the first framework to factorially decompose apparent grammar sensitivity into arrangement and composition components in this setting.
-We applied SF-GSI to five MPRA datasets spanning human, yeast, and plant systems (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements: 3 foundation models $\times$ 5 datasets $\times$ 500 enhancers, plus Enformer on 3 human datasets $\times$ 50 enhancers.
-The model set spans transformer, state-space, and MPRA-native families, including DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[4--7].
-Code and analysis pipelines are available at \url{https://github.com/bryanc5864/GRAMLANG}.
-
-\begin{figure}[t]
+We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements: 3 foundation models $\times$ 5 datasets $\times$ 500 enhancers, plus Enformer on 3 human datasets $\times$ 50 enhancers.
+The model set spans transformer, state-space, and MPRA-native families, including DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[4--7]. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.84\textwidth]{fig3_gsi_census.pdf}
-\caption{\textbf{Null normalization and FDR control collapse apparent grammar prevalence.} Model-wise distributions and dataset-specific agreement remain structured, but the fraction of enhancers called grammar-sensitive falls from 100\% under naive thresholding to 8.3\% after null normalization and to 0.17\% (13/7,650) after FDR correction.}
+\includegraphics[width=0.7\textwidth]{fig3_gsi_census.pdf}
+\caption{\textbf{Statistical correction collapses apparent grammar prevalence.} Calls fall from 100\% under naive thresholding to 8.3\% after null normalization and to 0.17\% (13/7,650) after FDR correction.}
 \label{fig:census}
 \end{figure}
 
@@ -68,32 +73,22 @@ The dominant result is the correction cascade in Fig.~\ref{fig:census}: under na
 That three-order-of-magnitude drop shows that widespread detectability under unconstrained shuffle assays is largely an artifact of the assay itself rather than evidence for pervasive motif-order logic.
 
 SF-GSI explains why that collapse occurs.
-Across datasets, spacer DNA composition accounts for 78--86\% of measured grammar-sensitivity variance, while simple compositional features explain 40--80\% of expression-prediction variance.
-Motif-only rearrangements produce substantially smaller perturbation effects than spacer replacement or GC-shifting perturbations.
-Arrangement-dependent signal is therefore present in the models, but it is dominated by nuisance variation introduced when spacer sequence is not controlled.
+As shown in Fig.~\ref{fig:spacer}, spacer DNA composition accounts for 78--86\% of measured grammar-sensitivity variance, while compositional features explain 40--80\% of expression-prediction variance.
+Motif-only rearrangements produce substantially smaller perturbation effects than spacer replacement or GC-shifting perturbations, showing that arrangement-dependent signal is present but dominated by nuisance variation when spacer sequence is not controlled.
 
-The residual signal that remains after correction is structured rather than random.
-Model medians are narrowly separated, and cross-model agreement is concentrated in specific biological contexts rather than in a single architecture family.
-Dataset context therefore matters more than nominal model class when asking where credible grammar-sensitive candidates are enriched.
-
-Positive controls confirm that the framework does not erase genuine grammar.
-When spacer sequence is held fixed in synthetic constructs, orientation effects remain strongly detectable across models ($p \le 7.2\times10^{-15}$, with two models reaching numerical underflow).
+The residual signal after correction is structured rather than random.
+Cross-model agreement is concentrated in specific biological contexts, indicating that dataset context matters more than nominal architecture when asking where credible grammar-sensitive candidates are enriched.
+Positive controls confirm that the framework does not erase genuine grammar: when spacer sequence is held fixed in synthetic constructs, orientation effects remain strongly detectable across models ($p \le 7.2\times10^{-15}$, with two models reaching numerical underflow).
 By contrast, cross-species transfer is near zero and variance decompositions assign only 0--1.6\% of explained variance to arrangement, versus 8--22\% to motif vocabulary.
-Motif arrangement therefore contributes real but limited and context-specific signal, whereas unconstrained shuffles overwhelmingly measure spacer composition.
-
-This matters beyond MPRA grammar analysis alone.
-If benchmark perturbations fail to control nuisance sequence variables, they can systematically misstate what regulatory foundation models have learned.
-SF-GSI therefore provides a stronger benchmark for mechanistic model evaluation.
-Our measurements are based on MPRA activity rather than endogenous chromatin context, but that limitation strengthens rather than weakens the main methodological point: background-sequence control must be treated as a first-class design constraint in any computational study of cis-regulatory grammar.
+These findings matter beyond MPRA grammar analysis because benchmark perturbations that fail to control nuisance sequence variables can systematically misstate what regulatory foundation models have learned.
 
 \section*{Conclusions}
 
 Spacer composition, not motif arrangement, explains most of the apparent regulatory grammar signal reported by standard shuffle-based assays.
-Once null normalization and multiplicity correction are applied, only a small residual set of candidates remains, while matched-spacer positive controls confirm that genuine grammar can still be recovered.
-For sequence-model benchmarking and enhancer biology alike, the practical implication is direct: claims about regulatory grammar should be made only under perturbation schemes that explicitly control spacer sequence.
+Matched-spacer positive controls still recover genuine grammar, but claims about regulatory grammar should be made only under perturbation schemes that explicitly control spacer sequence.
 
 \vspace{4pt}
-{\footnotesize
+{\scriptsize
 \textbf{References:}
 [1]~Arnosti \& Kulkarni, \textit{J.~Cell.~Biochem.} 94:890, 2005.\
 [2]~Long et~al., \textit{Cell} 167:1170, 2016.\
