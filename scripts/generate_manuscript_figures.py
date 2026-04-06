@@ -373,7 +373,7 @@ def fig3_gsi_census():
     ax.set_xlabel('Pairwise $\\rho$')
     ax.set_title('(D) Agreement Structure')
     ax.set_xlim(-0.25, 1.02)
-    _legend(ax, loc='upper left', fontsize=7)
+    _legend(ax, loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=3, fontsize=7)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.png'))
