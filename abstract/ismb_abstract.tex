@@ -59,6 +59,14 @@ We test this hypothesis directly using a spacer-factored grammar sensitivity fra
 
 SF-GSI computes a grammar sensitivity index, $GSI = \sigma(\hat{y}) / |\mu(\hat{y})|$, over vocabulary-preserving motif shuffles and factors the response into positional versus absolute context using matched-spacer perturbations and null-normalized testing.
 The billboard prediction is concrete: if models encode only absolute context, then controlling for spacer composition should collapse apparent grammar sensitivity to noise---i.e., the residual positional signal should be statistically indistinguishable from a null distribution.
+
+The framework proceeds in three stages.
+First, a \textit{factorial decomposition} isolates the contributions of motif position, motif orientation, and spacer composition by generating matched perturbation sets in which each factor is varied independently while the others are held fixed; effect sizes are expressed as the fraction of full-shuffle variance attributable to each factor.
+Second, a \textit{spacer ablation series} applies graded compositional perturbations---motif-only rearrangement, dinucleotide-preserving shuffle, GC-content shift, and full random replacement---to quantify the dose--response relationship between compositional disruption and model prediction change.
+Third, a \textit{feature decomposition} regresses model predictions against explicit compositional features (GC content, dinucleotide frequencies, trinucleotide counts, and DNA shape parameters) to estimate how much of the expression signal is explained by absolute context alone.
+Statistical significance is assessed via a three-stage correction cascade: an initial F-test on raw GSI, followed by z-score null normalization against matched shuffles, and finally Benjamini--Hochberg FDR correction at $\alpha = 0.05$.
+Positive controls use synthetic constructs with fixed spacer sequence and known orientation-dependent activity, verifying that the framework retains power to detect genuine positional effects when they exist.
+
 We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements: 3 foundation models $\times$ 5 datasets $\times$ 500 enhancers, plus Enformer on 3 human datasets $\times$ 50 enhancers.
 The model set spans transformer, state-space, and MPRA-native architectures---DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[4--7]---ensuring that conclusions are not artifacts of a single model family. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
 \begin{figure}[H]
