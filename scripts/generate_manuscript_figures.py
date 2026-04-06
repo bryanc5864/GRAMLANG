@@ -22,12 +22,31 @@ os.makedirs(FIGURES_DIR, exist_ok=True)
 # Dataset colors (consistent across all figures)
 DS_PALETTE = {
     'agarwal': '#c0392b',   # red
+    'de_almeida': '#2980b9',# blue
     'jores':   '#27ae60',   # green
     'inoue':   '#2980b9',   # blue
     'klein':   '#8e44ad',   # purple
     'vaishnav':'#d35400',   # orange
 }
 DS_COLORS_LIST = [DS_PALETTE['agarwal'], DS_PALETTE['jores'], DS_PALETTE['inoue']]
+
+DS_LABELS = {
+    'agarwal': 'Agarwal',
+    'de_almeida': 'de Almeida',
+    'inoue': 'Inoue',
+    'jores': 'Jores',
+    'klein': 'Klein',
+    'vaishnav': 'Vaishnav',
+}
+
+DS_SHORT_LABELS = {
+    'agarwal': 'Agar.',
+    'de_almeida': 'de Alm.',
+    'inoue': 'Inoue',
+    'jores': 'Jores',
+    'klein': 'Klein',
+    'vaishnav': 'Vaish.',
+}
 
 # Model colors (consistent across all figures)
 MODEL_PALETTE = {
@@ -102,7 +121,7 @@ def fig1_spacer_confound():
     plt.subplots_adjust(hspace=0.55, wspace=0.4)
 
     datasets = ['agarwal', 'jores', 'inoue']
-    ds_labels = ['Agarwal', 'Jores', 'Inoue']
+    ds_labels = [DS_LABELS[d] for d in datasets]
 
     # (A) Factorial decomposition
     ax = axes[0, 0]
@@ -121,7 +140,7 @@ def fig1_spacer_confound():
     ax.set_xticklabels(ds_labels, fontsize=6)
     ax.set_ylabel('% of Full Variance')
     ax.set_title('(A) Factorial Decomposition')
-    _legend(ax, loc='upper right')
+    _legend(ax, loc='upper center', bbox_to_anchor=(0.72, 1.02))
     ax.axhline(y=50, color='gray', linestyle=':', alpha=0.3, linewidth=0.5)
 
     # (B) Spacer ablation
@@ -137,7 +156,7 @@ def fig1_spacer_confound():
     ax.set_xticklabels(eff_labels, fontsize=6)
     ax.set_ylabel('Median |$\\Delta$ Expr|')
     ax.set_title('(B) Spacer Ablation')
-    _legend(ax)
+    _legend(ax, loc='upper left')
 
     # (C) Feature decomposition R^2
     ax = axes[1, 0]
@@ -154,7 +173,7 @@ def fig1_spacer_confound():
     ax.set_xticklabels(fc_labels, fontsize=6)
     ax.set_ylabel('$R^2$')
     ax.set_title('(C) Feature Prediction of Expression')
-    _legend(ax)
+    _legend(ax, loc='upper left')
 
     # (D) GC-expression correlation reversal
     ax = axes[1, 1]
@@ -186,16 +205,27 @@ def fig2_positive_control():
     pc_data = load_json('v3/positive_control/dnabert2_positive_control.json')
     orient = pc_data['orientation']
 
-    # (A) Effect size distribution
+    # (A) Supported summary statistics from DNABERT-2 positive control
     ax = axes[0]
-    thresholds = ['Any', '>0.05', '>0.10', '>0.15', '>0.20']
-    pcts = [100, 50, 17, 10, 3]
-    colors = [C_POS, '#229954', C_WARN, '#d35400', C_NEG]
-    bars = ax.bar(thresholds, pcts, color=colors, edgecolor='black',
+    stats = ['Median $|\\Delta|$', 'Mean $|\\Delta|$', 'Frac $>0.1$']
+    vals = [
+        orient['median_abs_diff'],
+        orient['mean_abs_diff'],
+        orient['frac_diff_gt_0.1'],
+    ]
+    colors = [C_ACCENT, C_WARN, C_POS]
+    bars = ax.bar(stats, vals, color=colors, edgecolor='black',
                   linewidth=0.3, width=0.6)
-    ax.set_ylabel('% of Pairs')
-    ax.set_xlabel('$|\\Delta|$ threshold')
-    ax.set_title('(A) Effect Size Distribution')
+    for idx, (bar, val) in enumerate(zip(bars, vals)):
+        label = f'{val:.3f}'
+        if idx == 2:
+            label = f'{val * 100:.0f}%'
+        ax.text(bar.get_x() + bar.get_width() / 2., bar.get_height() + 0.01,
+                label, ha='center', va='bottom', fontsize=5.5, fontweight='bold')
+    ax.set_ylabel('Value')
+    ax.set_title('(A) DNABERT-2 Positive Control')
+    ax.tick_params(axis='x', labelsize=5)
+    ax.set_ylim(0, 0.22)
     ax.text(0.95, 0.95, f'$p = {orient["p_value"]:.0e}$\n$n = {orient["n_pairs"]}$ pairs',
             transform=ax.transAxes, ha='right', va='top', fontsize=5,
             bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
@@ -212,7 +242,7 @@ def fig2_positive_control():
         ax.text(bar.get_x() + bar.get_width() / 2., bar.get_height() + 1.5,
                 f'{val}%', ha='center', va='bottom', fontsize=7, fontweight='bold')
     ax.set_ylabel('Detection Rate (%)')
-    ax.set_title('(B) Method Comparison')
+    ax.set_title('(B) Confounded vs Controlled')
     ax.set_ylim(0, 118)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig2_positive_control.pdf'))
@@ -233,7 +263,7 @@ def fig3_gsi_census():
     # (A) GSI distribution by model
     ax = axes[0, 0]
     for model in models:
-        data = gsi_df[gsi_df['model'] == model]['gsi'].clip(upper=gsi_df['gsi'].quantile(0.95))
+        data = gsi_df[gsi_df['model'] == model]['gsi']
         ax.hist(data, bins=40, alpha=0.45, label=model_labels[model],
                 color=MODEL_PALETTE[model])
     ax.set_xlabel('GSI')
@@ -253,8 +283,8 @@ def fig3_gsi_census():
             ax.bar(pos + idx * w, meds, w, label=model_labels[model],
                    color=MODEL_PALETTE[model], alpha=0.8)
         ax.set_xticks(pos + w)
-        ax.set_xticklabels([d.capitalize()[:5] + '.' for d in dsets],
-                           fontsize=5, rotation=20)
+        ax.set_xticklabels([DS_SHORT_LABELS[d] for d in dsets],
+                           fontsize=5.5, rotation=20)
         ax.set_ylabel('Median GSI')
         ax.set_title('(B) GSI by Dataset')
         _legend(ax)
@@ -280,11 +310,10 @@ def fig3_gsi_census():
     agreement = {
         'Agar.': [0.902, 0.702, 0.750], 'Klein': [0.879, 0.657, 0.671],
         'Jores': [0.894, 0.645, 0.695], 'Vaish.': [0.565, -0.030, -0.076],
-        'deAlm.': [-0.064, -0.164, 0.050],
+        'de Alm.': [-0.064, -0.164, 0.050],
     }
-    # Map to unified dataset palette
     ds_key_map = {'Agar.': 'agarwal', 'Klein': 'klein', 'Jores': 'jores',
-                  'Vaish.': 'vaishnav', 'deAlm.': 'inoue'}
+                  'Vaish.': 'vaishnav', 'de Alm.': 'de_almeida'}
     names = list(agreement.keys())
     avgs = [np.mean(v) for v in agreement.values()]
     colors_d = [DS_PALETTE[ds_key_map[n]] for n in names]
@@ -296,7 +325,7 @@ def fig3_gsi_census():
     ax.set_ylabel('Mean $\\rho$')
     ax.set_title('(D) Cross-Model Agreement')
     ax.set_ylim(-0.2, 1.0)
-    ax.tick_params(axis='x', labelsize=5)
+    ax.tick_params(axis='x', labelsize=5.5)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.png'))
@@ -313,14 +342,15 @@ def fig4_compositionality():
     ax.errorbar(gap_by_k['n_motifs'], gap_by_k['mean'],
                 yerr=gap_by_k['std'] / np.sqrt(gap_by_k['count']),
                 fmt='o-', color=C_ACCENT, capsize=3, markersize=4, linewidth=1.2)
-    ax.axhline(y=0.2, color=C_POS, linestyle='--', alpha=0.4, linewidth=0.6, label='Regular')
-    ax.axhline(y=0.5, color=C_WARN, linestyle='--', alpha=0.4, linewidth=0.6, label='Context-free')
-    ax.axhline(y=0.99, color=C_NEG, linestyle='--', alpha=0.4, linewidth=0.6, label='Context-sensitive')
+    ax.axhline(y=0.2, color=C_POS, linestyle='--', alpha=0.4, linewidth=0.6)
+    ax.axhline(y=0.5, color=C_WARN, linestyle='--', alpha=0.4, linewidth=0.6)
+    ax.axhline(y=0.99, color=C_NEG, linestyle='--', alpha=0.4, linewidth=0.6)
     ax.set_xlabel('Number of Motifs ($k$)')
     ax.set_ylabel('Compositionality Gap ($1 - R^2$)')
-    _legend(ax, loc='center right')
-    ax.set_ylim(0, 1.05)
-    ax.text(0.03, 0.15, 'Gap = 0.989\n77.5% non-additive\nClassification: Context-sensitive',
+    ax.set_ylim(0.97, 1.002)
+    ax.text(0.97, 0.70, 'Context-sensitive threshold', transform=ax.transAxes,
+            fontsize=5, va='center', ha='right', color=C_NEG)
+    ax.text(0.03, 0.08, 'Mean gap = 0.989\n77.5% non-additive',
             transform=ax.transAxes, fontsize=5, va='bottom',
             bbox=dict(boxstyle='round,pad=0.3', facecolor='lightyellow',
                       alpha=0.8, linewidth=0.3))
@@ -379,7 +409,7 @@ def fig5_transfer():
     # ── Panel B: Variance decomposition lollipop ──
     ax = axes[1]
     ds_order = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
-    ds_labels = ['Agar.', 'deAlm.', 'Vaish.', 'Jores', 'Klein']
+    ds_labels = [DS_SHORT_LABELS[d] for d in ds_order]
     cdata = {}
     for ds in ds_order:
         path = os.path.join(RESULTS_DIR, 'module6', f'{ds}_completeness.json')
@@ -426,7 +456,8 @@ def fig5_transfer():
     # Replicate ceiling line
     ax.axvline(x=0.85, color=C_ACCENT, linewidth=0.6, linestyle=':', alpha=0.5)
 
-    _legend(ax, loc='lower right', fontsize=5, ncol=2, markerscale=0.9)
+    _legend(ax, loc='upper center', bbox_to_anchor=(0.5, -0.12),
+            fontsize=5, ncol=2, markerscale=0.9)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_transfer.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_transfer.png'))
@@ -437,7 +468,7 @@ def fig5_transfer():
 def fig6_completeness():
     """Figure 6: Completeness (1x2, compact)."""
     datasets = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
-    labels = ['Agar.', 'deAlm.', 'Vaish.', 'Jores', 'Klein']
+    labels = [DS_SHORT_LABELS[d] for d in datasets]
     cdata = {}
     for ds in datasets:
         path = os.path.join(RESULTS_DIR, 'module6', f'{ds}_completeness.json')
@@ -464,7 +495,7 @@ def fig6_completeness():
     ax.set_xticklabels(labels, fontsize=5)
     ax.set_ylabel('$R^2$')
     ax.set_title('(A) Hierarchical $R^2$ Decomposition')
-    _legend(ax, fontsize=4.5, ncol=2)
+    _legend(ax, loc='upper center', bbox_to_anchor=(0.5, 1.01), fontsize=4.5, ncol=2)
     ax.set_ylim(0, 1.0)
 
     # (B) Completeness %
