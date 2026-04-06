@@ -69,7 +69,7 @@ Statistical significance is assessed via a three-stage correction cascade: an in
 Positive controls use synthetic constructs with fixed spacer sequence and known orientation-dependent activity, verifying that the framework retains power to detect genuine positional effects when they exist.
 
 We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements: 3 foundation models $\times$ 5 datasets $\times$ 500 enhancers, plus Enformer on 3 human datasets $\times$ 50 enhancers.
-The model set spans transformer, state-space, and MPRA-native architectures---DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[4--7]---ensuring that conclusions are not artifacts of a single model family. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
+The model set spans transformer, state-space, and MPRA-native architectures---DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[3--8]---ensuring that conclusions are not artifacts of a single model family. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{fig3_gsi_census.pdf}
@@ -101,11 +101,12 @@ Claims of learned regulatory grammar should be made only under perturbation desi
 \textbf{References:}
 [1]~Arnosti \& Kulkarni, \textit{J.~Cell.~Biochem.} 94:890, 2005.\
 [2]~Long et~al., \textit{Cell} 167:1170, 2016.\
-[3]~Castro-Mondragon et~al., \textit{Nucleic Acids Res.} 52:D142, 2024.\
-[4]~Zhou et~al., \textit{bioRxiv} 2023, DNABERT-2.\
-[5]~Nguyen et~al., \textit{bioRxiv} 2023, HyenaDNA.\
+[3]~Zhou et~al., \textit{ICLR} 2024, DNABERT-2.\
+[4]~Dalla-Torre et~al., \textit{Nature Methods} 2024, Nucleotide Transformer.\
+[5]~Nguyen et~al., \textit{arXiv}:2306.15794, 2023, HyenaDNA.\
 [6]~Avsec et~al., \textit{Nature Methods} 18:1196, 2021, Enformer.\
-[7]~Agarwal et~al., \textit{Science} 380:eadh0559, 2023; Jores et~al., \textit{Nat.~Plants} 7:842, 2021.
+[7]~de~Jonge et~al., \textit{Nature} 2025, PARM.\
+[8]~Agarwal et~al., \textit{Nature} 639:411, 2025; Jores et~al., \textit{Nat.~Plants} 7:842, 2021.
 }
 
 \end{document}
