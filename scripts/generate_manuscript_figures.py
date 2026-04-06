@@ -366,14 +366,12 @@ def fig3_gsi_census():
     for idx, (label, color, offset) in enumerate(zip(pair_labels, pair_colors, offsets)):
         vals = [agreement[name][idx] for name in names]
         ax.scatter(vals, y + offset, s=22, color=color, edgecolors='white', linewidths=0.3, label=label, zorder=3)
-    for yi, vals in enumerate(agreement.values()):
-        ax.text(max(vals) + 0.035, yi, f'{np.mean(vals):.2f}', fontsize=9, va='center')
     ax.set_yticks(y)
     ax.set_yticklabels(names)
     ax.set_xlabel('Pairwise $\\rho$')
     ax.set_title('(D) Agreement Structure')
-    ax.set_xlim(-0.25, 1.02)
-    _legend(ax, loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=3, fontsize=7)
+    ax.set_xlim(-0.25, 0.85)
+    _legend(ax, loc='center left', bbox_to_anchor=(1.02, 0.5), ncol=1, fontsize=7)
 
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.png'))
