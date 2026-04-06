@@ -261,8 +261,8 @@ def fig2_positive_control():
 def fig3_gsi_census():
     """Figure 3: GSI census redesign with cleaner statistical storytelling."""
     gsi_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module1', 'all_gsi_results.parquet'))
-    fig, axes = plt.subplots(1, 4, figsize=(11, 2.6))
-    plt.subplots_adjust(wspace=0.45)
+    fig, axes = plt.subplots(1, 4, figsize=(11, 2.3))
+    plt.subplots_adjust(wspace=0.45, top=0.82)
 
     models = ['dnabert2', 'nt', 'hyenadna']
     model_labels = {'dnabert2': 'DNABERT-2', 'nt': 'NT v2', 'hyenadna': 'HyenaDNA'}
