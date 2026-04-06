@@ -231,10 +231,17 @@ def fig2_positive_control():
             bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
                       alpha=0.8, linewidth=0.3))
 
-    # (B) Method comparison
+    # (B) Method comparison (computed from v2 data)
     ax = axes[1]
     methods = ['VP Shuffle\n(confounded)', 'Controlled\nDesign']
-    sig = [8.3, 100]
+    # VP shuffle rate from v2 z-score correction; controlled = positive control detection (p < 0.05)
+    _v2_corr = load_json('v2/module1/p_value_correction_summary.json')
+    _vp_rate = 100.0 * sum(v['n_sig'] for v in _v2_corr.values()) / (500 * len(_v2_corr))
+    # Positive control: all models detect orientation (p << 0.05), so 100% detection
+    _pc_all = load_json('v3/validation_analyses/positive_control_all_models.json')
+    _pc_detected = sum(1 for v in _pc_all.values() if v['p_value'] < 0.05)
+    _ctrl_rate = 100.0 * _pc_detected / len(_pc_all)
+    sig = [round(_vp_rate, 1), round(_ctrl_rate, 1)]
     colors_c = [C_NEG, C_POS]
     bars = ax.bar(methods, sig, color=colors_c, edgecolor='black',
                   linewidth=0.3, width=0.5)
@@ -303,10 +310,19 @@ def fig3_gsi_census():
     ax.set_ylim(0.035, 0.108)
     _legend(ax, loc='upper left')
 
-    # (C) Correction cascade as connected log-scale line
+    # (C) Correction cascade as connected log-scale line (computed from v2 data)
     ax = axes[2]
     stages = ['v1 (F-test)', 'v2 (z-score)', 'v2 (FDR)']
-    rates = [100, 8.3, 0.17]
+    v2_gsi = pd.read_parquet(os.path.join(RESULTS_DIR, 'v2', 'module1', 'all_gsi_results.parquet'))
+    from scipy.stats import norm as _norm
+    from statsmodels.stats.multitest import multipletests as _mt
+    _n_total = len(v2_gsi)
+    _pct_raw = 100.0 * (v2_gsi['p_value'] < 0.05).sum() / _n_total
+    _z_pvals = 2 * (1 - _norm.cdf(v2_gsi['z_score'].abs()))
+    _pct_zscore = 100.0 * (_z_pvals < 0.05).sum() / _n_total
+    _reject, _, _, _ = _mt(_z_pvals, alpha=0.05, method='fdr_bh')
+    _pct_fdr = 100.0 * _reject.sum() / _n_total
+    rates = [round(_pct_raw, 1), round(_pct_zscore, 1), round(_pct_fdr, 2)]
     x = np.arange(len(stages))
     ax.plot(x, rates, color='#444444', linewidth=1.0, zorder=1)
     ax.scatter(x, rates, s=[90, 70, 56], color=CASCADE_COLORS, edgecolors='black', linewidths=0.4, zorder=2)
@@ -325,17 +341,26 @@ def fig3_gsi_census():
     ax.set_ylim(0.1, 200)
     ax.tick_params(axis='x', labelsize=5)
 
-    # (D) Pairwise correlations by dataset, no heatmap
+    # (D) Pairwise correlations by dataset, computed from data
     ax = axes[3]
     pair_labels = ['B2 vs NT', 'B2 vs Hyena', 'NT vs Hyena']
     pair_colors = ['#1f4e79', '#6c8ebf', '#9fbad6']
-    agreement = {
-        'Agar.': [0.902, 0.702, 0.750],
-        'Klein': [0.879, 0.657, 0.671],
-        'Jores': [0.894, 0.645, 0.695],
-        'Vaish.': [0.565, -0.030, -0.076],
-        'Inoue': [-0.064, -0.164, 0.050],
-    }
+    _model_pairs = [('dnabert2', 'nt'), ('dnabert2', 'hyenadna'), ('nt', 'hyenadna')]
+    _ds_order = ['agarwal', 'klein', 'jores', 'vaishnav', 'de_almeida']
+    _ds_short = {'agarwal': 'Agar.', 'klein': 'Klein', 'jores': 'Jores',
+                 'vaishnav': 'Vaish.', 'de_almeida': 'de Alm.'}
+    agreement = {}
+    for _ds in _ds_order:
+        _ds_data = gsi_df[gsi_df['dataset'] == _ds]
+        _pivot = _ds_data.pivot_table(index='seq_id', columns='model', values='gsi')
+        _corrs = []
+        for _m1, _m2 in _model_pairs:
+            if _m1 in _pivot.columns and _m2 in _pivot.columns:
+                _r = _pivot[[_m1, _m2]].dropna().corr(method='spearman').iloc[0, 1]
+                _corrs.append(round(_r, 3))
+            else:
+                _corrs.append(0.0)
+        agreement[_ds_short[_ds]] = _corrs
     names = list(agreement.keys())
     y = np.arange(len(names))
     offsets = [-0.18, 0.0, 0.18]
