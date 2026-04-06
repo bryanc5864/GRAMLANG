@@ -32,7 +32,7 @@ DS_COLORS_LIST = [DS_PALETTE['agarwal'], DS_PALETTE['jores'], DS_PALETTE['inoue'
 
 DS_LABELS = {
     'agarwal': 'Agarwal',
-    'de_almeida': 'de Almeida',
+    'de_almeida': 'Inoue',
     'inoue': 'Inoue',
     'jores': 'Jores',
     'klein': 'Klein',
@@ -41,7 +41,7 @@ DS_LABELS = {
 
 DS_SHORT_LABELS = {
     'agarwal': 'Agar.',
-    'de_almeida': 'de Alm.',
+    'de_almeida': 'Inoue',
     'inoue': 'Inoue',
     'jores': 'Jores',
     'klein': 'Klein',
@@ -310,10 +310,10 @@ def fig3_gsi_census():
     agreement = {
         'Agar.': [0.902, 0.702, 0.750], 'Klein': [0.879, 0.657, 0.671],
         'Jores': [0.894, 0.645, 0.695], 'Vaish.': [0.565, -0.030, -0.076],
-        'de Alm.': [-0.064, -0.164, 0.050],
+        'Inoue': [-0.064, -0.164, 0.050],
     }
     ds_key_map = {'Agar.': 'agarwal', 'Klein': 'klein', 'Jores': 'jores',
-                  'Vaish.': 'vaishnav', 'de Alm.': 'de_almeida'}
+                  'Vaish.': 'vaishnav', 'Inoue': 'de_almeida'}
     names = list(agreement.keys())
     avgs = [np.mean(v) for v in agreement.values()]
     colors_d = [DS_PALETTE[ds_key_map[n]] for n in names]

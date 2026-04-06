@@ -15,6 +15,7 @@ Live ISMB 2026 requirements checked on 2026-04-05:
 - Oral-request submissions also require a long abstract PDF of up to 2 pages.
 - The long abstract must not include personal information such as affiliation or title/position.
 - Current public deadline listed by ISCB: Thursday, April 9, 2026.
+- The abstract page does not specify a required template, font package, or column count; the enforced constraint is the 2-page PDF limit.
 
 Source pages:
 - https://www.iscb.org/ismb2026/call-for-submissions/abstracts
