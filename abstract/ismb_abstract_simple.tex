@@ -1,36 +1,50 @@
 \documentclass[10pt]{article}
-
-\usepackage[letterpaper, margin=0.85in]{geometry}
+\usepackage[margin=0.6in,top=0.55in,bottom=0.55in]{geometry}
 \usepackage{graphicx}
-\usepackage{amsmath, amssymb}
-\usepackage{url}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{mathptmx}  % Times New Roman for text and math
 
-\setlength{\parskip}{4pt}
+% Compact sections
+\titleformat{\section}{\normalsize\bfseries}{\thesection}{0.5em}{}
+\titlespacing*{\section}{0pt}{7pt}{3pt}
+\setlength{\parskip}{3pt}
 \setlength{\parindent}{0pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{2pt}
+\setlength{\textfloatsep}{6pt}
+\setlength{\floatsep}{6pt}
+\setlength{\intextsep}{6pt}
 
 \graphicspath{{../results/manuscript_figures/}{../results/figures/}}
-
-\pagestyle{plain}
 
 \begin{document}
 
 \begin{center}
-{\Large \textbf{DNA foundation models encode motif identity but fail to learn regulatory grammar}}
+{\Large\bfseries DNA foundation models encode motif identity\\[2pt] but fail to learn regulatory grammar}
+\vspace{5pt}
 \end{center}
 
 \section*{Background}
 
-Whether enhancer activity is governed by motif arrangement or by more permissive logic remains a central question in cis-regulatory biology [1,2].
+Whether enhancer activity is governed by motif arrangement or by more permissive logic remains a central question in cis-regulatory biology~[1,2].
 We propose the \textbf{billboard model}: DNA foundation models encode which transcription factor binding sites are present (motif identity) but not their relative positions, orientations, or spacing (motif arrangement).
 Under this model, enhancers function like billboards---what matters is which elements appear, not how they are arranged.
 This is distinct from asking whether biology itself follows billboard logic; we specifically test what models learn.
 We derive testable predictions and evaluate them using a spacer-factored grammar sensitivity framework (SF-GSI) that isolates motif arrangement effects from motif identity effects---resolving a critical confound in standard vocabulary-preserving shuffles, which perturb both simultaneously.
 Crucially, we also test whether grammar matters biologically by identifying MPRA sequence pairs with identical motif vocabulary but different arrangements.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
-\includegraphics[width=\textwidth]{fig1_spacer_confound.pdf}
-\caption{\textbf{Absolute context dominates apparent grammar effects.} (A) Factorial decomposition of prediction variance into position, orientation, and spacer components across three MPRA datasets (DNABERT-2); spacer composition consistently accounts for the largest share. (B) Spacer ablation series: replacing spacer DNA produces larger expression changes than motif-only rearrangement. (C) Feature-based regression predicting model expression output from compositional sequence features; compositional features alone explain 40--80\% of variance. (D) GC--expression correlation reverses sign across datasets.}
+\includegraphics[width=\textwidth,keepaspectratio]{fig1_spacer_confound.pdf}
+\caption{\textbf{Absolute context dominates apparent grammar effects.}
+\textbf{(A)}~Factorial decomposition of prediction variance into position, orientation, and spacer components across three MPRA datasets (DNABERT-2); spacer composition consistently accounts for the largest share.
+\textbf{(B)}~Spacer ablation series: replacing spacer DNA produces larger expression changes than motif-only rearrangement.
+\textbf{(C)}~Feature-based regression predicting model expression output from compositional sequence features; compositional features alone explain 40--80\% of variance.
+\textbf{(D)}~GC--expression correlation reverses sign across datasets.}
+\label{fig:spacer}
 \end{figure}
 
 \section*{Methods}
@@ -40,12 +54,17 @@ SF-GSI computes a grammar sensitivity index, $GSI = \sigma(\hat{y}) / |\mu(\hat{
 The framework proceeds in three stages: (1) factorial decomposition isolating contributions of motif position, orientation, and spacer composition; (2) spacer ablation series applying graded compositional perturbations; (3) feature decomposition regressing model predictions against explicit compositional features.
 Statistical significance is assessed via a three-stage correction cascade: F-test, z-score null normalization, and Benjamini--Hochberg FDR correction at $\alpha = 0.05$.
 
-We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements across DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM [3--8]. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
+We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements across DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[3--8]. Code: \url{https://github.com/bryanc5864/GRAMLANG}.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
-\includegraphics[width=\textwidth]{fig3_gsi_census.pdf}
-\caption{\textbf{Statistical correction collapses apparent grammar prevalence.} (A) Violin plots of raw GSI values by model. (B) Median GSI profiles across five datasets. (C) Correction cascade: grammar-sensitive calls fall from 100\% to 8.3\% after null normalization and to 0.12\% (9/7,650) after FDR correction. (D) Pairwise cross-model GSI correlations by dataset.}
+\includegraphics[width=\textwidth,keepaspectratio]{fig3_gsi_census.pdf}
+\caption{\textbf{Statistical correction collapses apparent grammar prevalence.}
+\textbf{(A)}~Violin plots of raw GSI values by model.
+\textbf{(B)}~Median GSI profiles across five datasets.
+\textbf{(C)}~Correction cascade: grammar-sensitive calls fall from 100\% to 8.3\% after null normalization and to 0.12\% (9/7,650) after FDR correction.
+\textbf{(D)}~Pairwise cross-model GSI correlations by dataset.}
+\label{fig:census}
 \end{figure}
 
 \section*{Results}
@@ -71,17 +90,20 @@ Yet models cannot detect even synthetic grammar rules ($p = 0.73$) or known heli
 The billboard model (89.7\% of enhancers, 95\% CI: 87.7--91.7\%) describes model behavior, not biological reality---current architectures systematically miss regulatory grammar that demonstrably exists.
 This reframes model evaluation: benchmarks should test whether models can learn grammar that exists in experimental data.
 
+\vspace{3pt}
+\noindent\textbf{Availability:} \url{https://github.com/bryanc5864/GRAMLANG}
+
 \vspace{4pt}
-{\small
-\textbf{References:}
-[1] Arnosti \& Kulkarni, J. Cell. Biochem. 94:890, 2005.
-[2] Long et al., Cell 167:1170, 2016.
-[3] Zhou et al., ICLR 2024, DNABERT-2.
-[4] Dalla-Torre et al., Nature Methods 2024, Nucleotide Transformer.
-[5] Nguyen et al., arXiv:2306.15794, 2023, HyenaDNA.
-[6] Avsec et al., Nature Methods 18:1196, 2021, Enformer.
-[7] de Jonge et al., Nature 2025, PARM.
-[8] Agarwal et al., Nature 639:411, 2025; Jores et al., Nat. Plants 7:842, 2021.
+\noindent\textbf{\small References}\\
+{\footnotesize
+\noindent [1]~Arnosti \& Kulkarni, \textit{J.~Cell.~Biochem.} 94:890, 2005.
+\enspace [2]~Long et~al., \textit{Cell} 167:1170, 2016.\\
+\noindent [3]~Zhou et~al., \textit{ICLR} 2024, DNABERT-2.
+\enspace [4]~Dalla-Torre et~al., \textit{Nature Methods} 2024, Nucleotide Transformer.\\
+\noindent [5]~Nguyen et~al., \textit{arXiv}:2306.15794, 2023, HyenaDNA.
+\enspace [6]~Avsec et~al., \textit{Nature Methods} 18:1196, 2021, Enformer.\\
+\noindent [7]~de~Jonge et~al., \textit{Nature} 2025, PARM.\\
+\noindent [8]~Agarwal et~al., \textit{Nature} 639:411, 2025; Jores et~al., \textit{Nat.~Plants} 7:842, 2021.
 }
 
 \end{document}
