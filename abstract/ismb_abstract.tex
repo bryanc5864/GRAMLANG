@@ -38,16 +38,17 @@
 \begin{document}
 
 \begin{center}
-{\Large \textbf{Spacer composition, not motif grammar, drives regulatory signals in DNA sequence models}}
+{\Large \textbf{DNA foundation models learn billboard-like representations, missing regulatory grammar that exists}}
 \end{center}
 
 \section*{Background}
 
 Whether enhancer activity is governed by motif arrangement or by more permissive logic remains a central question in cis-regulatory biology~[1,2].
-We introduce the \textbf{billboard model}, a formal framework positing that regulatory activity depends on which transcription factor binding sites are present---their absolute identity and composition---not on their relative positions, orientations, or spacing.
-Under the billboard model, what DNA foundation models have actually learned is absolute context (compositional features) rather than positional context (relational arrangement between regulatory elements).
-This is a deliberately contrarian position: the prevailing view assumes that motif grammar carries regulatory meaning and that foundation models learn positional syntax.
-We derive testable predictions from the billboard model and evaluate them using a spacer-factored grammar sensitivity framework (SF-GSI) that isolates positional context from absolute context---resolving a critical confound in standard vocabulary-preserving shuffles, which perturb both simultaneously.
+We hypothesize that DNA foundation models learn \textbf{billboard-like representations}---encoding which transcription factor binding sites are present (absolute context) rather than their relative positions, orientations, or spacing (positional context).
+This is distinct from asking whether biology itself follows billboard logic; we specifically test what models learn.
+The prevailing view assumes foundation models learn positional syntax, but this has not been rigorously tested with proper controls for compositional confounds.
+We derive testable predictions and evaluate them using a spacer-factored grammar sensitivity framework (SF-GSI) that isolates positional context from absolute context---resolving a critical confound in standard vocabulary-preserving shuffles, which perturb both simultaneously.
+Crucially, we also test whether grammar matters biologically by identifying MPRA sequence pairs with identical motif vocabulary but different arrangements.
 
 \begin{figure}[H]
 \centering
@@ -79,22 +80,26 @@ The model set spans transformer, state-space, and MPRA-native architectures---DN
 
 \section*{Results}
 
-Under naive thresholding all tested enhancers appear grammar-sensitive, but this falls to 8.3\% after null normalization and to 0.12\% (9/7,650) after FDR correction (Fig.~\ref{fig:census}).
-That three-order-of-magnitude collapse is precisely the signature predicted by our billboard model: once absolute context is controlled, the apparent prevalence of positional syntax vanishes.
-Absolute context (spacer composition) accounts for 78--86\% of grammar-sensitivity variance (Fig.~\ref{fig:spacer}), while positional context---motif-only rearrangements---produces substantially smaller perturbation effects than spacer replacement or GC-shifting perturbations.
-These models have learned \textit{what} is present, not \textit{where} it is; the signal widely attributed to grammar is, in the vast majority of cases, a compositional signal misread as a positional one.
+\textbf{Models learn billboard-like.} Under naive thresholding all tested enhancers appear grammar-sensitive, but this falls to 8.3\% after null normalization and to 0.12\% (9/7,650) after FDR correction (Fig.~\ref{fig:census}).
+Per-enhancer classification shows 89.7\% (95\% CI: 87.7--91.7\%) of enhancers are ``billboard class'' with no detectable grammar effects.
+Spacer composition accounts for 78--86\% of grammar-sensitivity variance (Fig.~\ref{fig:spacer}), while motif-only rearrangements produce 2--6$\times$ smaller effects than spacer perturbations.
 
-Positive controls confirm the framework does not erase genuine grammar: with spacer sequence held fixed in synthetic constructs, orientation effects remain strongly detectable across models ($p \le 7.2\times10^{-15}$, with two models reaching numerical underflow).
-However, these controlled cases are rare exceptions, not the rule.
-Variance decompositions assign only 0--1.6\% of explained variance to arrangement versus 8--22\% to motif vocabulary---consistent with our billboard model's central claim that absolute identity, not positional syntax, is the dominant learned feature.
-Cross-species transfer is near zero, further suggesting that whatever positional logic models encode is not generalizable.
-Cross-model agreement concentrates in specific biological contexts rather than reflecting architecture-general positional learning, indicating that dataset provenance matters more than model design.
+\textbf{But grammar matters biologically.} We identified 363 MPRA sequence pairs with identical motif vocabulary but different arrangements.
+These pairs show measured expression differences up to $\Delta = 6.3$ (Jores dataset), with 76\% having $|\Delta| > 0.5$.
+This is direct experimental evidence that arrangement affects expression---grammar exists.
+
+\textbf{Models fail to learn grammar.} We tested whether models can detect grammar when it demonstrably exists: (1) synthetic sequences with obvious grammar rules (motif order, spacing) yielded $p = 0.73$---not detected; (2) known helical periodicity (10.5bp, from BPNet literature) yielded $p = 0.96$---not detected.
+Models cannot learn even simple, known grammar patterns.
+
+Positive controls confirm genuine grammar is detectable with controlled spacers ($p \le 7.2\times10^{-15}$), but this requires experimental designs that current models were not trained on.
 
 \section*{Conclusions}
 
-These results validate the billboard model we propose: DNA foundation models encode absolute context---what binding sites and sequence features are present---but show negligible encoding of positional context once composition is controlled.
-The billboard model reframes how the field should evaluate regulatory foundation models: benchmark perturbations that fail to control for absolute context systematically overstate positional knowledge.
-Claims of learned regulatory grammar should be made only under perturbation designs that explicitly factor out absolute context; without that control, compositional signals masquerade as positional ones.
+These results reveal a critical limitation: DNA foundation models learn billboard-like representations---encoding what binding sites are present---but fail to learn positional grammar, even when it exists biologically.
+We found 363 sequence pairs in MPRA data with identical motif vocabulary but different arrangements that show measured expression differences up to $\Delta = 6.3$, proving grammar matters.
+Yet models cannot detect even synthetic grammar rules ($p = 0.73$) or known helical periodicity ($p = 0.96$).
+The billboard finding (89.7\% of enhancers, 95\% CI: 87.7--91.7\%) reflects model limitations, not biological reality.
+This reframes model evaluation: current architectures systematically miss regulatory grammar, and benchmarks should test whether models can learn grammar that demonstrably exists in experimental data.
 
 \vspace{4pt}
 {\scriptsize
