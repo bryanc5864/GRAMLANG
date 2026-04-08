@@ -15,16 +15,16 @@
 \begin{document}
 
 \begin{center}
-{\Large \textbf{DNA foundation models encode motif identity but fail to learn regulatory grammar that exists}}
+{\Large \textbf{DNA foundation models encode motif identity but fail to learn regulatory grammar}}
 \end{center}
 
 \section*{Background}
 
 Whether enhancer activity is governed by motif arrangement or by more permissive logic remains a central question in cis-regulatory biology [1,2].
-We hypothesize that DNA foundation models learn \textbf{billboard-like representations}---encoding which transcription factor binding sites are present (absolute context) rather than their relative positions, orientations, or spacing (positional context).
+We propose the \textbf{billboard model}: DNA foundation models encode which transcription factor binding sites are present (motif identity) but not their relative positions, orientations, or spacing (motif arrangement).
+Under this model, enhancers function like billboards---what matters is which elements appear, not how they are arranged.
 This is distinct from asking whether biology itself follows billboard logic; we specifically test what models learn.
-The prevailing view assumes foundation models learn positional syntax, but this has not been rigorously tested with proper controls for compositional confounds.
-We derive testable predictions and evaluate them using a spacer-factored grammar sensitivity framework (SF-GSI) that isolates positional context from absolute context---resolving a critical confound in standard vocabulary-preserving shuffles, which perturb both simultaneously.
+We derive testable predictions and evaluate them using a spacer-factored grammar sensitivity framework (SF-GSI) that isolates motif arrangement effects from motif identity effects---resolving a critical confound in standard vocabulary-preserving shuffles, which perturb both simultaneously.
 Crucially, we also test whether grammar matters biologically by identifying MPRA sequence pairs with identical motif vocabulary but different arrangements.
 
 \begin{figure}[h]
@@ -50,9 +50,9 @@ We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jo
 
 \section*{Results}
 
-\textbf{Models learn billboard-like.} Under naive thresholding all tested enhancers appear grammar-sensitive, but this falls to 8.3\% after null normalization and to 0.12\% (9/7,650) after FDR correction.
-Per-enhancer classification shows 89.7\% (95\% CI: 87.7--91.7\%) of enhancers are ``billboard class'' with no detectable grammar effects.
-Spacer composition accounts for 78--86\% of grammar-sensitivity variance, while motif-only rearrangements produce 2--6$\times$ smaller effects than spacer perturbations.
+\textbf{Models fit the billboard model.} Under naive thresholding all tested enhancers appear grammar-sensitive, but this falls to 8.3\% after null normalization and to 0.12\% (9/7,650) after FDR correction.
+Per-enhancer classification shows 89.7\% (95\% CI: 87.7--91.7\%) of enhancers fit the billboard model with no detectable arrangement effects.
+Spacer composition accounts for 78--86\% of apparent grammar-sensitivity variance, while motif-only rearrangements produce 2--6$\times$ smaller effects than spacer perturbations.
 
 \textbf{But grammar matters biologically.} We identified 363 MPRA sequence pairs with identical motif vocabulary but different arrangements.
 These pairs show measured expression differences up to $\Delta = 6.3$ (Jores dataset), with 76\% having $|\Delta| > 0.5$.
@@ -65,11 +65,11 @@ Positive controls confirm genuine grammar is detectable with controlled spacers 
 
 \section*{Conclusions}
 
-These results reveal a critical limitation: DNA foundation models learn billboard-like representations---encoding what binding sites are present---but fail to learn positional grammar, even when it exists biologically.
-We found 363 sequence pairs in MPRA data with identical motif vocabulary but different arrangements that show measured expression differences up to $\Delta = 6.3$, proving grammar matters.
+These results support the billboard model: DNA foundation models encode motif identity but fail to learn regulatory grammar.
+We found 363 sequence pairs in MPRA data with identical motif vocabulary but different arrangements that show measured expression differences up to $\Delta = 6.3$, proving grammar matters biologically.
 Yet models cannot detect even synthetic grammar rules ($p = 0.73$) or known helical periodicity ($p = 0.96$).
-The billboard finding (89.7\% of enhancers, 95\% CI: 87.7--91.7\%) reflects model limitations, not biological reality.
-This reframes model evaluation: current architectures systematically miss regulatory grammar, and benchmarks should test whether models can learn grammar that demonstrably exists in experimental data.
+The billboard model (89.7\% of enhancers, 95\% CI: 87.7--91.7\%) describes model behavior, not biological reality---current architectures systematically miss regulatory grammar that demonstrably exists.
+This reframes model evaluation: benchmarks should test whether models can learn grammar that exists in experimental data.
 
 \vspace{4pt}
 {\small
