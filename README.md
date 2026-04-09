@@ -1,111 +1,81 @@
 # GRAMLANG
 
-**Decoding the Computational Grammar of Gene Regulation**
+**DNA foundation models encode motif identity but fail to learn regulatory grammar**
 
-GRAMLANG investigates whether regulatory DNA follows compositional grammar rules using foundation models (DNABERT-2, NT v2-500M, HyenaDNA, Enformer) on five MPRA datasets (Agarwal/K562, Klein/HepG2, Inoue/neural, Vaishnav/yeast, Jores/plant).
+## Overview
 
-**Key finding (v3):** The standard computational method for measuring grammar (vocabulary-preserving shuffles + expression prediction) is fundamentally confounded by spacer DNA composition effects -- 78-86% of measured variance comes from spacer DNA, not motif arrangement. However, a positive control proves grammar IS real when spacers are controlled (p < 1e-117).
+GRAMLANG investigates what DNA foundation models learn about regulatory sequences. We propose and validate the **billboard model**: foundation models encode which transcription factor binding sites are present (motif identity) but not their relative positions, orientations, or spacing (motif arrangement). Under this model, enhancers function like billboards—what matters is which elements appear, not how they are arranged.
 
----
+**Key finding:** 89.7% of enhancers (95% CI: 87.7–91.7%) fit the billboard model. However, 363 MPRA sequence pairs with identical motif vocabulary but different arrangements show expression differences up to Δ=6.3—proving grammar matters biologically. Models fail to detect even synthetic grammar rules (p=0.73) or known helical periodicity (p=0.96). The billboard model describes model limitations, not biological reality.
+
+## Methods
+
+**SF-GSI (Spacer-Factored Grammar Sensitivity Index):** A framework that isolates motif arrangement effects from motif identity effects using matched-spacer perturbations and null-normalized testing.
+
+**Models tested:** DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, PARM
+
+**Datasets:** Agarwal (K562), Klein (HepG2), Inoue (neural), Vaishnav (yeast), Jores (plant) — 7,650 model–enhancer measurements total
+
+## Key Results
+
+| Metric | Value |
+|--------|-------|
+| Billboard class enhancers | 89.7% (95% CI: 87.7–91.7%) |
+| Grammar-sensitive after FDR | 0.12% (9/7,650) |
+| Spacer contribution to variance | 78–86% |
+| MPRA pairs with identical vocab, different expression | 363 (Δ up to 6.3) |
+| Synthetic grammar detection | p = 0.73 (not detected) |
+| Helical periodicity detection | p = 0.96 (not detected) |
 
 ## Project Structure
 
 ```
 src/
-  models/        Foundation model wrappers and expression probes (2-layer MLP on frozen embeddings)
-  grammar/       Grammar sensitivity index (GSI), rule extraction, compositionality analysis
+  models/        Foundation model wrappers and expression probes
+  grammar/       Grammar sensitivity index (GSI), SF-GSI, rule extraction
   perturbation/  Vocabulary-preserving shuffles
   analysis/      Biophysics, transfer, completeness analysis
-scripts/         Pipeline scripts (run_full_pipeline.py, train_probes.py,
-                 generate_final_figures.py, run_v3_analysis.py)
-results/         Module 1-6 results (parquet, JSON) + v3 extension results + figures
-data/            MPRA datasets (not included; see Data Acquisition below)
+scripts/         Pipeline scripts
+results/         Results and figures
+data/            MPRA datasets (not included; see below)
 ```
 
 ## Installation
 
 ```bash
-# Option A: conda
 conda env create -f environment.yml
 conda activate gramlang
-
-# Option B: pip
-pip install -e .
 ```
 
-**Requirements:** Python >= 3.10, PyTorch >= 2.1.0, CUDA-capable GPU (tested on 4x A100 80GB, CUDA 12.4, Rocky Linux 9.6).
+**Requirements:** Python >= 3.10, PyTorch >= 2.1.0, CUDA-capable GPU
 
 ## Data Acquisition
 
 MPRA datasets must be downloaded separately:
 
-- Agarwal et al. (2023) -- K562 MPRA
-- Klein et al. (2020) -- HepG2 MPRA
-- Inoue & Kreimer et al. (2019) -- Neural MPRA (Cell Stem Cell)
-- Vaishnav et al. (2022) -- Yeast MPRA
-- Jores et al. (2021) -- Plant MPRA
+- Agarwal et al., Nature 639:411, 2025 (K562)
+- Klein et al., Nat. Methods 17:1147, 2020 (HepG2)
+- Inoue et al., Cell Stem Cell 25:713, 2019 (neural)
+- Vaishnav et al., Nature 603:455, 2022 (yeast)
+- Jores et al., Nat. Plants 7:842, 2021 (plant)
 
-Motif scanning requires FIMO v5.5.7 and JASPAR 2024 databases.
-
-Place raw data in `data/raw/` and processed data in `data/processed/`.
-
-## Reproduction
-
-### 1. Train probes
+## Usage
 
 ```bash
-python scripts/train_probes.py \
-  --models dnabert2 nt hyenadna \
-  --datasets vaishnav2022 klein2020 agarwal2023 jores2021 inoue2019
-```
+# Train probes
+python scripts/train_probes.py --models dnabert2 nt hyenadna --datasets agarwal klein inoue vaishnav jores
 
-### 2. Run main pipeline (Modules 1-6)
+# Run SF-GSI analysis
+python scripts/run_sf_gsi.py
 
-```bash
-python scripts/run_full_pipeline.py --module 1  # GSI census
-python scripts/run_full_pipeline.py --module 2  # Rule extraction
-python scripts/run_full_pipeline.py --module 3  # Compositionality
-python scripts/run_full_pipeline.py --module 4  # Cross-species transfer
-python scripts/run_full_pipeline.py --module 5  # Causal determinants
-python scripts/run_full_pipeline.py --module 6  # Completeness
-```
-
-### 3. Run v3 extensions
-
-```bash
-python scripts/run_v3_analysis.py
-```
-
-### 4. Generate figures
-
-```bash
+# Generate figures
 python scripts/generate_final_figures.py
 ```
 
-## Key Parameters
-
-| Parameter | Default | Description |
-|---|---|---|
-| `--n-shuffles` | 50 | Number of vocabulary-preserving shuffles per enhancer |
-| `--max-enhancers` | 200 | Enhancers per model-dataset combination |
-| `--seed` | 42 | Random seed for reproducibility |
-
-## Results Summary
-
-| Module | Result |
-|---|---|
-| GSI Census | 7,650 measurements; 8.3% significant (nominal p<0.05), 0.17% FDR-corrected |
-| Rules | 9,019 grammar rules; consensus 0.433; orientation agreement 84.8% |
-| Compositionality | Gap = 0.989 (context-sensitive in Chomsky hierarchy) |
-| Transfer | Zero cross-species grammar transfer |
-| Biophysics | R² = 0.06-0.79 across species (v2, robust GSI) |
-| Completeness | 6-18% of replicate ceiling |
-| v3 Spacer Confound | 78-86% of GSI variance from spacer DNA, not grammar |
-
 ## License
 
-MIT License -- see LICENSE file.
+MIT License
 
 ## Citation
 
-Cheng, B. (2026). GRAMLANG: Decoding the Computational Grammar of Gene Regulation. [Manuscript in preparation].
+Cheng, B. (2026). DNA foundation models encode motif identity but fail to learn regulatory grammar. ISMB 2026.
