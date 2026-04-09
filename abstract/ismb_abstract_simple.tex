@@ -3,17 +3,13 @@
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
 \usepackage[font=small,labelfont=bf]{caption}
-\usepackage{fontspec}
-\setmainfont{Latin Modern Roman}
+\usepackage{mathptmx}  % Times New Roman for text and math
 
-% Compact sections (without titlesec)
-\makeatletter
-\renewcommand\section{\@startsection{section}{1}{\z@}%
-  {-7pt \@plus -1pt \@minus -1pt}%
-  {3pt \@plus 1pt}%
-  {\normalfont\normalsize\bfseries}}
-\makeatother
+% Compact sections
+\titleformat{\section}{\normalsize\bfseries}{\thesection}{0.5em}{}
+\titlespacing*{\section}{0pt}{7pt}{3pt}
 \setlength{\parskip}{3pt}
 \setlength{\parindent}{0pt}
 \setlength{\abovecaptionskip}{4pt}
