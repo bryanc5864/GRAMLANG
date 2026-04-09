@@ -3,13 +3,16 @@
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage[hidelinks]{hyperref}
-\usepackage{titlesec}
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{mathptmx}  % Times New Roman for text and math
 
-% Compact sections
-\titleformat{\section}{\normalsize\bfseries}{\thesection}{0.5em}{}
-\titlespacing*{\section}{0pt}{7pt}{3pt}
+% Compact sections (without titlesec)
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-7pt \@plus -1pt \@minus -1pt}%
+  {3pt \@plus 1pt}%
+  {\normalfont\normalsize\bfseries}}
+\makeatother
 \setlength{\parskip}{3pt}
 \setlength{\parindent}{0pt}
 \setlength{\abovecaptionskip}{4pt}
@@ -62,7 +65,7 @@ The key prediction is concrete: if models encode only absolute context, then con
 The framework proceeds in three stages: (1) factorial decomposition isolating contributions of motif position, orientation, and spacer composition; (2) spacer ablation series applying graded compositional perturbations (motif-only rearrangement, dinucleotide-preserving shuffle, GC-content shift, and full random replacement); (3) feature decomposition regressing model predictions against explicit compositional features (GC content, dinucleotide frequencies, trinucleotide counts, and DNA shape parameters).
 Statistical significance is assessed via a three-stage correction cascade: F-test, z-score null normalization, and Benjamini--Hochberg FDR correction at $\alpha = 0.05$.
 
-We applied SF-GSI to five MPRA datasets (Agarwal, Klein, Inoue, Vaishnav, and Jores), totaling 7,650 model--enhancer measurements across DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, and PARM~[3--8]---spanning transformer, state-space, and MPRA-native architectures.
+We applied SF-GSI to five MPRA datasets (Agarwal~[8], Klein~[9], Inoue~[10], Vaishnav~[11], and Jores~[12]), totaling 7,650 model--enhancer measurements across DNABERT-2~[3], Nucleotide Transformer v2~[4], HyenaDNA~[5], Enformer~[6], and PARM~[7]---spanning transformer, state-space, and MPRA-native architectures.
 Code: \url{https://github.com/bryanc5864/GRAMLANG}.
 
 \begin{figure}[h!]
@@ -105,16 +108,18 @@ The billboard model reframes how the field should evaluate DNA foundation models
 \noindent\textbf{Availability:} \url{https://github.com/bryanc5864/GRAMLANG}
 
 \vspace{4pt}
-\noindent\textbf{\small References}\\
-{\footnotesize
-\noindent [1]~Arnosti \& Kulkarni, \textit{J.~Cell.~Biochem.} 94:890, 2005.
-\enspace [2]~Long et~al., \textit{Cell} 167:1170, 2016.\\
-\noindent [3]~Zhou et~al., \textit{ICLR} 2024, DNABERT-2.
-\enspace [4]~Dalla-Torre et~al., \textit{Nature Methods} 2024, Nucleotide Transformer.\\
-\noindent [5]~Nguyen et~al., \textit{arXiv}:2306.15794, 2023, HyenaDNA.
-\enspace [6]~Avsec et~al., \textit{Nature Methods} 18:1196, 2021, Enformer.\\
-\noindent [7]~de~Jonge et~al., \textit{Nature} 2025, PARM.\\
-\noindent [8]~Agarwal et~al., \textit{Nature} 639:411, 2025; Jores et~al., \textit{Nat.~Plants} 7:842, 2021.
-}
+{\small\textbf{References:}
+[1]~Arnosti \& Kulkarni, \textit{J.~Cell.~Biochem.} 94:890, 2005.
+[2]~Long et~al., \textit{Cell} 167:1170, 2016.
+[3]~Zhou et~al., \textit{ICLR} 2024 (DNABERT-2).
+[4]~Dalla-Torre et~al., \textit{Nat.~Methods} 2024 (Nucleotide Transformer).
+[5]~Nguyen et~al., \textit{arXiv}:2306.15794, 2023 (HyenaDNA).
+[6]~Avsec et~al., \textit{Nat.~Methods} 18:1196, 2021 (Enformer).
+[7]~de~Jonge et~al., \textit{Nature} 2025 (PARM).
+[8]~Agarwal et~al., \textit{Nature} 639:411, 2025.
+[9]~Klein et~al., \textit{Cell} 183:1018, 2020.
+[10]~Inoue et~al., \textit{Cell Stem Cell} 25:357, 2019.
+[11]~Vaishnav et~al., \textit{Nature} 603:455, 2022.
+[12]~Jores et~al., \textit{Nat.~Plants} 7:842, 2021.}
 
 \end{document}
