@@ -18,15 +18,15 @@ RESULTS_DIR = os.path.join(PROJECT_DIR, 'results')
 FIGURES_DIR = os.path.join(RESULTS_DIR, 'manuscript_figures')
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
-# --- Unified color palette ---
-# Dataset colors (consistent across all figures)
+# --- Unified light blue-green palette ---
+# All figures share a single teal/mint family; distinctions are by lightness.
 DS_PALETTE = {
-    'agarwal': '#c0392b',   # red
-    'de_almeida': '#2980b9',# blue
-    'jores':   '#27ae60',   # green
-    'inoue':   '#2980b9',   # blue
-    'klein':   '#8e44ad',   # purple
-    'vaishnav':'#d35400',   # orange
+    'agarwal':    '#1B5E5E',  # deep teal
+    'jores':      '#4FB3A9',  # sea green
+    'inoue':      '#2D8C8C',  # medium teal
+    'de_almeida': '#2D8C8C',  # alias for inoue
+    'klein':      '#7BC3B5',  # mint
+    'vaishnav':   '#A6D7CB',  # pale mint
 }
 DS_COLORS_LIST = [DS_PALETTE['agarwal'], DS_PALETTE['jores'], DS_PALETTE['inoue']]
 
@@ -48,28 +48,28 @@ DS_SHORT_LABELS = {
     'vaishnav': 'Vaish.',
 }
 
-# Model colors (consistent across all figures)
+# Model colors (light blue-green family, distinguished by lightness)
 MODEL_PALETTE = {
-    'dnabert2':  '#2980b9',  # blue
-    'nt':        '#c0392b',  # red
-    'hyenadna':  '#27ae60',  # green
+    'dnabert2':  '#1B5E5E',  # deep teal
+    'nt':        '#4FB3A9',  # sea green
+    'hyenadna':  '#A6D7CB',  # pale mint
 }
 
-# Semantic colors
-C_POS    = '#27ae60'  # positive / good / within
-C_NEG    = '#c0392b'  # negative / bad / cross
-C_WARN   = '#e67e22'  # warning / moderate
-C_ACCENT = '#2980b9'  # accent / neutral emphasis
+# Semantic colors (all teal/mint; contrast via darkness)
+C_POS    = '#4FB3A9'  # positive / good / within (sea green)
+C_NEG    = '#1B5E5E'  # negative / bad / cross (deep teal)
+C_WARN   = '#7BC3B5'  # warning / moderate (mid mint)
+C_ACCENT = '#2D8C8C'  # accent / neutral emphasis (medium teal)
 
 # Component colors for factorial decomposition
 COMP_COLORS = {
-    'position':    '#2980b9',  # blue
-    'orientation': '#e67e22',  # orange
-    'spacer':      '#c0392b',  # red
+    'position':    '#1B5E5E',  # deep teal
+    'orientation': '#4FB3A9',  # sea green
+    'spacer':      '#A6D7CB',  # pale mint
 }
 
-# Correction cascade
-CASCADE_COLORS = ['#c0392b', '#e67e22', '#27ae60']  # red, orange, green
+# Correction cascade (dark -> light)
+CASCADE_COLORS = ['#1B5E5E', '#4FB3A9', '#A6D7CB']
 
 # ISMB / Bioinformatics style: Times New Roman
 plt.rcParams.update({
@@ -340,7 +340,7 @@ def fig3_gsi_census():
     # (D) Pairwise correlations by dataset, computed from data
     ax = axes[3]
     pair_labels = ['B2 vs NT', 'B2 vs Hyena', 'NT vs Hyena']
-    pair_colors = ['#1f4e79', '#6c8ebf', '#9fbad6']
+    pair_colors = ['#1B5E5E', '#4FB3A9', '#A6D7CB']
     _model_pairs = [('dnabert2', 'nt'), ('dnabert2', 'hyenadna'), ('nt', 'hyenadna')]
     _ds_order = ['agarwal', 'klein', 'jores', 'vaishnav', 'de_almeida']
     _ds_short = {'agarwal': 'Agar.', 'klein': 'Klein', 'jores': 'Jores',
@@ -398,7 +398,7 @@ def fig4_compositionality():
             fontsize=9, va='center', ha='right', color=C_NEG)
     ax.text(0.03, 0.08, 'Mean gap = 0.989\n77.5% non-additive',
             transform=ax.transAxes, fontsize=9, va='bottom',
-            bbox=dict(boxstyle='round,pad=0.3', facecolor='lightyellow',
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='#E5F2EE',
                       alpha=0.8, linewidth=0.3))
 
     plt.tight_layout()
@@ -428,7 +428,7 @@ def fig5_transfer():
     species_labels = [s.capitalize() for s in species]
 
     sns.heatmap(matrix, xticklabels=species_labels, yticklabels=species_labels,
-                cmap='Blues', vmin=0, vmax=0.25, ax=ax, annot=False,
+                cmap='BuGn', vmin=0, vmax=0.25, ax=ax, annot=False,
                 linewidths=1.0, linecolor='white',
                 cbar_kws={'label': '$R^2$', 'shrink': 0.75, 'aspect': 12})
 
@@ -534,7 +534,7 @@ def fig6_completeness():
     model = [cdata[d]['full_model_r2'] for d in datasets]
     repl = [cdata[d]['replicate_r2'] for d in datasets]
     ax.bar(x - 1.5*w, vocab, w, label='Vocab', color=C_NEG, alpha=0.8)
-    ax.bar(x - 0.5*w, gram, w, label='+Grammar', color='#f1c40f', alpha=0.8)
+    ax.bar(x - 0.5*w, gram, w, label='+Grammar', color='#7BC3B5', alpha=0.8)
     ax.bar(x + 0.5*w, model, w, label='Full Model', color=C_POS, alpha=0.8)
     ax.bar(x + 1.5*w, repl, w, label='Replicate', color=C_ACCENT, alpha=0.8)
     ax.set_xticks(x)
