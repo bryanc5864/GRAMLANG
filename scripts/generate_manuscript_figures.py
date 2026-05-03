@@ -87,6 +87,9 @@ plt.rcParams.update({
     'savefig.dpi': 300,
     'savefig.bbox': 'tight',
     'savefig.pad_inches': 0.02,
+    # NeurIPS requires Type 1 or embedded TrueType fonts (no Type 3).
+    'pdf.fonttype': 42,
+    'ps.fonttype': 42,
     'axes.spines.top': False,
     'axes.spines.right': False,
     'axes.linewidth': 0.5,
