@@ -28,14 +28,17 @@ Thumbs.db
 .idea/
 
 # LaTeX build artifacts
-paper/*.aux
-paper/*.bbl
-paper/*.blg
-paper/*.out
-paper/*.log
-paper/*.fls
-paper/*.fdb_latexmk
-paper/*.synctex.gz
+**/*.aux
+**/*.bbl
+**/*.blg
+**/*.out
+**/*.fls
+**/*.fdb_latexmk
+**/*.synctex.gz
+**/texput.log
+
+# Compiled paper PDF (kept locally; uploaded to OpenReview separately)
+manuscript/neurips2026/main.pdf
 
 # Temp
 *.tmp
