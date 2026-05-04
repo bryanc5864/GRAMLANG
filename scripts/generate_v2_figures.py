@@ -11,9 +11,9 @@ import seaborn as sns
 import os
 from scipy import stats
 
-RESULTS_V1 = '/home/bcheng/grammar/results'
-RESULTS_V2 = '/home/bcheng/grammar/results/v2'
-FIGURES_DIR = '/home/bcheng/grammar/results/v2/figures'
+RESULTS_V1 = './results'
+RESULTS_V2 = './results/v2'
+FIGURES_DIR = './results/v2/figures'
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
 plt.rcParams.update({

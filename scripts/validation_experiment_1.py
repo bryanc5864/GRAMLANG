@@ -29,8 +29,8 @@ warnings.filterwarnings("ignore")
 # ──────────────────────────────────────────────────────────────────────
 # Configuration
 # ──────────────────────────────────────────────────────────────────────
-DATA_DIR = "/home/bcheng/grammar/results/v2/module1/"
-OUTPUT_PATH = "/home/bcheng/grammar/results/v2/module1/cross_dataset_validation.json"
+DATA_DIR = "./results/v2/module1/"
+OUTPUT_PATH = "./results/v2/module1/cross_dataset_validation.json"
 
 DATASETS = ["agarwal", "inoue", "klein", "vaishnav", "jores"]
 MODELS = ["dnabert2", "nt", "hyenadna"]

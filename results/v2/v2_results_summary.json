@@ -1,95 +1,95 @@
 {
   "metadata": {
     "timestamp": "2026-02-04T10:35:19.583553",
-    "project_dir": "/home/bcheng/grammar",
-    "v1_dir": "/home/bcheng/grammar/results",
-    "v2_dir": "/home/bcheng/grammar/results/v2",
-    "script": "/home/bcheng/grammar/scripts/collect_v2_results.py"
+    "project_dir": ".",
+    "v1_dir": "./results",
+    "v2_dir": "./results/v2",
+    "script": "./scripts/collect_v2_results.py"
   },
   "completion_status": {
     "module1": {
       "exists": true,
       "n_files": 18,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/module1"
+      "path": "./results/v2/module1"
     },
     "module2": {
       "exists": true,
       "n_files": 2,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/module2"
+      "path": "./results/v2/module2"
     },
     "module3": {
       "exists": true,
       "n_files": 2,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/module3"
+      "path": "./results/v2/module3"
     },
     "module4": {
       "exists": true,
       "n_files": 1,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/module4"
+      "path": "./results/v2/module4"
     },
     "module5": {
       "exists": true,
       "n_files": 5,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/module5"
+      "path": "./results/v2/module5"
     },
     "module6": {
       "exists": true,
       "n_files": 5,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/module6"
+      "path": "./results/v2/module6"
     },
     "experiment_b": {
       "exists": true,
       "n_files": 20,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/experiment_b"
+      "path": "./results/v2/experiment_b"
     },
     "experiment_e": {
       "exists": true,
       "n_files": 5,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/experiment_e"
+      "path": "./results/v2/experiment_e"
     },
     "experiment_f": {
       "exists": true,
       "n_files": 5,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/experiment_f"
+      "path": "./results/v2/experiment_f"
     },
     "experiment_g": {
       "exists": true,
       "n_files": 5,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/experiment_g"
+      "path": "./results/v2/experiment_g"
     },
     "compositionality_v2": {
       "exists": true,
       "n_files": 1,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/compositionality_v2"
+      "path": "./results/v2/compositionality_v2"
     },
     "distributional_transfer": {
       "exists": true,
       "n_files": 1,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/distributional_transfer"
+      "path": "./results/v2/distributional_transfer"
     },
     "attention": {
       "exists": true,
       "n_files": 2,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/attention"
+      "path": "./results/v2/attention"
     },
     "anova": {
       "exists": true,
       "n_files": 5,
       "status": "COMPLETE",
-      "path": "/home/bcheng/grammar/results/v2/anova"
+      "path": "./results/v2/anova"
     }
   },
   "module1": {

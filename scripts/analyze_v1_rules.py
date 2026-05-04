@@ -5,7 +5,7 @@ before v2 re-extraction.
 
 Outputs:
   - Detailed printed report
-  - Summary JSON at /home/bcheng/grammar/results/v2/v1_rules_analysis.json
+  - Summary JSON at ./results/v2/v1_rules_analysis.json
 """
 
 import json
@@ -15,8 +15,8 @@ from collections import Counter
 from pathlib import Path
 
 # -- 0. Load --
-PARQUET = Path("/home/bcheng/grammar/results/module2/grammar_rules_database.parquet")
-OUT_JSON = Path("/home/bcheng/grammar/results/v2/v1_rules_analysis.json")
+PARQUET = Path("./results/module2/grammar_rules_database.parquet")
+OUT_JSON = Path("./results/v2/v1_rules_analysis.json")
 
 df = pd.read_parquet(PARQUET)
 summary = {}

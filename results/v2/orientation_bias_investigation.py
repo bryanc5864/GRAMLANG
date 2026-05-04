@@ -13,7 +13,7 @@ from collections import Counter
 # =============================================================================
 # Load data
 # =============================================================================
-rules = pd.read_parquet("/home/bcheng/grammar/results/module2/grammar_rules_database.parquet")
+rules = pd.read_parquet("./results/module2/grammar_rules_database.parquet")
 print(f"Total rules: {len(rules)}")
 print(f"Orientation distribution:\n{rules['optimal_orientation'].value_counts()}\n")
 
@@ -442,7 +442,7 @@ results["verdict"] = {
 }
 
 # Save results
-output_path = "/home/bcheng/grammar/results/v2/orientation_bias_investigation.json"
+output_path = "./results/v2/orientation_bias_investigation.json"
 with open(output_path, 'w') as f:
     json.dump(results, f, indent=2)
 print(f"\nResults saved to {output_path}")

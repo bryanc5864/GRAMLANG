@@ -1,81 +1,116 @@
 # GRAMLANG
 
-**DNA foundation models encode motif identity but fail to learn regulatory grammar**
+**Anonymized code release for NeurIPS 2026 submission.**
 
-## Overview
+GRAMLANG is a benchmark and diagnostic framework for evaluating whether DNA foundation models (DNABERT-2, Nucleotide Transformer, HyenaDNA, Enformer, PARM) encode regulatory grammar—motif arrangement, orientation, and spacing—on top of motif identity. The central tool is the **Spacer-Factored Grammar Sensitivity Index (SF-GSI)**, which isolates arrangement effects from spacer-composition confounds via matched-spacer perturbations and a per-enhancer null distribution.
 
-GRAMLANG investigates what DNA foundation models learn about regulatory sequences. We propose and validate the **billboard model**: foundation models encode which transcription factor binding sites are present (motif identity) but not their relative positions, orientations, or spacing (motif arrangement). Under this model, enhancers function like billboards—what matters is which elements appear, not how they are arranged.
+This release contains the complete code, intermediate results, and figure-generation pipeline used to produce the headline finding: 89.7% of enhancers fit a strict billboard model in which models are insensitive to motif arrangement, and the grammar-sensitive fraction collapses from 100% to 0.12% (9 / 7,650) after spacer factoring and FDR correction.
 
-**Key finding:** 89.7% of enhancers (95% CI: 87.7–91.7%) fit the billboard model. However, 363 MPRA sequence pairs with identical motif vocabulary but different arrangements show expression differences up to Δ=6.3—proving grammar matters biologically. Models fail to detect even synthetic grammar rules (p=0.73) or known helical periodicity (p=0.96). The billboard model describes model limitations, not biological reality.
-
-## Methods
-
-**SF-GSI (Spacer-Factored Grammar Sensitivity Index):** A framework that isolates motif arrangement effects from motif identity effects using matched-spacer perturbations and null-normalized testing.
-
-**Models tested:** DNABERT-2, Nucleotide Transformer v2, HyenaDNA, Enformer, PARM
-
-**Datasets:** Agarwal (K562), Klein (HepG2), Inoue (neural), Vaishnav (yeast), Jores (plant) — 7,650 model–enhancer measurements total
-
-## Key Results
-
-| Metric | Value |
-|--------|-------|
-| Billboard class enhancers | 89.7% (95% CI: 87.7–91.7%) |
-| Grammar-sensitive after FDR | 0.12% (9/7,650) |
-| Spacer contribution to variance | 78–86% |
-| MPRA pairs with identical vocab, different expression | 363 (Δ up to 6.3) |
-| Synthetic grammar detection | p = 0.73 (not detected) |
-| Helical periodicity detection | p = 0.96 (not detected) |
-
-## Project Structure
+## Repository structure
 
 ```
-src/
-  models/        Foundation model wrappers and expression probes
-  grammar/       Grammar sensitivity index (GSI), SF-GSI, rule extraction
-  perturbation/  Vocabulary-preserving shuffles
-  analysis/      Biophysics, transfer, completeness analysis
-scripts/         Pipeline scripts
-results/         Results and figures
-data/            MPRA datasets (not included; see below)
+.
+├── src/                  Library code (importable as the gramlang package)
+│   ├── models/           Foundation-model wrappers and expression probes
+│   ├── grammar/          GSI / SF-GSI estimators and rule extraction
+│   ├── perturbation/     Vocabulary-preserving perturbation operators
+│   ├── decomposition/    Variance decomposition (vocab / grammar / embedding)
+│   ├── transfer/         Cross-dataset transfer analyses
+│   ├── design/           Synthetic-grammar and helical-periodicity controls
+│   └── utils/            Shared helpers
+├── scripts/              Top-level entry points (see "Reproducing the paper")
+├── results/              Pre-computed intermediate outputs (JSON, parquet)
+│   └── manuscript_figures/   Six figures used in the submission
+├── data/                 Place MPRA datasets here (gitignored; see "Data")
+├── environment.yml       Conda environment specification
+├── requirements.txt      Pip-installable dependency list
+├── pyproject.toml        Package metadata
+└── LICENSE               MIT
 ```
 
 ## Installation
+
+**Requirements:** Python ≥ 3.10, a CUDA-capable GPU (tested on a single A100 40 GB).
+
+### Option A — Conda (recommended)
 
 ```bash
 conda env create -f environment.yml
 conda activate gramlang
 ```
 
-**Requirements:** Python >= 3.10, PyTorch >= 2.1.0, CUDA-capable GPU
-
-## Data Acquisition
-
-MPRA datasets must be downloaded separately:
-
-- Agarwal et al., Nature 639:411, 2025 (K562)
-- Klein et al., Nat. Methods 17:1147, 2020 (HepG2)
-- Inoue et al., Cell Stem Cell 25:713, 2019 (neural)
-- Vaishnav et al., Nature 603:455, 2022 (yeast)
-- Jores et al., Nat. Plants 7:842, 2021 (plant)
-
-## Usage
+### Option B — pip
 
 ```bash
-# Train probes
-python scripts/train_probes.py --models dnabert2 nt hyenadna --datasets agarwal klein inoue vaishnav jores
-
-# Run SF-GSI analysis
-python scripts/run_sf_gsi.py
-
-# Generate figures
-python scripts/generate_final_figures.py
+python -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+pip install -e .
 ```
+
+## Data
+
+Five publicly available MPRA datasets are required. Place them under `data/mpra/<dataset>/` after download. The datasets are released by their original authors under their own licenses; we do not redistribute them.
+
+| Dataset  | Citation                              | Source                                                          |
+|----------|---------------------------------------|-----------------------------------------------------------------|
+| Agarwal  | Agarwal et al., *Nature* 2025         | GEO companion of the original lentiMPRA publication             |
+| Klein    | Klein et al., *Nat. Methods* 2020     | Supplementary tables of the original publication                |
+| Inoue    | Inoue et al., *Cell Stem Cell* 2019   | GEO accession from the original publication                     |
+| Vaishnav | Vaishnav et al., *Nature* 2022        | Supplementary data of the original publication                  |
+| Jores    | Jores et al., *Nature Plants* 2021    | Supplementary tables of the original publication                |
+
+Motif calls use **JASPAR2024** profiles scanned with **FIMO** (MEME Suite) at p < 1e-4. JASPAR PWMs can be downloaded from `jaspar.genereg.net`; FIMO is part of MEME Suite (`meme-suite.org`). A preprocessed cache is written to `data/processed/` after the first preprocessing run.
+
+## Reproducing the paper
+
+The full pipeline runs in **under 200 GPU-hours** on a single A100. To reproduce the headline numbers and all six manuscript figures from raw MPRA data:
+
+```bash
+python scripts/run_full_pipeline.py
+```
+
+This is equivalent to running, in order:
+
+```bash
+python scripts/preprocess_mpra.py             # build motif calls + filtered enhancer sets
+python scripts/train_probes.py                # train ridge probes on frozen embeddings
+python scripts/run_sf_gsi.py                  # compute SF-GSI for 7,650 (model, dataset, enhancer) triples
+python scripts/run_factorial_remaining.py     # variance decomposition (Fig. 1)
+python scripts/run_positive_control.py        # synthetic grammar + helical periodicity (Fig. 2)
+python scripts/run_validation_analyses.py     # transfer + completeness (Figs. 5, 6)
+python scripts/generate_manuscript_figures.py # render all six figures
+```
+
+To regenerate **only** the figures from the cached intermediate outputs in `results/`:
+
+```bash
+python scripts/generate_manuscript_figures.py
+```
+
+This produces the six figures referenced in the paper:
+
+| Figure  | File                                                   | Pipeline section it tests          |
+|---------|--------------------------------------------------------|------------------------------------|
+| Fig. 1  | `results/manuscript_figures/fig1_spacer_confound.pdf`  | Spacer-composition confound        |
+| Fig. 2  | `results/manuscript_figures/fig2_positive_control.pdf` | Synthetic grammar + helical scan   |
+| Fig. 3  | `results/manuscript_figures/fig3_gsi_census.pdf`       | SF-GSI census + correction cascade |
+| Fig. 4  | `results/manuscript_figures/fig4_compositionality.pdf` | Variance decomposition             |
+| Fig. 5  | `results/manuscript_figures/fig5_transfer.pdf`         | Cross-dataset transfer             |
+| Fig. 6  | `results/manuscript_figures/fig6_completeness.pdf`     | Matched-vocabulary MPRA pairs      |
+
+Headline numerical claims (e.g. 89.7% billboard CI, 0.12% post-FDR, 363 matched-vocabulary pairs) are recoverable from the JSON files under `results/critique/`, `results/sf_gsi/`, and `results/v3/`.
+
+## Reproducibility notes
+
+- Random seeds are fixed; per-enhancer N = 30 permutations for SF-GSI.
+- Probe training: Adam, weight decay 1e-3, 5,000 training sequences per dataset. Full hyperparameters in `scripts/train_probes.py`.
+- Sensitivity analyses (FIMO threshold, JASPAR version, permutation count) are produced by `scripts/run_validation_analyses.py`; the post-FDR billboard fraction lies in [88.4%, 92.1%] across all settings.
 
 ## License
 
-MIT License
+MIT (see `LICENSE`). Code only — MPRA datasets and pretrained foundation-model weights remain under their original licenses.
 
-## Citation
+## Anonymization notice
 
-Cheng, B. (2026). DNA foundation models encode motif identity but fail to learn regulatory grammar. ISMB 2026.
+This repository is the anonymized supplementary code for a NeurIPS 2026 double-blind submission. Author names, affiliations, and identifying URLs have been removed.

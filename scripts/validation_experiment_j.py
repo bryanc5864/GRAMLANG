@@ -29,10 +29,10 @@ warnings.filterwarnings("ignore")
 # ======================================================================
 # Configuration
 # ======================================================================
-MODULE1_DIR = "/home/bcheng/grammar/results/v2/module1/"
-MODULE2_DIR = "/home/bcheng/grammar/results/v2/module2/"
-DIST_TRANSFER = "/home/bcheng/grammar/results/v2/distributional_transfer/distributional_transfer.json"
-OUTPUT_PATH = "/home/bcheng/grammar/results/v2/module1/validation_experiment_j.json"
+MODULE1_DIR = "./results/v2/module1/"
+MODULE2_DIR = "./results/v2/module2/"
+DIST_TRANSFER = "./results/v2/distributional_transfer/distributional_transfer.json"
+OUTPUT_PATH = "./results/v2/module1/validation_experiment_j.json"
 
 HUMAN_DATASETS = ["agarwal", "inoue", "klein"]
 ALL_DATASETS = ["agarwal", "inoue", "klein", "vaishnav", "jores"]
