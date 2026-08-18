@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.528297483921051,
+    "test_r": 0.5032069683074951,
+    "test_rho": 0.5293260426974122,
+    "test_r2": 0.23446619510650635,
+    "n_params": 2305,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "vaishnav"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.5342140197753906,
+    "test_r": 0.5179094672203064,
+    "test_rho": 0.536532301387526,
+    "test_r2": 0.26715344190597534,
+    "n_params": 231425,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "vaishnav"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.5273544788360596,
+    "test_r": 0.5135148763656616,
+    "test_rho": 0.5311249533002809,
+    "test_r2": 0.24330610036849976,
+    "n_params": 264706,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "vaishnav"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.5216305255889893,
+    "test_r": 0.5079671144485474,
+    "test_rho": 0.5289588192067642,
+    "test_r2": 0.2523043751716614,
+    "n_params": 777985,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "vaishnav"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.5272705554962158,
+    "test_r": 0.49556732177734375,
+    "test_rho": 0.5016105016800064,
+    "test_r2": 0.1322612166404724,
+    "n_params": 743617,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "vaishnav"
+  }
+]

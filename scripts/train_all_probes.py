@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
-Train species-specific expression probes for ALL (model, dataset) pairs.
+Train species-specific expression probes for every (model, dataset) pair.
 
-Critical fix: Previously, probes were trained only on Vaishnav 2022 (yeast)
-and applied to human/plant datasets. This trains dataset-specific probes
-so each model's expression predictions are calibrated to the target dataset.
+Probes used to be trained on Vaishnav 2022 (yeast) alone and then applied to
+the human and plant datasets, which left the expression predictions
+uncalibrated. This fits one probe per dataset instead.
 """
 
 import os
@@ -31,7 +31,7 @@ PROCESSED_DIR = os.path.join(PROJECT_DIR, 'data', 'processed')
 os.makedirs(CACHE_DIR, exist_ok=True)
 os.makedirs(PROBES_DIR, exist_ok=True)
 
-# Dataset name mapping: pipeline name -> raw parquet name
+# pipeline name -> raw parquet name
 DATASET_MAP = {
     'vaishnav': 'vaishnav2022',
     'klein': 'klein2020',
@@ -46,7 +46,7 @@ MAX_SEQUENCES = 10000
 
 def find_dataset_file(ds_name):
     """Find the parquet file for a dataset."""
-    # Try processed file first (has motif annotations), then raw
+    # processed file first, it has the motif annotations
     for suffix in ['_processed.parquet', '.parquet']:
         for prefix in [ds_name, DATASET_MAP.get(ds_name, ds_name)]:
             path = os.path.join(PROCESSED_DIR, f'{prefix}{suffix}')
@@ -61,7 +61,6 @@ def train_probe_for_pair(model_name, ds_name, device='cuda'):
     print(f"Training probe: {model_name} on {ds_name}")
     print(f"{'='*60}")
 
-    # Check if probe already exists
     probe_name = f'{model_name}_{ds_name}'
     probe_path = os.path.join(PROBES_DIR, f'{probe_name}_probe.pt')
     metrics_path = os.path.join(PROBES_DIR, f'{probe_name}_probe_metrics.json')
@@ -72,10 +71,9 @@ def train_probe_for_pair(model_name, ds_name, device='cuda'):
             print(f"  Probe already exists and is viable (r={existing['pearson_r']:.3f}), skipping")
             return existing
 
-    # Find and load dataset
     data_path = find_dataset_file(ds_name)
     if data_path is None:
-        # Try with the mapped name
+        # retry with the mapped name
         raw_name = DATASET_MAP.get(ds_name, ds_name)
         data_path = find_dataset_file(raw_name)
 
@@ -86,13 +84,11 @@ def train_probe_for_pair(model_name, ds_name, device='cuda'):
     print(f"  Loading data from {data_path}")
     df = pd.read_parquet(data_path)
 
-    # Ensure required columns
     if 'sequence' not in df.columns or 'expression' not in df.columns:
         print(f"  Missing required columns (sequence, expression), skipping")
         print(f"  Available columns: {list(df.columns)}")
         return None
 
-    # Subsample
     if len(df) > MAX_SEQUENCES:
         print(f"  Subsampling {len(df)} -> {MAX_SEQUENCES}")
         df = df.sample(MAX_SEQUENCES, random_state=42).reset_index(drop=True)
@@ -104,7 +100,7 @@ def train_probe_for_pair(model_name, ds_name, device='cuda'):
     print(f"  Expression range: [{expressions.min():.3f}, {expressions.max():.3f}]")
     print(f"  Expression mean: {expressions.mean():.3f}, std: {expressions.std():.3f}")
 
-    # Check for cached embeddings
+    # cached embeddings?
     cache_file = os.path.join(CACHE_DIR, f'{model_name}_{ds_name}_embeddings.npz')
 
     if os.path.exists(cache_file):
@@ -112,20 +108,18 @@ def train_probe_for_pair(model_name, ds_name, device='cuda'):
         data = np.load(cache_file)
         embeddings = data['embeddings']
     else:
-        # Load model (without probe - we just need embeddings)
+        # no probe needed here, just the embeddings
         print(f"  Loading model {model_name} for embedding extraction...")
         model = load_model(model_name, device=device)
         print(f"  Extracting embeddings...")
         embeddings = model.get_embeddings(sequences)
         print(f"  Embeddings shape: {embeddings.shape}")
 
-        # Cache
         np.savez_compressed(cache_file, embeddings=embeddings, expressions=expressions)
         print(f"  Cached to {cache_file}")
 
         model.unload()
 
-    # Train probe
     print(f"  Training expression probe (input_dim={embeddings.shape[1]})...")
     probe, metrics = train_expression_probe(
         embeddings, expressions,
@@ -157,7 +151,7 @@ def train_probe_for_pair(model_name, ds_name, device='cuda'):
     print(f"    R²:           {metrics['r_squared']:.4f}")
     print(f"    Viable:       {result['viable']}")
 
-    # Save probe regardless of viability (even weak probes are better than cross-species)
+    # save even weak probes: still better than borrowing another species's
     save_probe(probe, metrics, PROBES_DIR, probe_name)
     print(f"  Probe saved as {probe_name}")
 
@@ -192,7 +186,6 @@ def main():
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
 
-    # Summary
     print(f"\n\n{'='*60}")
     print("PROBE TRAINING SUMMARY")
     print(f"{'='*60}")
@@ -204,7 +197,6 @@ def main():
             print(f"  {r['model']:12s} on {r['dataset']:12s}: "
                   f"r={r['pearson_r']:.3f}, R²={r['r_squared']:.3f} [{status}]")
 
-    # Save summary
     results_path = os.path.join(PROJECT_DIR, 'results', 'probe_training_all_results.json')
     os.makedirs(os.path.dirname(results_path), exist_ok=True)
     with open(results_path, 'w') as f:

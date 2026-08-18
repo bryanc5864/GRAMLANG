@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 """
-GRAMLANG v3: Extension Analysis Pipeline
-
-Runs the critical P0 and P1 experiments from EXTENSION_PLAN.md:
-  P0.3: Power analysis with 1000 shuffles
-  P1.1: Factorial shuffle decomposition (position vs orientation vs spacer)
-  P1.2: Bag-of-motifs baseline comparison
-  P1.3: Unexplained variance decomposition
+v3 analysis phases from EXTENSION_PLAN.md: power analysis (P0.3), factorial
+shuffle decomposition (P1.1), bag-of-motifs baseline (P1.2), variance
+decomposition (P1.3).
 
 Usage:
     python scripts/run_v3_analysis.py [--phase P0.3|P1.1|P1.2|P1.3|all]
@@ -25,7 +21,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import cross_val_score, KFold
 
-# Add project root to path
+# so src/ imports resolve when run from anywhere
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.models.model_loader import load_model
@@ -39,7 +35,6 @@ from src.perturbation.vocabulary_preserving import (
 from src.grammar.sensitivity import compute_gsi
 from src.utils.io import load_processed, save_json
 
-# Configuration
 DATASETS = ['agarwal', 'klein', 'inoue', 'vaishnav', 'jores']
 MODELS = ['dnabert2', 'nt', 'hyenadna']
 RESULTS_DIR = Path('results/v3')
@@ -55,7 +50,6 @@ DATASET_CELL_TYPES = {
 
 
 def ensure_dirs():
-    """Create output directories."""
     for d in ['power_analysis', 'factorial_decomposition', 'bom_baseline',
               'variance_decomposition']:
         (RESULTS_DIR / d).mkdir(parents=True, exist_ok=True)
@@ -65,7 +59,7 @@ PROBES_DIR = 'data/probes'
 
 
 def swap_probe(model, model_name, ds_name, device='cuda'):
-    """Swap expression probe on already-loaded model."""
+    """Swap the expression probe on an already-loaded model."""
     if model_name == 'enformer' or not hasattr(model, 'set_probe'):
         return
     from src.models.expression_probes import load_probe
@@ -75,23 +69,23 @@ def swap_probe(model, model_name, ds_name, device='cuda'):
         if os.path.exists(probe_path):
             probe = load_probe(PROBES_DIR, probe_name, model.hidden_dim, device=device)
             model.set_probe(probe)
-            print(f"  Loaded probe: {probe_name}")
+            print(f"  loaded probe: {probe_name}")
             return
-    print(f"  WARNING: No probe found for {model_name}/{ds_name}")
+    print(f"  warning: no probe found for {model_name}/{ds_name}")
 
 
 def load_data_and_model(dataset_name, model_name):
     """Load dataset, motif hits, and model."""
     dataset = load_processed(f'data/processed/{dataset_name}_processed.parquet')
     motif_hits = pd.read_parquet(f'data/processed/{dataset_name}_processed_motif_hits.parquet')
-    # Load model without probe first, then swap in dataset-specific probe
+    # load bare, then swap in the dataset-specific probe
     model = load_model(model_name, dataset_name='__dummy__')
     swap_probe(model, model_name, dataset_name)
     return dataset, motif_hits, model
 
 
 def get_enhancer_sample(dataset, motif_hits, n=100, min_motifs=2, seed=42):
-    """Get a sample of enhancers with sufficient motifs."""
+    """Sample enhancers with at least min_motifs hits."""
     eligible = dataset[dataset['n_motifs'] >= min_motifs].copy()
     if len(eligible) > n:
         eligible = eligible.sample(n=n, random_state=seed)
@@ -99,7 +93,7 @@ def get_enhancer_sample(dataset, motif_hits, n=100, min_motifs=2, seed=42):
 
 
 def get_annotation(sequence, seq_id, motif_hits):
-    """Build annotation dict for an enhancer."""
+    """Annotation dict for one enhancer."""
     seq_motifs = motif_hits[motif_hits['seq_id'] == str(seq_id)]
     return {
         'sequence': sequence,
@@ -109,31 +103,26 @@ def get_annotation(sequence, seq_id, motif_hits):
     }
 
 
-# ============================================================
-# P0.3: Power Analysis with 1000 Shuffles
-# ============================================================
+# P0.3 power analysis
 
 def run_power_analysis(dataset_name='agarwal', model_name='dnabert2',
                        n_enhancers=100, max_shuffles=1000):
-    """
-    Run 1000 shuffles per enhancer and compute significance at
-    100, 250, 500, 750, 1000 shuffle levels.
-    """
+    """Shuffle each enhancer max_shuffles times, score significance at checkpoints."""
     print(f"\n{'='*60}")
-    print(f"P0.3: POWER ANALYSIS — {dataset_name} / {model_name}")
+    print(f"P0.3 power analysis - {dataset_name} / {model_name}")
     print(f"{'='*60}")
 
     dataset, motif_hits, model = load_data_and_model(dataset_name, model_name)
     sample = get_enhancer_sample(dataset, motif_hits, n=n_enhancers)
 
-    print(f"  Enhancers: {len(sample)}, Shuffles: {max_shuffles}")
+    print(f"  enhancers: {len(sample)}, shuffles: {max_shuffles}")
 
     shuffle_checkpoints = [100, 250, 500, 750, 1000]
     all_results = []
 
     for idx, (_, row) in enumerate(sample.iterrows()):
         if idx % 10 == 0:
-            print(f"  [{idx}/{len(sample)}] Processing enhancer {row['seq_id']}...")
+            print(f"  [{idx}/{len(sample)}] enhancer {row['seq_id']}...")
 
         seq = row['sequence']
         seq_id = str(row['seq_id'])
@@ -142,7 +131,6 @@ def run_power_analysis(dataset_name='agarwal', model_name='dnabert2',
         if annotation['motif_count'] < 2:
             continue
 
-        # Run full 1000 shuffles
         try:
             result = compute_gsi(
                 seq, annotation, model,
@@ -150,13 +138,12 @@ def run_power_analysis(dataset_name='agarwal', model_name='dnabert2',
                 seed=42 + idx
             )
         except Exception as e:
-            print(f"  Error for {seq_id}: {e}")
+            print(f"  error on {seq_id}: {e}")
             continue
 
         shuffle_exprs = np.array(result['shuffle_expressions'])
         original_expr = result['original_expression']
 
-        # Compute metrics at each checkpoint
         enhancer_result = {
             'seq_id': seq_id,
             'original_expression': original_expr,
@@ -172,18 +159,15 @@ def run_power_analysis(dataset_name='agarwal', model_name='dnabert2',
             sub_median = np.median(subset)
             sub_mad = np.median(np.abs(subset - sub_median))
 
-            # GSI
             gsi = sub_std / max(abs(sub_mean), 1e-10)
             gsi_robust = sub_std / max(abs(sub_mean), sub_std * 0.1, 1e-10)
 
-            # z-score and p-value
             z = abs(original_expr - sub_mean) / max(sub_std, 1e-10)
             p_zscore = 2 * (1 - stats.norm.cdf(z))
 
-            # GES (robust z-score)
+            # GES: median/MAD version of the z-score
             ges = abs(original_expr - sub_median) / max(sub_mad * 1.4826, sub_std, 1e-10)
 
-            # GPE
             gpe = (np.max(subset) - np.min(subset)) / max(abs(sub_median), 1e-10)
 
             enhancer_result[f'gsi_{n_shuf}'] = float(gsi)
@@ -198,7 +182,6 @@ def run_power_analysis(dataset_name='agarwal', model_name='dnabert2',
 
     df = pd.DataFrame(all_results)
 
-    # Summary statistics
     summary = {
         'dataset': dataset_name,
         'model': model_name,
@@ -230,31 +213,26 @@ def run_power_analysis(dataset_name='agarwal', model_name='dnabert2',
     outdir = RESULTS_DIR / 'power_analysis'
     df.to_parquet(outdir / f'{dataset_name}_{model_name}_power.parquet')
     save_json(summary, outdir / f'{dataset_name}_{model_name}_power_summary.json')
-    print(f"  Saved to {outdir}/")
+    print(f"  saved to {outdir}/")
     return summary
 
 
-# ============================================================
-# P1.1: Factorial Shuffle Decomposition
-# ============================================================
+# P1.1 factorial shuffle decomposition
 
 def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
                                  n_enhancers=100, n_shuffles=100):
-    """
-    Run 4 types of shuffles to decompose grammar sensitivity into:
-    1. Position effect (motif order permuted, orientation & spacer fixed)
-    2. Orientation effect (motif orientations flipped, position & spacer fixed)
-    3. Spacer effect (spacer DNA reshuffled, motifs fixed)
-    4. Full shuffle (all factors changed — original GSI approach)
+    """Split grammar sensitivity across position, orientation, spacer, and full shuffles.
+
+    each single-factor shuffle holds the other two fixed; full is the original GSI shuffle.
     """
     print(f"\n{'='*60}")
-    print(f"P1.1: FACTORIAL DECOMPOSITION — {dataset_name} / {model_name}")
+    print(f"P1.1 factorial decomposition - {dataset_name} / {model_name}")
     print(f"{'='*60}")
 
     dataset, motif_hits, model = load_data_and_model(dataset_name, model_name)
     sample = get_enhancer_sample(dataset, motif_hits, n=n_enhancers)
 
-    print(f"  Enhancers: {len(sample)}, Shuffles per type: {n_shuffles}")
+    print(f"  enhancers: {len(sample)}, shuffles per type: {n_shuffles}")
 
     shuffle_types = ['position', 'orientation', 'spacer', 'full']
     shuffle_funcs = {
@@ -268,7 +246,7 @@ def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
 
     for idx, (_, row) in enumerate(sample.iterrows()):
         if idx % 20 == 0:
-            print(f"  [{idx}/{len(sample)}] Processing enhancer {row['seq_id']}...")
+            print(f"  [{idx}/{len(sample)}] enhancer {row['seq_id']}...")
 
         seq = row['sequence']
         seq_id = str(row['seq_id'])
@@ -277,7 +255,6 @@ def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
         if annotation['motif_count'] < 2:
             continue
 
-        # Original expression
         original_expr = float(model.predict_expression([seq])[0])
 
         enhancer_result = {
@@ -298,7 +275,7 @@ def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
                 shuf_median = float(np.median(exprs))
                 shuf_mad = float(np.median(np.abs(exprs - shuf_median)))
 
-                # Effect size: how much does this factor change expression?
+                # how far the original sits from the shuffled mean
                 z = abs(original_expr - shuf_mean) / max(shuf_std, 1e-10)
                 variance = float(np.var(exprs))
 
@@ -311,7 +288,7 @@ def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
                 enhancer_result[f'{stype}_gsi'] = shuf_std / max(abs(shuf_mean), 1e-10)
 
             except Exception as e:
-                print(f"  Error {stype} for {seq_id}: {e}")
+                print(f"  error on {stype} for {seq_id}: {e}")
                 for key in ['mean', 'std', 'median', 'mad', 'variance', 'z_score', 'gsi']:
                     enhancer_result[f'{stype}_{key}'] = np.nan
 
@@ -319,7 +296,7 @@ def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
 
     df = pd.DataFrame(all_results)
 
-    # Compute variance fractions (relative to full shuffle variance)
+    # variance fractions are relative to the full shuffle
     summary = {
         'dataset': dataset_name,
         'model': model_name,
@@ -347,7 +324,6 @@ def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
             print(f"  {stype:12s}: median variance={median_var:.6f}, "
                   f"median z={median_z:.3f}, median GSI={median_gsi:.4f}")
 
-    # Fraction of full variance explained by each factor
     full_var = df['full_variance'].values
     for stype in ['position', 'orientation', 'spacer']:
         var_col = f'{stype}_variance'
@@ -360,7 +336,7 @@ def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
             print(f"  {stype:12s} / full: median={np.median(ratios):.3f}, "
                   f"mean={np.mean(ratios):.3f}")
 
-    # Interaction: full - (position + orientation + spacer)
+    # whatever full variance the three single factors do not account for
     pos_var = df.get('position_variance', pd.Series(dtype=float)).fillna(0).values
     orient_var = df.get('orientation_variance', pd.Series(dtype=float)).fillna(0).values
     spacer_var = df.get('spacer_variance', pd.Series(dtype=float)).fillna(0).values
@@ -374,42 +350,33 @@ def run_factorial_decomposition(dataset_name='agarwal', model_name='dnabert2',
     outdir = RESULTS_DIR / 'factorial_decomposition'
     df.to_parquet(outdir / f'{dataset_name}_{model_name}_factorial.parquet')
     save_json(summary, outdir / f'{dataset_name}_{model_name}_factorial_summary.json')
-    print(f"  Saved to {outdir}/")
+    print(f"  saved to {outdir}/")
     return summary
 
 
-# ============================================================
-# P1.2: Bag-of-Motifs Baseline
-# ============================================================
+# P1.2 bag-of-motifs baseline
 
 def run_bom_baseline(dataset_name='agarwal', n_enhancers=500, seed=42):
-    """
-    Compare expression prediction R²:
-    1. Bag-of-Motifs (BOM): [count(motif_i) for each motif type]
-    2. Grammar features: BOM + pairwise spacing/orientation stats
-    3. Upper bound: DNABERT-2 probe R² (from probes)
-    """
+    """Compare expression R² from motif counts alone vs counts + arrangement stats."""
     print(f"\n{'='*60}")
-    print(f"P1.2: BAG-OF-MOTIFS BASELINE — {dataset_name}")
+    print(f"P1.2 bag-of-motifs baseline - {dataset_name}")
     print(f"{'='*60}")
 
     dataset = load_processed(f'data/processed/{dataset_name}_processed.parquet')
     motif_hits = pd.read_parquet(f'data/processed/{dataset_name}_processed_motif_hits.parquet')
 
-    # Filter to enhancers with motifs and expression data
     eligible = dataset[dataset['n_motifs'] >= 2].copy()
     if 'expression' not in eligible.columns:
-        print(f"  No expression column in {dataset_name}, skipping")
+        print(f"  no expression column in {dataset_name}, skipping")
         return None
     eligible = eligible.dropna(subset=['expression'])
     if len(eligible) > n_enhancers:
         eligible = eligible.sample(n=n_enhancers, random_state=seed)
 
-    print(f"  Enhancers with expression: {len(eligible)}")
+    print(f"  enhancers with expression: {len(eligible)}")
 
-    # Build BOM feature matrix
     all_motif_names = sorted(motif_hits['motif_name'].unique())
-    print(f"  Unique motif types: {len(all_motif_names)}")
+    print(f"  unique motif types: {len(all_motif_names)}")
 
     bom_features = []
     grammar_features = []
@@ -419,7 +386,6 @@ def run_bom_baseline(dataset_name='agarwal', n_enhancers=500, seed=42):
         seq_id = str(row['seq_id'])
         seq_motifs = motif_hits[motif_hits['seq_id'] == seq_id]
 
-        # BOM: motif counts
         counts = {name: 0 for name in all_motif_names}
         for _, m in seq_motifs.iterrows():
             name = m['motif_name']
@@ -429,13 +395,12 @@ def run_bom_baseline(dataset_name='agarwal', n_enhancers=500, seed=42):
         bom_row = [counts[name] for name in all_motif_names]
         bom_features.append(bom_row)
 
-        # Grammar features: BOM + pairwise stats
-        grammar_row = list(bom_row)  # start with BOM
+        # grammar = BOM plus pairwise arrangement stats
+        grammar_row = list(bom_row)
 
-        # Add simple grammar features
         if len(seq_motifs) >= 2:
             positions = seq_motifs['start'].values
-            # Mean/std of inter-motif distances
+            # inter-motif distances
             sorted_pos = np.sort(positions)
             dists = np.diff(sorted_pos)
             grammar_row.extend([
@@ -443,10 +408,9 @@ def run_bom_baseline(dataset_name='agarwal', n_enhancers=500, seed=42):
                 float(np.std(dists)) if len(dists) > 0 else 0,
                 float(np.min(dists)) if len(dists) > 0 else 0,
                 float(np.max(dists)) if len(dists) > 0 else 0,
-                float(len(seq_motifs)),  # total motif count
+                float(len(seq_motifs)),
                 float(len(seq_motifs) / max(len(row['sequence']), 1)),  # density
             ])
-            # Strand balance
             if 'strand' in seq_motifs.columns:
                 plus_frac = (seq_motifs['strand'] == '+').mean()
                 grammar_row.append(float(plus_frac))
@@ -463,23 +427,20 @@ def run_bom_baseline(dataset_name='agarwal', n_enhancers=500, seed=42):
     y = np.array(expressions)
 
     if len(bom_features) < 20:
-        print(f"  Too few enhancers ({len(bom_features)}), skipping")
+        print(f"  too few enhancers ({len(bom_features)}), skipping")
         return None
 
-    print(f"  BOM features: {X_bom.shape[1]}, Grammar features: {X_grammar.shape[1]}")
+    print(f"  BOM features: {X_bom.shape[1]}, grammar features: {X_grammar.shape[1]}")
 
-    # Cross-validated R²
     cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
-    # BOM only (Ridge regression — many motif features may be sparse)
+    # ridge because the motif count matrix is sparse
     model_bom = Ridge(alpha=1.0)
     scores_bom = cross_val_score(model_bom, X_bom, y, cv=cv, scoring='r2')
 
-    # Grammar features (BOM + spacing/orientation stats)
     model_grammar = Ridge(alpha=1.0)
     scores_grammar = cross_val_score(model_grammar, X_grammar, y, cv=cv, scoring='r2')
 
-    # Random forest versions
     model_bom_rf = RandomForestRegressor(n_estimators=100, max_depth=10, random_state=seed)
     scores_bom_rf = cross_val_score(model_bom_rf, X_bom, y, cv=cv, scoring='r2')
 
@@ -514,40 +475,31 @@ def run_bom_baseline(dataset_name='agarwal', n_enhancers=500, seed=42):
         'grammar_increment_rf': float(np.mean(scores_grammar_rf) - np.mean(scores_bom_rf)),
     }
 
-    print(f"\n  Results:")
-    print(f"\n  Results:")
-    print(f"  BOM (Ridge):     R² = {np.mean(scores_bom):.4f} ± {np.std(scores_bom):.4f}")
-    print(f"  Grammar (Ridge): R² = {np.mean(scores_grammar):.4f} ± {np.std(scores_grammar):.4f}")
+    print(f"\n  results:")
+    print(f"\n  results:")
+    print(f"  BOM (ridge):     R² = {np.mean(scores_bom):.4f} ± {np.std(scores_bom):.4f}")
+    print(f"  grammar (ridge): R² = {np.mean(scores_grammar):.4f} ± {np.std(scores_grammar):.4f}")
     print(f"  BOM (RF):        R² = {np.mean(scores_bom_rf):.4f} ± {np.std(scores_bom_rf):.4f}")
-    print(f"  Grammar (RF):    R² = {np.mean(scores_grammar_rf):.4f} ± {np.std(scores_grammar_rf):.4f}")
-    print(f"  Grammar increment (Ridge): {summary['grammar_increment_ridge']:+.4f}")
-    print(f"  Grammar increment (RF):    {summary['grammar_increment_rf']:+.4f}")
+    print(f"  grammar (RF):    R² = {np.mean(scores_grammar_rf):.4f} ± {np.std(scores_grammar_rf):.4f}")
+    print(f"  grammar increment (ridge): {summary['grammar_increment_ridge']:+.4f}")
+    print(f"  grammar increment (RF):    {summary['grammar_increment_rf']:+.4f}")
 
     outdir = RESULTS_DIR / 'bom_baseline'
     save_json(summary, outdir / f'{dataset_name}_bom_summary.json')
-    print(f"  Saved to {outdir}/")
+    print(f"  saved to {outdir}/")
     return summary
 
 
-# ============================================================
-# P1.3: Unexplained Variance Decomposition
-# ============================================================
+# P1.3 unexplained variance decomposition
 
 def run_variance_decomposition(dataset_name='agarwal', model_name='dnabert2',
                                 n_enhancers=500, seed=42):
-    """
-    Decompose expression variance using DL embeddings vs hand-crafted features.
+    """Compare expression R² from motif counts, arrangement stats, and frozen embeddings.
 
-    Compare R² from:
-    1. Vocabulary features (motif counts)
-    2. Grammar features (motif counts + spacing/orientation)
-    3. DL embeddings (frozen model representations)
-    4. Probe R² (upper bound from expression probe)
-
-    The gap between (2) and (3) = "grammar info the DL captures but we don't"
+    the embedding-minus-grammar gap is the grammar the model uses and we do not measure.
     """
     print(f"\n{'='*60}")
-    print(f"P1.3: VARIANCE DECOMPOSITION — {dataset_name} / {model_name}")
+    print(f"P1.3 variance decomposition - {dataset_name} / {model_name}")
     print(f"{'='*60}")
 
     dataset = load_processed(f'data/processed/{dataset_name}_processed.parquet')
@@ -555,16 +507,15 @@ def run_variance_decomposition(dataset_name='agarwal', model_name='dnabert2',
 
     eligible = dataset[dataset['n_motifs'] >= 2].copy()
     if 'expression' not in eligible.columns:
-        print(f"  No expression column in {dataset_name}, skipping")
+        print(f"  no expression column in {dataset_name}, skipping")
         return None
     eligible = eligible.dropna(subset=['expression'])
     if len(eligible) > n_enhancers:
         eligible = eligible.sample(n=n_enhancers, random_state=seed)
 
-    print(f"  Loading model {model_name} for embedding extraction...")
+    print(f"  loading {model_name} for embedding extraction...")
     model = load_model(model_name)
 
-    # Build features
     all_motif_names = sorted(motif_hits['motif_name'].unique())
     sequences = []
     vocab_features = []
@@ -576,14 +527,13 @@ def run_variance_decomposition(dataset_name='agarwal', model_name='dnabert2',
         seq_motifs = motif_hits[motif_hits['seq_id'] == seq_id]
         sequences.append(row['sequence'])
 
-        # Vocabulary features
         counts = {name: 0 for name in all_motif_names}
         for _, m in seq_motifs.iterrows():
             if m['motif_name'] in counts:
                 counts[m['motif_name']] += 1
         vocab_features.append([counts[n] for n in all_motif_names])
 
-        # Grammar features (vocab + arrangement stats)
+        # vocab plus arrangement stats
         gram_row = [counts[n] for n in all_motif_names]
         if len(seq_motifs) >= 2:
             positions = np.sort(seq_motifs['start'].values)
@@ -609,37 +559,33 @@ def run_variance_decomposition(dataset_name='agarwal', model_name='dnabert2',
     X_grammar = np.array(grammar_features)
     y = np.array(expressions)
 
-    # Extract DL embeddings
-    print(f"  Extracting embeddings for {len(sequences)} sequences...")
+    print(f"  extracting embeddings for {len(sequences)} sequences...")
     try:
         embeddings = model.get_embeddings(sequences)
         if isinstance(embeddings, dict):
-            # Use last layer
+            # last layer only
             layer_keys = sorted(embeddings.keys())
             X_embed = embeddings[layer_keys[-1]]
         else:
             X_embed = embeddings
         if hasattr(X_embed, 'numpy'):
             X_embed = X_embed.numpy()
-        # Mean-pool if 3D (batch, seq_len, hidden)
+        # mean-pool if 3D (batch, seq_len, hidden)
         if X_embed.ndim == 3:
             X_embed = np.mean(X_embed, axis=1)
-        print(f"  Embedding shape: {X_embed.shape}")
+        print(f"  embedding shape: {X_embed.shape}")
     except Exception as e:
-        print(f"  Could not extract embeddings: {e}")
-        print(f"  Falling back to probe predictions as embedding proxy...")
-        # Use model predictions as a 1D embedding
+        print(f"  could not extract embeddings: {e}")
+        print(f"  falling back to probe predictions as a 1-d proxy")
         preds = model.predict_expression(sequences)
         X_embed = preds.reshape(-1, 1)
 
-    # Cross-validated R²
     cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
     scores_vocab = cross_val_score(Ridge(alpha=1.0), X_vocab, y, cv=cv, scoring='r2')
     scores_grammar = cross_val_score(Ridge(alpha=1.0), X_grammar, y, cv=cv, scoring='r2')
     scores_embed = cross_val_score(Ridge(alpha=1.0), X_embed, y, cv=cv, scoring='r2')
 
-    # Combined: grammar + embeddings
     X_combined = np.hstack([X_grammar, X_embed])
     scores_combined = cross_val_score(Ridge(alpha=1.0), X_combined, y, cv=cv, scoring='r2')
 
@@ -663,40 +609,36 @@ def run_variance_decomposition(dataset_name='agarwal', model_name='dnabert2',
         ),
     }
 
-    print(f"\n  Results:")
-    print(f"  Vocabulary:   R² = {np.mean(scores_vocab):.4f} ± {np.std(scores_vocab):.4f}")
-    print(f"  Grammar:      R² = {np.mean(scores_grammar):.4f} ± {np.std(scores_grammar):.4f}")
-    print(f"  Embeddings:   R² = {np.mean(scores_embed):.4f} ± {np.std(scores_embed):.4f}")
-    print(f"  Combined:     R² = {np.mean(scores_combined):.4f} ± {np.std(scores_combined):.4f}")
-    print(f"  Grammar increment over vocab: {summary['grammar_increment']:+.4f}")
-    print(f"  Embedding increment over grammar: {summary['embedding_increment_over_grammar']:+.4f}")
-    print(f"  Grammar captures {summary['grammar_captures_fraction_of_embedding']:.1%} of embedding signal")
+    print(f"\n  results:")
+    print(f"  vocabulary:   R² = {np.mean(scores_vocab):.4f} ± {np.std(scores_vocab):.4f}")
+    print(f"  grammar:      R² = {np.mean(scores_grammar):.4f} ± {np.std(scores_grammar):.4f}")
+    print(f"  embeddings:   R² = {np.mean(scores_embed):.4f} ± {np.std(scores_embed):.4f}")
+    print(f"  combined:     R² = {np.mean(scores_combined):.4f} ± {np.std(scores_combined):.4f}")
+    print(f"  grammar increment over vocab: {summary['grammar_increment']:+.4f}")
+    print(f"  embedding increment over grammar: {summary['embedding_increment_over_grammar']:+.4f}")
+    print(f"  grammar captures {summary['grammar_captures_fraction_of_embedding']:.1%} of embedding signal")
 
     outdir = RESULTS_DIR / 'variance_decomposition'
     save_json(summary, outdir / f'{dataset_name}_{model_name}_variance_summary.json')
-    print(f"  Saved to {outdir}/")
+    print(f"  saved to {outdir}/")
     return summary
 
 
-# ============================================================
-# Main
-# ============================================================
-
 def main():
-    parser = argparse.ArgumentParser(description='GRAMLANG v3 Extension Analysis')
+    parser = argparse.ArgumentParser(description='GRAMLANG v3 extension analysis')
     parser.add_argument('--phase', type=str, default='all',
                         choices=['P0.3', 'P1.1', 'P1.2', 'P1.3', 'all'],
-                        help='Which analysis phase to run')
+                        help='which analysis phase to run')
     parser.add_argument('--datasets', type=str, default='agarwal,jores,inoue',
-                        help='Comma-separated dataset names')
+                        help='comma-separated dataset names')
     parser.add_argument('--models', type=str, default='dnabert2,nt,hyenadna',
-                        help='Comma-separated model names')
+                        help='comma-separated model names')
     parser.add_argument('--n-enhancers', type=int, default=100,
-                        help='Number of enhancers per analysis')
+                        help='enhancers per analysis')
     parser.add_argument('--n-shuffles', type=int, default=100,
-                        help='Number of shuffles (P1.1)')
+                        help='shuffles per type (P1.1)')
     parser.add_argument('--max-shuffles', type=int, default=1000,
-                        help='Max shuffles for power analysis (P0.3)')
+                        help='max shuffles for power analysis (P0.3)')
     args = parser.parse_args()
 
     ensure_dirs()
@@ -710,13 +652,12 @@ def main():
 
     for phase in phases:
         print(f"\n{'#'*60}")
-        print(f"# PHASE {phase}")
+        print(f"# phase {phase}")
         print(f"{'#'*60}")
 
         if phase == 'P0.3':
-            # Power analysis: run on first dataset + first model (most important)
-            for ds in datasets[:2]:  # Do 2 datasets
-                for mdl in models[:1]:  # Primary model only for speed
+            for ds in datasets[:2]:
+                for mdl in models[:1]:  # primary model only, for speed
                     key = f'power_{ds}_{mdl}'
                     all_summaries[key] = run_power_analysis(
                         ds, mdl, n_enhancers=args.n_enhancers,
@@ -724,9 +665,8 @@ def main():
                     )
 
         elif phase == 'P1.1':
-            # Factorial decomposition: run on all datasets × primary model
             for ds in datasets:
-                for mdl in models[:1]:  # Primary model for speed
+                for mdl in models[:1]:  # primary model only, for speed
                     key = f'factorial_{ds}_{mdl}'
                     all_summaries[key] = run_factorial_decomposition(
                         ds, mdl, n_enhancers=args.n_enhancers,
@@ -734,7 +674,7 @@ def main():
                     )
 
         elif phase == 'P1.2':
-            # BOM baseline: all datasets (no model needed)
+            # no model needed here
             for ds in datasets:
                 key = f'bom_{ds}'
                 all_summaries[key] = run_bom_baseline(
@@ -742,7 +682,6 @@ def main():
                 )
 
         elif phase == 'P1.3':
-            # Variance decomposition: all datasets × primary model
             for ds in datasets:
                 for mdl in models[:1]:
                     key = f'variance_{ds}_{mdl}'
@@ -752,12 +691,11 @@ def main():
 
     elapsed = time.time() - start_time
     print(f"\n{'='*60}")
-    print(f"ALL PHASES COMPLETE in {elapsed/60:.1f} minutes")
+    print(f"all phases complete in {elapsed/60:.1f} minutes")
     print(f"{'='*60}")
 
-    # Save master summary
     save_json(all_summaries, RESULTS_DIR / 'v3_analysis_summary.json')
-    print(f"Master summary saved to {RESULTS_DIR / 'v3_analysis_summary.json'}")
+    print(f"master summary saved to {RESULTS_DIR / 'v3_analysis_summary.json'}")
 
 
 if __name__ == '__main__':

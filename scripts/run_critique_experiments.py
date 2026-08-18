@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 """
-Critique experiments to strengthen the billboard model paper.
+Experiments answering the critiques of the billboard model.
 
-Experiments:
-1. Synthetic grammar test - Can models detect KNOWN grammar rules?
-2. Known grammar validation - Test BPNet's Nanog 10.5bp periodicity
-3. Grammar-positive deep dive - What's special about the 10% with grammar?
-4. Bootstrap confidence intervals - Statistical rigor
-5. Natural MPRA variants - Find pairs differing only in arrangement
+Can the models detect grammar rules we planted ourselves? Do they see the
+10.5bp Nanog periodicity BPNet found? What is different about the ~10% of
+enhancers that do show grammar? Bootstrap CIs on the headline numbers, and a
+search for natural MPRA pairs differing only in arrangement.
 """
 
 import os
@@ -29,29 +27,26 @@ from src.grammar.sensitivity import compute_gsi
 
 def create_synthetic_grammar_sequences(n_sequences=100, seq_length=200):
     """
-    Create synthetic sequences with KNOWN grammar rules.
-
-    Rule 1: Motif A followed by Motif B within 20bp = HIGH expression
-    Rule 2: Motif B followed by Motif A = LOW expression
-    Rule 3: Spacing matters: 10bp spacing = HIGH, 50bp spacing = LOW
+    Synthetic sequences with grammar rules we chose: A before B within 20bp is
+    high, B before A is low, and 10bp spacing beats 50bp.
     """
-    # Simple motifs (not real TF binding sites, but recognizable patterns)
+    # not real binding sites, just recognizable patterns
     MOTIF_A = "GATAAGAT"  # GATA-like
     MOTIF_B = "CACGTGAC"  # E-box-like
 
     sequences = []
-    labels = []  # 'high_grammar', 'low_grammar', 'no_grammar'
+    labels = []  # high_grammar / low_grammar / no_grammar
     grammar_rules = []
 
     rng = np.random.default_rng(42)
     bases = ['A', 'C', 'G', 'T']
 
     for i in range(n_sequences):
-        # Random background
+        # random background
         bg = ''.join(rng.choice(bases, seq_length))
 
         if i < n_sequences // 3:
-            # HIGH grammar: A then B, close spacing (10-20bp)
+            # high grammar: A then B, 10-20bp apart
             pos_a = 50
             spacing = rng.integers(10, 21)
             pos_b = pos_a + len(MOTIF_A) + spacing
@@ -62,7 +57,7 @@ def create_synthetic_grammar_sequences(n_sequences=100, seq_length=200):
             grammar_rules.append({'rule': 'A_then_B_close', 'spacing': int(spacing)})
 
         elif i < 2 * n_sequences // 3:
-            # LOW grammar: B then A (reversed order)
+            # low grammar: reversed order
             pos_b = 50
             spacing = rng.integers(10, 21)
             pos_a = pos_b + len(MOTIF_B) + spacing
@@ -73,7 +68,7 @@ def create_synthetic_grammar_sequences(n_sequences=100, seq_length=200):
             grammar_rules.append({'rule': 'B_then_A', 'spacing': int(spacing)})
 
         else:
-            # NO grammar: A and B far apart (>80bp)
+            # no grammar: more than 80bp apart
             pos_a = 30
             pos_b = 150
             seq = bg[:pos_a] + MOTIF_A + bg[pos_a+len(MOTIF_A):pos_b] + MOTIF_B + bg[pos_b+len(MOTIF_B):]
@@ -86,32 +81,24 @@ def create_synthetic_grammar_sequences(n_sequences=100, seq_length=200):
 
 
 def experiment_1_synthetic_grammar(model_name='dnabert2', output_dir='results/critique'):
-    """
-    Test if models can detect KNOWN synthetic grammar rules.
-
-    If models CAN'T detect these simple rules, interpretation B is supported
-    (models fail to learn grammar).
-    """
+    """Can the models see grammar rules we planted? If not, they never learned any."""
     print("\n=== Experiment 1: Synthetic Grammar Detection ===")
 
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Create synthetic sequences
     sequences, labels, rules, motif_a, motif_b = create_synthetic_grammar_sequences(n_sequences=150)
 
-    # Load model (no probe needed - just embeddings)
+    # embeddings only, no probe needed
     model = load_model(model_name, dataset_name='agarwal')
 
-    # Get embeddings for all sequences
     print("  Getting embeddings...")
     embeddings = model.get_embeddings(sequences)
 
-    # Also get expression predictions
+    # expression predictions too
     print("  Getting predictions...")
     predictions = model.predict_expression(sequences)
 
-    # Analyze by grammar label
     results_by_label = defaultdict(list)
     for i, label in enumerate(labels):
         results_by_label[label].append({
@@ -120,16 +107,14 @@ def experiment_1_synthetic_grammar(model_name='dnabert2', output_dir='results/cr
             'rule': rules[i]
         })
 
-    # Statistical tests
     high_preds = [r['prediction'] for r in results_by_label['high_grammar']]
     low_preds = [r['prediction'] for r in results_by_label['low_grammar']]
     no_preds = [r['prediction'] for r in results_by_label['no_grammar']]
 
-    # T-tests
     t_high_vs_low, p_high_vs_low = stats.ttest_ind(high_preds, low_preds)
     t_high_vs_no, p_high_vs_no = stats.ttest_ind(high_preds, no_preds)
 
-    # Effect sizes (Cohen's d)
+    # Cohen's d
     def cohens_d(x, y):
         nx, ny = len(x), len(y)
         pooled_std = np.sqrt(((nx-1)*np.std(x)**2 + (ny-1)*np.std(y)**2) / (nx+ny-2))
@@ -138,11 +123,10 @@ def experiment_1_synthetic_grammar(model_name='dnabert2', output_dir='results/cr
     d_high_vs_low = cohens_d(high_preds, low_preds)
     d_high_vs_no = cohens_d(high_preds, no_preds)
 
-    # Embedding similarity analysis
     high_embs = np.array([r['embedding'] for r in results_by_label['high_grammar']])
     low_embs = np.array([r['embedding'] for r in results_by_label['low_grammar']])
 
-    # Mean embedding distance between classes
+    # mean embedding distance between classes
     high_centroid = np.mean(high_embs, axis=0)
     low_centroid = np.mean(low_embs, axis=0)
     centroid_distance = 1 - cosine(high_centroid, low_centroid)
@@ -190,24 +174,20 @@ def experiment_1_synthetic_grammar(model_name='dnabert2', output_dir='results/cr
 
 def experiment_2_helical_periodicity(model_name='dnabert2', output_dir='results/critique'):
     """
-    Test if models detect helical periodicity (10.5bp spacing).
-
-    BPNet found Nanog binding is sensitive to 10.5bp periodicity.
-    We create sequences with motif pairs at different spacings and test
-    if 10-11bp shows different predictions than other spacings.
+    Do the models see 10.5bp helical periodicity? BPNet found Nanog binding is
+    sensitive to it, so pairs at 10-11bp should read differently from the rest.
     """
     print("\n=== Experiment 2: Helical Periodicity Detection ===")
 
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    MOTIF = "GATAAG"  # GATA motif
+    MOTIF = "GATAAG"  # GATA
 
     rng = np.random.default_rng(42)
     bases = ['A', 'C', 'G', 'T']
 
-    # Create sequences with different spacings
-    spacings = list(range(5, 51, 1))  # 5bp to 50bp
+    spacings = list(range(5, 51, 1))  # 5 to 50bp
     sequences_by_spacing = {}
 
     n_per_spacing = 20
@@ -225,21 +205,18 @@ def experiment_2_helical_periodicity(model_name='dnabert2', output_dir='results/
     # Load model
     model = load_model(model_name, dataset_name='agarwal')
 
-    # Get predictions for each spacing
     print("  Getting predictions for each spacing...")
     predictions_by_spacing = {}
     for spacing, seqs in tqdm(sequences_by_spacing.items()):
         preds = model.predict_expression(seqs)
         predictions_by_spacing[spacing] = preds
 
-    # Analyze periodicity
     mean_preds = {s: float(np.mean(p)) for s, p in predictions_by_spacing.items()}
     std_preds = {s: float(np.std(p)) for s, p in predictions_by_spacing.items()}
 
-    # Check for 10.5bp periodicity
-    # Compare 10-11bp vs 15-16bp (half period away)
-    helical_spacings = [10, 11, 21, 22, 31, 32]  # Helical (n * 10.5)
-    non_helical_spacings = [15, 16, 26, 27, 36, 37]  # Non-helical
+    # 10-11bp vs 15-16bp, half a period away
+    helical_spacings = [10, 11, 21, 22, 31, 32]  # n * 10.5
+    non_helical_spacings = [15, 16, 26, 27, 36, 37]
 
     helical_preds = [p for s in helical_spacings if s in predictions_by_spacing
                      for p in predictions_by_spacing[s]]
@@ -248,7 +225,7 @@ def experiment_2_helical_periodicity(model_name='dnabert2', output_dir='results/
 
     t_stat, p_value = stats.ttest_ind(helical_preds, non_helical_preds)
 
-    # Autocorrelation to detect periodicity
+    # autocorrelation picks up the periodicity
     mean_series = [mean_preds[s] for s in sorted(mean_preds.keys())]
 
     results = {
@@ -284,19 +261,14 @@ def experiment_2_helical_periodicity(model_name='dnabert2', output_dir='results/
 
 def experiment_3_grammar_positive_analysis(output_dir='results/critique'):
     """
-    Deep dive into the ~10% of enhancers that DO show grammar.
-
-    Questions:
-    - What motifs are enriched?
-    - What's different about their sequence composition?
-    - Are they from specific genomic regions?
+    The ~10% of enhancers that do show grammar: which motifs are enriched, how
+    does their composition differ, do they come from particular regions?
     """
     print("\n=== Experiment 3: Grammar-Positive Deep Dive ===")
 
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Load classification results
     classification_files = list(Path('results/confirmatory').glob('*_enhancer_classification.json'))
 
     if not classification_files:
@@ -333,17 +305,14 @@ def experiment_3_grammar_positive_analysis(output_dir='results/critique'):
         print("  No grammar-positive enhancers found.")
         return None
 
-    # Analysis
     gp_gsi = [e['gsi'] for e in all_grammar_positive]
     bb_gsi = [e['gsi'] for e in all_billboard]
 
     gp_motifs = [e['n_motifs'] for e in all_grammar_positive]
     bb_motifs = [e['n_motifs'] for e in all_billboard]
 
-    # Statistical comparison
     t_motifs, p_motifs = stats.ttest_ind(gp_motifs, bb_motifs)
 
-    # Dataset distribution
     gp_datasets = defaultdict(int)
     for e in all_grammar_positive:
         gp_datasets[e['dataset']] += 1
@@ -386,15 +355,12 @@ def experiment_3_grammar_positive_analysis(output_dir='results/critique'):
 
 
 def experiment_4_bootstrap_confidence_intervals(output_dir='results/critique'):
-    """
-    Add bootstrap confidence intervals to key findings.
-    """
+    """Bootstrap confidence intervals on the headline numbers."""
     print("\n=== Experiment 4: Bootstrap Confidence Intervals ===")
 
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Load classification results
     classification_files = list(Path('results/confirmatory').glob('*_enhancer_classification.json'))
 
     results = {}
@@ -409,7 +375,6 @@ def experiment_4_bootstrap_confidence_intervals(output_dir='results/critique'):
         if not per_enhancer:
             continue
 
-        # Bootstrap the billboard percentage
         classifications = [r['classification'] for r in per_enhancer]
         n_bootstrap = 1000
         bootstrap_billboard_pcts = []
@@ -435,7 +400,6 @@ def experiment_4_bootstrap_confidence_intervals(output_dir='results/critique'):
 
         print(f"  {dataset}: {results[dataset]['billboard_pct']:.1f}% [{ci_lower:.1f}%, {ci_upper:.1f}%]")
 
-    # Overall bootstrap
     all_classifications = []
     for f in classification_files:
         with open(f) as file:
@@ -468,10 +432,8 @@ def experiment_4_bootstrap_confidence_intervals(output_dir='results/critique'):
 
 def experiment_5_mpra_grammar_variants(model_name='dnabert2', output_dir='results/critique'):
     """
-    Find natural pairs in MPRA data that differ primarily in motif arrangement.
-
-    This provides experimental validation if such pairs exist and have
-    measured expression differences.
+    Natural MPRA pairs differing mostly in arrangement. If they exist and their
+    measured expression differs, that is experimental support.
     """
     print("\n=== Experiment 5: Natural MPRA Grammar Variants ===")
 
@@ -494,26 +456,22 @@ def experiment_5_mpra_grammar_variants(model_name='dnabert2', output_dir='result
         df = pd.read_parquet(data_path)
         motif_df = pd.read_parquet(motif_path)
 
-        # Group motifs by sequence
         motif_groups = motif_df.groupby('seq_id')
 
-        # Create motif vocabulary signature for each sequence
         vocab_signatures = {}
         for seq_id in df['seq_id']:
             if seq_id in motif_groups.groups:
                 motifs = motif_groups.get_group(seq_id)
-                # Vocabulary = sorted list of motif names
+                # vocabulary is the sorted motif names
                 vocab = tuple(sorted(motifs['motif_name'].tolist()))
                 if vocab not in vocab_signatures:
                     vocab_signatures[vocab] = []
                 vocab_signatures[vocab].append(seq_id)
 
-        # Find pairs with same vocabulary
         same_vocab_pairs = []
         for vocab, seq_ids in vocab_signatures.items():
             if len(seq_ids) >= 2 and len(vocab) >= 2:
-                # Get expression values
-                for i, id1 in enumerate(seq_ids[:10]):  # Limit to first 10
+                for i, id1 in enumerate(seq_ids[:10]):  # first 10 only
                     for id2 in seq_ids[i+1:i+11]:
                         expr1 = df[df['seq_id'] == id1]['expression'].values[0]
                         expr2 = df[df['seq_id'] == id2]['expression'].values[0]
@@ -528,7 +486,6 @@ def experiment_5_mpra_grammar_variants(model_name='dnabert2', output_dir='result
                         })
 
         if same_vocab_pairs:
-            # Sort by expression difference
             same_vocab_pairs = sorted(same_vocab_pairs, key=lambda x: x['expr_diff'], reverse=True)
 
             expr_diffs = [p['expr_diff'] for p in same_vocab_pairs]
@@ -586,8 +543,7 @@ def main():
     print("\n=== All Critique Experiments Complete ===")
     print(f"Results saved to {args.output_dir}/")
 
-    # Summary
-    print("\n=== SUMMARY ===")
+    print("\n=== summary ===")
     if 'exp1' in results and results['exp1']:
         print(f"Exp 1 (Synthetic): {results['exp1']['interpretation']}")
     if 'exp2' in results and results['exp2']:

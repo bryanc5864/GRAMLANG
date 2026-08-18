@@ -70,15 +70,13 @@ def main():
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load data
     print(f"Loading {args.dataset}...")
     df, motif_annotations = load_dataset(args.dataset)
 
-    # Filter sequences with motifs
+    # need at least 2 motifs to rearrange anything
     valid_indices = [i for i, m in enumerate(motif_annotations) if len(m) >= 2]
     print(f"  {len(valid_indices)} sequences with >= 2 motifs")
 
-    # Subsample
     if len(valid_indices) > args.max_samples:
         valid_indices = np.random.choice(valid_indices, args.max_samples, replace=False)
     print(f"  Analyzing {len(valid_indices)} sequences")
@@ -86,7 +84,7 @@ def main():
     sequences = [df.iloc[i]['sequence'] for i in valid_indices]
     motifs = [motif_annotations[i] for i in valid_indices]
 
-    # Load or create model
+    # SFGN if we have one, else a foundation model
     if args.model_path and Path(args.model_path).exists():
         print(f"Loading model from {args.model_path}...")
         checkpoint = torch.load(args.model_path, map_location=device)
@@ -99,7 +97,6 @@ def main():
         print("  Using SFGN model for predictions")
     else:
         print("No SFGN model found, using foundation model directly...")
-        # Use existing model loader
         from src.models.model_loader import load_model
         foundation = load_model('dnabert2', dataset_name=args.dataset)
         use_sfgn = False
@@ -110,7 +107,7 @@ def main():
     results = {}
 
     if use_sfgn:
-        # Method 1: SFGN built-in decomposition
+        # SFGN built-in decomposition
         print("\nComputing SF-GSI with SFGN decomposition...")
         sfgn_result = compute_sf_gsi_with_sfgn(
             model, sequences, motifs, n_shuffles=args.n_shuffles
@@ -121,14 +118,13 @@ def main():
         print(f"  Mean α: {sfgn_result['mean_alpha']:.4f}")
         print(f"  Spacer contribution: {sfgn_result['spacer_contribution']:.4f}")
 
-        # Define predict function for SFGN
         def predict_fn(seqs, mots):
             model.eval()
             with torch.no_grad():
                 output = model(seqs, mots)
                 return output.prediction
 
-    # Method 2: Motif-only shuffles
+    # motif-only shuffles
     print("\nComputing SF-GSI with motif-only method...")
     motif_only_result = compute_sf_gsi(
         sequences, motifs, predict_fn,
@@ -148,7 +144,7 @@ def main():
     print(f"  SF-GSI: {motif_only_result.sf_gsi:.4f}")
     print(f"  Spacer contribution: {motif_only_result.spacer_contribution:.2%}")
 
-    # Method 3: Matched shuffles
+    # GC-matched shuffles
     print("\nComputing SF-GSI with matched method...")
     matched_result = compute_sf_gsi(
         sequences, motifs, predict_fn,
@@ -168,7 +164,7 @@ def main():
     print(f"  SF-GSI: {matched_result.sf_gsi:.4f}")
     print(f"  Spacer contribution: {matched_result.spacer_contribution:.2%}")
 
-    # Method 4: Regression
+    # regress the spacer effect out
     print("\nComputing SF-GSI with regression method...")
     try:
         regression_result = compute_sf_gsi(
@@ -192,7 +188,6 @@ def main():
         print(f"  Regression method failed: {e}")
         results['regression'] = {'error': str(e)}
 
-    # Summary
     print("\n" + "=" * 60)
     print("SUMMARY")
     print("=" * 60)
@@ -210,7 +205,7 @@ def main():
             spacer = res.get('spacer_contribution', 0)
             print(f"  {method:20s}: GSI={gsi:.4f}, SF-GSI={sf_gsi:.4f}, Spacer={spacer:.2%}")
 
-    # Save results (convert numpy types to Python floats)
+    # json cannot take numpy scalars
     def convert_to_serializable(obj):
         if isinstance(obj, dict):
             return {k: convert_to_serializable(v) for k, v in obj.items()}

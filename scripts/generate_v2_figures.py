@@ -1,4 +1,4 @@
-"""Generate publication-quality figures for GRAMLANG v2 results."""
+"""Figures for the GRAMLANG v2 results."""
 
 import json
 import numpy as np
@@ -66,13 +66,13 @@ def load_json(path):
 
 
 def fig1_gsi_corrected():
-    """Figure 1: v2 GSI Census with Corrected P-Values."""
+    """V2 GSI census with corrected p-values."""
     gsi = pd.read_parquet(os.path.join(RESULTS_V2, 'module1', 'all_gsi_results.parquet'))
 
     fig = plt.figure(figsize=(18, 14))
     gs = gridspec.GridSpec(3, 3, hspace=0.35, wspace=0.3)
 
-    # (A) GSI distribution by dataset (using gsi_robust to avoid outlier-dominated histograms)
+    # (A) gsi_robust here, raw GSI outliers swamp the histogram
     ax = fig.add_subplot(gs[0, 0])
     ds_order = ['klein', 'agarwal', 'jores', 'vaishnav', 'inoue']
     for ds in ds_order:
@@ -85,7 +85,7 @@ def fig1_gsi_corrected():
     ax.legend(fontsize=7)
     ax.set_xlim(0, 3)
 
-    # (B) Median GSI by dataset and model
+    # (B) median GSI by dataset and model
     ax = fig.add_subplot(gs[0, 1])
     models = ['dnabert2', 'nt', 'hyenadna']
     x = np.arange(len(ds_order))
@@ -118,7 +118,7 @@ def fig1_gsi_corrected():
     ax.legend(fontsize=8)
     ax.set_xlim(0, 5)
 
-    # (D) Significance rate by dataset×model
+    # (D) significance rate by dataset x model
     ax = fig.add_subplot(gs[1, 0])
     sig_rates = []
     labels_dm = []
@@ -138,7 +138,7 @@ def fig1_gsi_corrected():
     ax.set_title('(D) Significance by Dataset x Model')
     ax.legend(fontsize=7)
 
-    # (E) Cross-model agreement (Spearman rho heatmap)
+    # (E) cross-model agreement
     ax = fig.add_subplot(gs[1, 1])
     ds_for_corr = ['agarwal', 'jores', 'klein', 'vaishnav', 'inoue']
     model_pairs = [('dnabert2', 'nt'), ('dnabert2', 'hyenadna'), ('nt', 'hyenadna')]
@@ -169,7 +169,7 @@ def fig1_gsi_corrected():
         t.set_fontsize(9)
     ax.set_title('(F) Sources of GSI Variance (eta^2)')
 
-    # (G) Expression vs GSI by dataset
+    # (G) expression vs GSI
     ax = fig.add_subplot(gs[2, 0])
     for ds in ['agarwal', 'jores', 'klein']:
         sub = gsi[gsi['dataset'] == ds].groupby('seq_id').agg(
@@ -183,7 +183,7 @@ def fig1_gsi_corrected():
     ax.set_title('(G) Expression vs GSI')
     ax.legend(fontsize=7)
 
-    # (H) Motif count vs GSI
+    # (H) motif count vs GSI
     ax = fig.add_subplot(gs[2, 1])
     for ds in ['agarwal', 'jores', 'klein']:
         sub = gsi[gsi['dataset'] == ds].groupby('seq_id').agg(
@@ -214,14 +214,13 @@ def fig1_gsi_corrected():
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig1_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig1_gsi_census.png'))
     plt.close()
-    print("  v2 Fig 1: GSI census complete")
+    print("  v2 fig 1: GSI census done")
 
 
 def fig2_enformer():
-    """Figure 2: Enformer vs Foundation Model Comparison."""
+    """Enformer vs the foundation models."""
     gsi_all = pd.read_parquet(os.path.join(RESULTS_V2, 'module1', 'all_gsi_results.parquet'))
 
-    # Load Enformer files
     enformer_dfs = []
     for ds in ['agarwal', 'inoue', 'klein']:
         path = os.path.join(RESULTS_V2, 'module1', f'{ds}_enformer_gsi.parquet')
@@ -232,7 +231,7 @@ def fig2_enformer():
             enformer_dfs.append(edf)
 
     if not enformer_dfs:
-        print("  No Enformer data found, skipping Fig 2")
+        print("  no Enformer data, skipping fig 2")
         return
 
     enf = pd.concat(enformer_dfs, ignore_index=True)
@@ -243,7 +242,7 @@ def fig2_enformer():
     ds_labels_short = {'agarwal': 'Agarwal (K562)', 'inoue': 'Inoue (Neural)', 'klein': 'Klein (HepG2)'}
 
     for col, ds in enumerate(datasets):
-        # Top row: GSI comparison (foundation vs Enformer)
+        # top row: foundation vs Enformer
         ax = axes[0, col]
         for model in ['dnabert2', 'nt', 'hyenadna']:
             data = gsi_all[(gsi_all['dataset'] == ds) & (gsi_all['model'] == model)]['gsi_robust']
@@ -262,7 +261,7 @@ def fig2_enformer():
         ax.legend(fontsize=7)
         ax.set_xlim(0, 3)
 
-        # Bottom row: Enformer vs foundation model scatter
+        # bottom row: scatter
         ax = axes[1, col]
         enf_ds = enf[enf['dataset'] == ds].set_index('seq_id')
         gsi_col = 'gsi_robust' if 'gsi_robust' in enf_ds.columns else 'gsi'
@@ -278,7 +277,6 @@ def fig2_enformer():
         ax.set_ylabel('Foundation Model GSI')
         ax.set_title(f'({"DEF"[col]}) Enformer vs FM: {ds}')
         ax.legend(fontsize=7)
-        # Add diagonal
         lims = [0, max(ax.get_xlim()[1], ax.get_ylim()[1])]
         ax.plot(lims, lims, ':', color='gray', alpha=0.3)
 
@@ -287,14 +285,14 @@ def fig2_enformer():
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig2_enformer.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig2_enformer.png'))
     plt.close()
-    print("  v2 Fig 2: Enformer comparison complete")
+    print("  v2 fig 2: Enformer comparison done")
 
 
 def fig3_anova_decomposition():
-    """Figure 3: ANOVA Variance Decomposition - Vocabulary vs Grammar."""
+    """ANOVA variance decomposition, vocabulary vs grammar."""
     fig, axes = plt.subplots(1, 3, figsize=(18, 5.5))
 
-    # (A) ANOVA eta-squared by dataset
+    # (A) eta-squared by dataset
     ax = axes[0]
     datasets = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
     vocab_eta2 = [0.111, 0.086, 0.083, 0.121, 0.224]
@@ -309,7 +307,7 @@ def fig3_anova_decomposition():
     ax.set_title('(A) Vocabulary vs Grammar: ANOVA')
     ax.legend()
 
-    # (B) Information-theoretic decomposition
+    # (B) information-theoretic decomposition
     ax = axes[1]
     datasets_info = ['agarwal', 'klein', 'inoue', 'vaishnav', 'jores']
     vocab_r2 = [0.053, 0.064, 0.086, 0.000, 0.000]
@@ -326,7 +324,7 @@ def fig3_anova_decomposition():
     ax.set_title('(B) Information-Theoretic Decomposition')
     ax.legend(fontsize=7)
 
-    # (C) Grammar completeness ceiling
+    # (C) completeness ceiling
     ax = axes[2]
     ds_comp = ['agarwal', 'klein', 'vaishnav', 'jores', 'inoue']
     completeness = [17.3, 14.5, 11.3, 12.5, 7.0]
@@ -348,14 +346,14 @@ def fig3_anova_decomposition():
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig3_anova.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig3_anova.png'))
     plt.close()
-    print("  v2 Fig 3: ANOVA decomposition complete")
+    print("  v2 fig 3: ANOVA decomposition done")
 
 
 def fig4_transfer_phylogeny():
-    """Figure 4: Cross-Species Transfer & Distributional Analysis."""
+    """Cross-species transfer and distributional analysis."""
     fig, axes = plt.subplots(1, 3, figsize=(18, 5.5))
 
-    # (A) Transfer distance matrix
+    # (A) transfer distance matrix
     ax = axes[0]
     species = ['Human', 'Yeast', 'Plant']
     dist_matrix = np.array([[0, 1.0, 1.0], [1.0, 0, 1.0], [1.0, 1.0, 0]])
@@ -364,7 +362,7 @@ def fig4_transfer_phylogeny():
                 cbar_kws={'label': 'Grammar Distance'})
     ax.set_title('(A) Grammar Phylogeny (Distance)')
 
-    # (B) Distributional transfer - Cohen's d
+    # (B) distributional transfer, Cohen's d
     ax = axes[1]
     pairs = ['Hum-Plant', 'Hum-Yeast', 'Plant-Yeast']
     spacing_d = [3.56, 11.32, 5.20]
@@ -380,7 +378,7 @@ def fig4_transfer_phylogeny():
     ax.legend()
     ax.axhline(y=0.8, color='gray', linestyle=':', alpha=0.5, label='Large effect')
 
-    # (C) Within vs cross-species GSI similarity
+    # (C) within vs cross-species GSI
     ax = axes[2]
     categories = ['Within-\nspecies', 'Cross-\nspecies']
     means = [0.955, 1.888]
@@ -400,21 +398,21 @@ def fig4_transfer_phylogeny():
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig4_transfer.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig4_transfer.png'))
     plt.close()
-    print("  v2 Fig 4: Transfer & phylogeny complete")
+    print("  v2 fig 4: transfer and phylogeny done")
 
 
 def fig5_biophysics_corrected():
-    """Figure 5: Corrected Biophysics with gsi_robust."""
+    """Biophysics rerun on gsi_robust."""
     fig, axes = plt.subplots(1, 3, figsize=(18, 5.5))
 
-    # (A) R² comparison: raw vs robust
+    # (A) R² raw vs robust
     ax = axes[0]
     datasets = ['Jores\n(Plant)', 'Klein\n(HepG2)', 'Vaishnav\n(Yeast)', 'Agarwal\n(K562)', 'Inoue\n(Neural)']
     r2_raw = [0.792, -19.14, 0.197, -9.56, -0.573]
     r2_robust = [0.789, 0.375, 0.218, 0.062, -0.488]
     x = np.arange(len(datasets))
     width = 0.35
-    # Clip raw for display
+    # clip raw so the bars stay readable
     r2_raw_clip = [max(r, -1.0) for r in r2_raw]
     ax.bar(x - width/2, r2_raw_clip, width, label='Raw GSI (broken)', color='#e74c3c', alpha=0.5)
     ax.bar(x + width/2, r2_robust, width, label='gsi_robust (corrected)', color='#2ecc71', alpha=0.85,
@@ -433,9 +431,8 @@ def fig5_biophysics_corrected():
     ax.set_ylim(-1.1, 1.0)
     ax.axhline(y=0, color='black', linewidth=0.5)
 
-    # (B) Top features for corrected analysis
+    # (B) top features
     ax = axes[1]
-    # Load corrected results
     feature_data = {}
     for ds in ['jores', 'klein', 'vaishnav', 'agarwal']:
         path = os.path.join(RESULTS_V2, 'module5', f'{ds}_biophysics_robust.json')
@@ -443,14 +440,12 @@ def fig5_biophysics_corrected():
             feature_data[ds] = load_json(path)['feature_importances']
 
     if feature_data:
-        # Get top features across all datasets
         all_features = {}
         for ds, imps in feature_data.items():
             for feat, val in list(imps.items())[:5]:
                 if feat not in all_features:
                     all_features[feat] = {}
                 all_features[feat][ds] = val
-        # Sort by max importance
         top_feats = sorted(all_features.keys(), key=lambda f: max(all_features[f].values()), reverse=True)[:8]
         y_pos = np.arange(len(top_feats))
         bar_width = 0.2
@@ -466,7 +461,7 @@ def fig5_biophysics_corrected():
         ax.legend(fontsize=7)
         ax.invert_yaxis()
 
-    # (C) Biophysics R² ranking
+    # (C) R² ranking
     ax = axes[2]
     ds_names = ['Jores', 'Klein', 'Vaishnav', 'Agarwal', 'Inoue']
     r2_values = [0.789, 0.375, 0.218, 0.062, -0.488]
@@ -486,14 +481,14 @@ def fig5_biophysics_corrected():
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig5_biophysics.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig5_biophysics.png'))
     plt.close()
-    print("  v2 Fig 5: Biophysics corrected complete")
+    print("  v2 fig 5: biophysics done")
 
 
 def fig6_compositionality():
-    """Figure 6: Non-Compositionality & Epistasis."""
+    """Non-compositionality and epistasis."""
     fig, axes = plt.subplots(1, 3, figsize=(18, 5.5))
 
-    # (A) Compositionality gap (from v2 module 3)
+    # (A) compositionality gap, from v2 module 3
     ax = axes[0]
     k_vals = [3, 4, 5, 6]
     gaps = [0.992, 0.989, 0.986, 0.989]
@@ -510,7 +505,7 @@ def fig6_compositionality():
     ax.text(0.5, 0.15, 'Gap = 0.989\n(constant)', transform=ax.transAxes,
             ha='center', fontsize=10, bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
 
-    # (B) Compositionality v2: additive vs non-additive
+    # (B) additive vs non-additive
     ax = axes[1]
     categories = ['Non-additive\n(epistatic)', 'Additive', 'Intermediate']
     fractions = [77.5, 6.7, 15.8]
@@ -524,9 +519,9 @@ def fig6_compositionality():
         t.set_fontweight('bold')
     ax.set_title('(B) Motif Pair Interaction Types')
 
-    # (C) Compositionality score distribution (simulated from summary stats)
+    # (C) score distribution, simulated from the summary stats
     ax = axes[2]
-    # Mean = 0.163, median = 0.0, meaning heavy left-skew
+    # mean 0.163 with median 0.0, so heavy left skew
     np.random.seed(42)
     comp_scores = np.concatenate([
         np.zeros(500),  # ~50% at zero
@@ -547,21 +542,20 @@ def fig6_compositionality():
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig6_compositionality.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig6_compositionality.png'))
     plt.close()
-    print("  v2 Fig 6: Compositionality complete")
+    print("  v2 fig 6: compositionality done")
 
 
 def fig7_attention_grammar():
-    """Figure 7: Attention-Based Grammar in NT v2-500M."""
+    """Attention-based grammar in NT v2-500M."""
     fig, axes = plt.subplots(1, 3, figsize=(18, 5.5))
 
-    # Load attention data
     attn_path = os.path.join(RESULTS_V2, 'attention', 'agarwal_nt_grammar_heads.json')
     if not os.path.exists(attn_path):
-        print("  No attention data found, skipping Fig 7")
+        print("  no attention data, skipping fig 7")
         return
     attn = load_json(attn_path)
 
-    # (A) Grammar heads per layer
+    # (A) grammar heads per layer
     ax = axes[0]
     grammar_heads = attn.get('grammar_heads', [])
     if grammar_heads:
@@ -579,7 +573,7 @@ def fig7_attention_grammar():
     else:
         ax.text(0.5, 0.5, 'No grammar head data', transform=ax.transAxes, ha='center')
 
-    # (B) Enrichment distribution
+    # (B) enrichment distribution
     ax = axes[1]
     if grammar_heads:
         ax.hist(enrichments, bins=30, color='coral', alpha=0.7, edgecolor='black', linewidth=0.3)
@@ -590,7 +584,7 @@ def fig7_attention_grammar():
         ax.set_title('(B) Enrichment Distribution')
         ax.legend()
 
-    # (C) Summary statistics
+    # (C) summary stats
     ax = axes[2]
     ax.axis('off')
     total_heads = attn.get('total_heads', 464)
@@ -621,15 +615,15 @@ def fig7_attention_grammar():
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig7_attention.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig7_attention.png'))
     plt.close()
-    print("  v2 Fig 7: Attention grammar complete")
+    print("  v2 fig 7: attention grammar done")
 
 
 def fig8_grand_summary():
-    """Figure 8: Grand Summary of all v2 Findings."""
+    """Everything v2 on one page."""
     fig = plt.figure(figsize=(20, 14))
     gs = gridspec.GridSpec(3, 4, hspace=0.4, wspace=0.35)
 
-    # (A) Key numbers as table
+    # (A) key numbers
     ax = fig.add_subplot(gs[0, 0])
     ax.axis('off')
     table_data = [
@@ -659,7 +653,7 @@ def fig8_grand_summary():
         cell.set_edgecolor('#cccccc')
     ax.set_title('(A) GRAMLANG v2 Summary')
 
-    # (B) GSI by dataset (bar)
+    # (B) GSI by dataset
     ax = fig.add_subplot(gs[0, 1])
     ds_names = ['Klein', 'Agarwal', 'Jores', 'Vaishnav', 'Inoue']
     median_gsi = [0.611, 0.328, 0.118, 0.084, 0.044]
@@ -673,7 +667,7 @@ def fig8_grand_summary():
     ax.set_title('(B) Grammar by Dataset')
     ax.tick_params(axis='x', rotation=30, labelsize=8)
 
-    # (C) P-value correction cascade
+    # (C) p-value correction cascade
     ax = fig.add_subplot(gs[0, 2])
     stages = ['v1 F-test', 'z-score\n(p<0.05)', 'FDR\n(q<0.05)']
     pcts = [100, 8.3, 0.17]
@@ -684,7 +678,7 @@ def fig8_grand_summary():
     ax.set_title('(C) Significance Cascade')
     ax.set_ylim(0, 115)
 
-    # (D) Vocab vs Grammar eta^2
+    # (D) vocab vs grammar eta^2
     ax = fig.add_subplot(gs[0, 3])
     vocab = [0.111, 0.086, 0.083, 0.121, 0.224]
     gram = [0.000, 0.014, 0.000, 0.016, 0.000]
@@ -695,7 +689,7 @@ def fig8_grand_summary():
     ax.set_title('(D) ANOVA: Vocab >> Grammar')
     ax.legend(fontsize=7)
 
-    # (E) Transfer matrix
+    # (E) transfer matrix
     ax = fig.add_subplot(gs[1, 0])
     matrix = np.array([[0, 1, 1], [1, 0, 1], [1, 1, 0]])
     sns.heatmap(matrix, xticklabels=['Human', 'Yeast', 'Plant'],
@@ -703,7 +697,7 @@ def fig8_grand_summary():
                 annot=True, fmt='.0f', cmap='YlOrRd', vmin=0, vmax=1, ax=ax)
     ax.set_title('(E) Grammar Distance')
 
-    # (F) Biophysics R² (corrected)
+    # (F) biophysics R²
     ax = fig.add_subplot(gs[1, 1])
     ds_bio = ['Jores', 'Klein', 'Vaishnav', 'Agarwal']
     r2_bio = [0.789, 0.375, 0.218, 0.062]
@@ -716,7 +710,7 @@ def fig8_grand_summary():
     ax.set_title('(F) Biophysics (Corrected)')
     ax.invert_yaxis()
 
-    # (G) Compositionality
+    # (G) compositionality
     ax = fig.add_subplot(gs[1, 2])
     wedges, _, autotexts = ax.pie(
         [77.5, 6.7, 15.8], labels=['Non-additive', 'Additive', 'Other'],
@@ -724,7 +718,7 @@ def fig8_grand_summary():
         startangle=90, explode=(0.05, 0, 0))
     ax.set_title('(G) Compositionality v2')
 
-    # (H) Attention heads
+    # (H) attention heads
     ax = fig.add_subplot(gs[1, 3])
     ax.bar(['Grammar\nHeads', 'Non-Grammar\nHeads'], [101, 363],
            color=['#e74c3c', '#bdc3c7'], edgecolor='black', linewidth=0.5)
@@ -744,7 +738,7 @@ def fig8_grand_summary():
     ax.set_title('(I) Enformer Agreement')
     ax.tick_params(axis='x', rotation=15, labelsize=8)
 
-    # (J) Grammar potential
+    # (J) grammar potential
     ax = fig.add_subplot(gs[2, 1])
     ds_pot = ['Vaishnav', 'Jores', 'Klein', 'Inoue', 'Agarwal']
     potential = [5.598, 2.002, 0.828, 0.761, 0.449]
@@ -758,7 +752,7 @@ def fig8_grand_summary():
     ax.set_title('(J) Untapped Potential')
     ax.tick_params(axis='x', rotation=30, labelsize=7)
 
-    # (K) Completeness
+    # (K) completeness
     ax = fig.add_subplot(gs[2, 2])
     ds_c = ['Aga', 'Kle', 'Jor', 'Vai', 'deA']
     comp = [17.3, 14.5, 12.5, 11.3, 7.0]
@@ -769,7 +763,7 @@ def fig8_grand_summary():
     ax.set_title('(K) Grammar Completeness')
     ax.legend(fontsize=7)
 
-    # (L) Key conclusions as table
+    # (L) key conclusions
     ax = fig.add_subplot(gs[2, 3])
     ax.axis('off')
     concl_data = [
@@ -800,11 +794,11 @@ def fig8_grand_summary():
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig8_summary.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'v2_fig8_summary.png'))
     plt.close()
-    print("  v2 Fig 8: Grand summary complete")
+    print("  v2 fig 8: grand summary done")
 
 
 if __name__ == '__main__':
-    print("Generating v2 publication figures...")
+    print("generating v2 figures...")
     print()
     fig1_gsi_corrected()
     fig2_enformer()
@@ -816,7 +810,7 @@ if __name__ == '__main__':
     fig8_grand_summary()
 
     print(f"\nAll v2 figures saved to {FIGURES_DIR}/")
-    print("Files generated:")
+    print("files generated:")
     for f in sorted(os.listdir(FIGURES_DIR)):
         size = os.path.getsize(os.path.join(FIGURES_DIR, f))
         print(f"  {f}: {size/1024:.1f} KB")

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-collect_v2_results.py  --  Collect and summarize all v2 pipeline results.
+Collect and summarize the v2 pipeline results.
 
-Run AFTER the v2 pipeline completes (or partially completes).
-Produces:
-  - results/v2/v2_results_summary.json  (machine-readable)
-  - Formatted report to stdout
+Run after the v2 pipeline finishes, or part-way through. Writes
+results/v2/v2_results_summary.json and prints a formatted report.
 
 Usage:
     conda run -n gramlang python scripts/collect_v2_results.py
@@ -22,9 +20,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-# ---------------------------------------------------------------------------
-# Paths
-# ---------------------------------------------------------------------------
+# paths
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 RESULTS_DIR = PROJECT_DIR / "results"
 V1_DIR = RESULTS_DIR  # v1 results are at results/module1-6/
@@ -36,9 +32,7 @@ ALL_MODELS = FOUNDATION_MODELS + ["enformer"]
 
 OUTPUT_JSON = V2_DIR / "v2_results_summary.json"
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+# helpers
 
 def safe_load_json(path):
     """Load a JSON file, returning None on failure."""
@@ -98,9 +92,7 @@ def sub_header(title, char="-", width=60):
     print(f"  {char * 4} {title} {char * 4}")
 
 
-# ---------------------------------------------------------------------------
-# Module 1: GSI Census
-# ---------------------------------------------------------------------------
+# module 1: gsi census
 
 def collect_module1():
     """Collect v1 and v2 Module 1 (GSI Census) results."""
@@ -111,7 +103,7 @@ def collect_module1():
         "comparison": None,
     }
 
-    # --- v1 ---
+    # v1
     v1_summary = safe_load_json(V1_DIR / "module1" / "gsi_summary.json")
     v1_gsi = safe_read_parquet(V1_DIR / "module1" / "all_gsi_results.parquet")
     if v1_summary is not None:
@@ -122,12 +114,11 @@ def collect_module1():
             "overall_median_gsi": safe_float(v1_gsi["gsi"].median()) if v1_gsi is not None else None,
         }
 
-    # --- v2 ---
+    # v2
     v2_dir = V2_DIR / "module1"
     if not v2_dir.exists():
         return result
 
-    # Discover available parquet files
     v2_parquets = sorted(v2_dir.glob("*_gsi.parquet"))
     v2_parquets = [p for p in v2_parquets if p.name != "all_gsi_results.parquet"]
 
@@ -136,7 +127,6 @@ def collect_module1():
 
     result["status"] = "complete"
 
-    # Load individual files and combine
     frames = []
     file_inventory = {}
     for pq in v2_parquets:
@@ -159,7 +149,7 @@ def collect_module1():
         "overall_median_gsi": safe_float(v2_gsi["gsi"].median()),
     }
 
-    # Per-dataset summary
+    # per-dataset summary
     per_dataset = {}
     for ds in v2_gsi["dataset"].unique():
         ds_data = v2_gsi[v2_gsi["dataset"] == ds]
@@ -173,7 +163,7 @@ def collect_module1():
         }
     result["v2"]["per_dataset"] = per_dataset
 
-    # Per-model summary
+    # per-model summary
     if "model" in v2_gsi.columns:
         per_model = {}
         for model in v2_gsi["model"].unique():
@@ -185,11 +175,11 @@ def collect_module1():
             }
         result["v2"]["per_model"] = per_model
 
-    # Load p-value correction summary
+
     pval_correction = safe_load_json(v2_dir / "p_value_correction_summary.json")
     if pval_correction is not None:
         result["v2"]["p_value_correction"] = pval_correction
-        # Compute overall corrected significance rate
+        # overall corrected significance rate
         total_sig = sum(v.get("n_sig", 0) for v in pval_correction.values())
         total_n = sum(v.get("n_sig", 0) / v["frac_sig"]
                       if v.get("frac_sig", 0) > 0 else 0
@@ -199,7 +189,7 @@ def collect_module1():
         median_frac_sig = np.median([v.get("frac_sig", 0) for v in pval_correction.values()])
         result["v2"]["median_frac_significant_per_combo"] = safe_float(median_frac_sig)
 
-    # Load extended analysis
+
     v2_analysis = safe_load_json(v2_dir / "v2_gsi_analysis.json")
     if v2_analysis is not None:
         result["v2"]["extended_analysis"] = {
@@ -213,15 +203,15 @@ def collect_module1():
             "expression_vs_gsi_summary": v2_analysis.get("expression_vs_gsi_summary"),
         }
 
-    # Cross-dataset validation
+    # cross-dataset validation
     cross_val = safe_load_json(v2_dir / "cross_dataset_validation.json")
     if cross_val is not None:
         result["v2"]["cross_dataset_validation_available"] = True
 
-    # --- v1 vs v2 comparison ---
+    # v1 vs v2 comparison
     if result["v1"] is not None and v1_gsi is not None:
         comp = {}
-        # Overall GSI shift
+        # overall GSI shift
         v1_mean = v1_gsi["gsi"].mean()
         v2_mean = v2_gsi["gsi"].mean()
         comp["gsi_mean_v1"] = safe_float(v1_mean)
@@ -234,12 +224,12 @@ def collect_module1():
         comp["sample_size_v1"] = int(len(v1_gsi))
         comp["sample_size_v2"] = int(len(v2_gsi))
 
-        # v1 significance was 100% (artifact); v2 has corrected p-values
+        # v1 significance was 100%, an artifact; v2 has corrected p-values
         comp["v1_frac_significant_uncorrected"] = 1.0
         if "corrected_frac_significant" in result["v2"]:
             comp["v2_frac_significant_corrected"] = result["v2"]["corrected_frac_significant"]
 
-        # Per-dataset GSI comparison
+        # per-dataset GSI comparison
         per_ds_comp = {}
         for ds in DATASETS:
             v1_ds = v1_summary.get(ds, {}) if v1_summary else {}
@@ -259,9 +249,7 @@ def collect_module1():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Module 2: Grammar Rules
-# ---------------------------------------------------------------------------
+# module 2: grammar rules
 
 def collect_module2():
     """Collect v1 and v2 Module 2 (Grammar Rules) results."""
@@ -272,7 +260,7 @@ def collect_module2():
         "comparison": None,
     }
 
-    # --- v1 ---
+    # v1
     v1_consensus = safe_load_json(V1_DIR / "module2" / "global_consensus.json")
     v1_rules = safe_read_parquet(V1_DIR / "module2" / "grammar_rules_database.parquet")
     if v1_consensus is not None:
@@ -285,7 +273,7 @@ def collect_module2():
             v1_info["mean_fold_change"] = safe_float(v1_rules["fold_change"].mean())
             v1_info["mean_spacing_sensitivity"] = safe_float(v1_rules["spacing_sensitivity"].mean())
             v1_info["mean_orientation_sensitivity"] = safe_float(v1_rules["orientation_sensitivity"].mean())
-            # Orientation bias
+            # orientation bias
             if "optimal_orientation" in v1_rules.columns:
                 orient_counts = v1_rules["optimal_orientation"].value_counts()
                 v1_info["orientation_distribution"] = {
@@ -297,7 +285,7 @@ def collect_module2():
                 )
         result["v1"] = v1_info
 
-    # v1 rules analysis (from v2 directory)
+    # v1 rules analysis, stored under the v2 directory
     v1_rules_analysis = safe_load_json(V2_DIR / "v1_rules_analysis.json")
     if v1_rules_analysis is not None and result["v1"] is not None:
         result["v1"]["v1_rules_analysis_available"] = True
@@ -305,7 +293,7 @@ def collect_module2():
             "unique_motifs_union"
         )
 
-    # --- v2 ---
+    # v2
     v2_dir = V2_DIR / "module2"
     if not v2_dir.exists():
         return result
@@ -344,7 +332,7 @@ def collect_module2():
             v2_info["plus_plus_fraction"] = safe_float(
                 plus_plus / len(v2_rules) if len(v2_rules) > 0 else 0
             )
-        # Per-dataset rule counts
+        # per-dataset rule counts
         if "dataset" in v2_rules.columns:
             per_ds = {}
             for ds in v2_rules["dataset"].unique():
@@ -363,7 +351,7 @@ def collect_module2():
 
     result["v2"] = v2_info
 
-    # --- Comparison ---
+    # comparison
     if result["v1"] is not None and result["v2"] is not None:
         comp = {}
         for key in ["n_rules_total", "mean_consensus", "mean_orientation_agreement",
@@ -387,9 +375,7 @@ def collect_module2():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Module 3: Compositionality
-# ---------------------------------------------------------------------------
+# module 3: compositionality
 
 def collect_module3():
     """Collect v1 and v2 Module 3 (Compositionality) results."""
@@ -400,7 +386,7 @@ def collect_module3():
         "comparison": None,
     }
 
-    # --- v1 ---
+    # v1
     v1_class = safe_load_json(V1_DIR / "module3" / "complexity_classification.json")
     v1_comp = safe_read_parquet(V1_DIR / "module3" / "compositionality_results.parquet")
     if v1_class is not None:
@@ -414,7 +400,7 @@ def collect_module3():
             v1_info["n_tests"] = int(len(v1_comp))
             v1_info["overall_mean_gap"] = safe_float(v1_comp["compositionality_gap"].mean())
             v1_info["overall_mean_r2"] = safe_float(v1_comp["pairwise_r2"].mean())
-            # Per-k breakdown
+            # per-k breakdown
             if "n_motifs" in v1_comp.columns:
                 per_k = {}
                 for k in sorted(v1_comp["n_motifs"].unique()):
@@ -427,7 +413,7 @@ def collect_module3():
                 v1_info["per_k"] = per_k
         result["v1"] = v1_info
 
-    # --- v2 ---
+    # v2
     v2_dir = V2_DIR / "module3"
     if not v2_dir.exists():
         return result
@@ -465,7 +451,7 @@ def collect_module3():
 
     result["v2"] = v2_info
 
-    # --- Comparison ---
+    # comparison
     if result["v1"] is not None and result["v2"] is not None:
         comp = {}
         comp["classification_v1"] = result["v1"].get("classification")
@@ -480,9 +466,7 @@ def collect_module3():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Module 4: Cross-Species Transfer
-# ---------------------------------------------------------------------------
+# module 4: cross-species transfer
 
 def collect_module4():
     """Collect v1 and v2 Module 4 (Transfer) results."""
@@ -493,7 +477,7 @@ def collect_module4():
         "comparison": None,
     }
 
-    # --- v1 ---
+    # v1
     v1_phylo = safe_load_json(V1_DIR / "module4" / "grammar_phylogeny.json")
     v1_transfer = safe_read_parquet(V1_DIR / "module4" / "transfer_matrix.parquet")
     if v1_transfer is not None:
@@ -501,14 +485,14 @@ def collect_module4():
             "n_entries": int(len(v1_transfer)),
             "species_list": v1_phylo.get("species_list", []) if v1_phylo else [],
         }
-        # Transfer R2 matrix
+        # transfer R2 matrix
         transfer_dict = {}
         for _, row in v1_transfer.iterrows():
             key = f"{row['source']}_to_{row['target']}"
             transfer_dict[key] = safe_float(row.get("transfer_r2", row.get("transfer_corr", 0)))
         v1_info["transfer_r2"] = transfer_dict
 
-        # Within vs cross species
+        # within vs cross species
         within = v1_transfer[v1_transfer["source"] == v1_transfer["target"]]["transfer_r2"]
         cross = v1_transfer[v1_transfer["source"] != v1_transfer["target"]]["transfer_r2"]
         v1_info["mean_within_r2"] = safe_float(within.mean())
@@ -516,7 +500,7 @@ def collect_module4():
 
         result["v1"] = v1_info
 
-    # --- v2 ---
+    # v2
     v2_dir = V2_DIR / "module4"
     if not v2_dir.exists():
         return result
@@ -550,7 +534,7 @@ def collect_module4():
 
     result["v2"] = v2_info
 
-    # --- Comparison ---
+    # comparison
     if result["v1"] is not None and result["v2"] is not None:
         result["comparison"] = {
             "v1_mean_within_r2": result["v1"].get("mean_within_r2"),
@@ -564,9 +548,7 @@ def collect_module4():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Module 5: Biophysics Decomposition
-# ---------------------------------------------------------------------------
+# module 5: biophysics decomposition
 
 def collect_module5():
     """Collect v1 and v2 Module 5 (Biophysics) results."""
@@ -577,7 +559,7 @@ def collect_module5():
         "comparison": None,
     }
 
-    # --- v1 ---
+    # v1
     v1_biophysics = {}
     for ds in DATASETS:
         bio = safe_load_json(V1_DIR / "module5" / f"{ds}_biophysics.json")
@@ -607,7 +589,7 @@ def collect_module5():
                 "improvement": safe_float(v1_structure.get("improvement")),
             }
 
-    # --- v2 ---
+    # v2
     v2_dir = V2_DIR / "module5"
     if not v2_dir.exists():
         return result
@@ -627,10 +609,10 @@ def collect_module5():
                                    default=None) if bio.get("feature_importances") else None,
             }
 
-    # Also check for a combined biophysics.json
+    # there may also be a combined biophysics.json
     combined_bio = safe_load_json(v2_dir / "biophysics.json")
     if combined_bio is not None and not v2_biophysics:
-        # Combined file might contain per-dataset results
+        # the combined file may hold per-dataset results
         if isinstance(combined_bio, dict):
             for ds in DATASETS:
                 if ds in combined_bio:
@@ -650,11 +632,11 @@ def collect_module5():
                    if v.get("biophysics_r2") is not None]
         result["v2"]["mean_biophysics_r2"] = safe_float(np.mean(r2_vals)) if r2_vals else None
 
-    # Check for phase diagrams
+    # phase diagrams
     phase_diagrams = list(v2_dir.glob("*_phase_diagram.json"))
     result["v2"]["n_phase_diagrams"] = len(phase_diagrams)
 
-    # --- Comparison ---
+    # comparison
     if result["v1"] is not None and v2_biophysics:
         comp = {}
         for ds in DATASETS:
@@ -672,9 +654,7 @@ def collect_module5():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Module 6: Grammar Completeness
-# ---------------------------------------------------------------------------
+# module 6: grammar completeness
 
 def collect_module6():
     """Collect v1 and v2 Module 6 (Completeness) results."""
@@ -685,7 +665,7 @@ def collect_module6():
         "comparison": None,
     }
 
-    # --- v1 ---
+    # v1
     v1_completeness = {}
     for ds in DATASETS:
         comp = safe_load_json(V1_DIR / "module6" / f"{ds}_completeness.json")
@@ -717,7 +697,7 @@ def collect_module6():
             ),
         }
 
-    # --- v2 ---
+    # v2
     v2_dir = V2_DIR / "module6"
     if not v2_dir.exists():
         return result
@@ -742,7 +722,7 @@ def collect_module6():
                 "n_samples": comp.get("n_samples"),
             }
 
-    # Also check combined completeness.json
+    # there may also be a combined completeness.json
     combined = safe_load_json(v2_dir / "completeness.json")
     if combined is not None and not v2_completeness:
         if isinstance(combined, dict):
@@ -769,7 +749,7 @@ def collect_module6():
         ),
     }
 
-    # --- Comparison ---
+    # comparison
     if result["v1"] is not None and result["v2"] is not None:
         comp = {}
         for ds in DATASETS:
@@ -793,15 +773,13 @@ def collect_module6():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Phase 2: New Experiments
-# ---------------------------------------------------------------------------
+# phase 2: new experiments
 
 def collect_experiment_b():
     """Experiment B: Synthetic Grammar Probes."""
     exp_dir = V2_DIR / "experiments" / "experiment_b"
     if not exp_dir.exists():
-        # Also check the alternate path used by the pipeline
+        # the pipeline also writes to an alternate path
         exp_dir = V2_DIR / "experiment_b"
     if not exp_dir.exists():
         return {"status": "not_found"}
@@ -828,7 +806,7 @@ def collect_experiment_b():
         "parquet_sizes": parquets,
     }
 
-    # Aggregate key metrics across all summaries
+    # aggregate the key metrics
     all_confirm_rates = []
     for key, s in summaries.items():
         if s and "confirmation_rate" in s:
@@ -870,7 +848,7 @@ def collect_experiment_e():
         "n_datasets": len(info_files),
     }
 
-    # Aggregate
+    # aggregate
     grammar_infos = [v["grammar_information"] for v in info_files.values()
                      if v.get("grammar_information") is not None]
     if grammar_infos:
@@ -962,9 +940,7 @@ def collect_experiment_g():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Phase 3: Redesigned Tests
-# ---------------------------------------------------------------------------
+# phase 3: redesigned tests
 
 def collect_phase3_compositionality_v2():
     """Phase 3: Redesigned Compositionality (enhancer-specific)."""
@@ -1051,7 +1027,7 @@ def collect_phase3_attention():
                 "total_heads": data.get("total_heads"),
             }
 
-    # Aggregate
+    # aggregate
     total_grammar_heads = sum(
         v.get("n_grammar_heads", 0) for v in result["per_analysis"].values()
         if v.get("n_grammar_heads") is not None
@@ -1092,7 +1068,7 @@ def collect_phase3_anova():
         "n_datasets": len(anova_files),
     }
 
-    # Aggregates
+    # aggregates
     vocab_eta2 = [v["eta2_vocabulary"] for v in anova_files.values()
                   if v.get("eta2_vocabulary") is not None]
     grammar_eta2 = [v["grammar_total_eta2"] for v in anova_files.values()
@@ -1108,9 +1084,7 @@ def collect_phase3_anova():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Pipeline Completion Status
-# ---------------------------------------------------------------------------
+# pipeline completion status
 
 def check_completion_status():
     """Check which result directories exist and have content."""
@@ -1170,17 +1144,15 @@ def check_completion_status():
     return status
 
 
-# ---------------------------------------------------------------------------
-# Report Printer
-# ---------------------------------------------------------------------------
+# report printer
 
 def print_report(summary):
     """Print a formatted report to stdout."""
-    section_header("GRAMLANG v2 PIPELINE RESULTS REPORT")
+    section_header("GRAMLANG v2 pipeline results")
     print(f"  Generated: {summary['metadata']['timestamp']}")
     print(f"  Project:   {summary['metadata']['project_dir']}")
 
-    # --- Completion Status ---
+    # completion status
     section_header("1. PIPELINE COMPLETION STATUS")
     completion = summary["completion_status"]
     n_complete = sum(1 for v in completion.values() if v["status"] == "COMPLETE")
@@ -1200,7 +1172,7 @@ def print_report(summary):
         path_str = info.get("path", "")
         print(f"  {name:<28s} {marker:<10s} {info['n_files']:<8d} {path_str}")
 
-    # --- Module 1 ---
+    # module 1
     m1 = summary.get("module1", {})
     section_header("2. MODULE 1: GSI CENSUS")
     if m1.get("status") == "not_found":
@@ -1229,7 +1201,7 @@ def print_report(summary):
                 print(f"  ANOVA model eta2:       {fmt_float(model_eta2)}")
                 print(f"  Dominant factor:        {anova.get('dominant_factor', 'N/A')}")
 
-        # Per-dataset table
+        # per-dataset table
         per_ds = v2.get("per_dataset", {})
         if per_ds:
             sub_header("Per-Dataset GSI (v2)")
@@ -1275,7 +1247,7 @@ def print_report(summary):
                               f"{fmt_float(dc.get('v2_median_gsi')):>10s} "
                               f"{dc.get('v1_n', 'N/A'):>6} {dc.get('v2_n', 'N/A'):>6}")
 
-    # --- Module 2 ---
+    # module 2
     m2 = summary.get("module2", {})
     section_header("3. MODULE 2: GRAMMAR RULES")
     if m2.get("status") == "not_found":
@@ -1314,7 +1286,7 @@ def print_report(summary):
                     print(f"  {label:<30s} {fmt_float(entry.get('v1')):>12s} "
                           f"{fmt_float(entry.get('v2')):>12s} {ratio_str:>10s}")
 
-    # --- Module 3 ---
+    # module 3
     m3 = summary.get("module3", {})
     section_header("4. MODULE 3: COMPOSITIONALITY")
     if m3.get("status") == "not_found":
@@ -1346,7 +1318,7 @@ def print_report(summary):
             print(f"  Mean gap v1:        {fmt_float(comp.get('mean_gap_v1'))}")
             print(f"  Mean gap v2:        {fmt_float(comp.get('mean_gap_v2'))}")
 
-    # --- Module 4 ---
+    # module 4
     m4 = summary.get("module4", {})
     section_header("5. MODULE 4: CROSS-SPECIES TRANSFER")
     if m4.get("status") == "not_found":
@@ -1364,7 +1336,7 @@ def print_report(summary):
                     for key, val in sorted(tr.items()):
                         print(f"    {key:<25s}  R2 = {fmt_float(val)}")
 
-    # --- Module 5 ---
+    # module 5
     m5 = summary.get("module5", {})
     section_header("6. MODULE 5: BIOPHYSICS DECOMPOSITION")
     if m5.get("status") == "not_found":
@@ -1397,7 +1369,7 @@ def print_report(summary):
                           f"{fmt_float(dc.get('v2_r2')):>10s} "
                           f"{fmt_float(dc.get('delta')):>10s}")
 
-    # --- Module 6 ---
+    # module 6
     m6 = summary.get("module6", {})
     section_header("7. MODULE 6: GRAMMAR COMPLETENESS")
     if m6.get("status") == "not_found":
@@ -1434,7 +1406,7 @@ def print_report(summary):
                           f"v2={fmt_pct(dc.get('v2_completeness')):>8s}  "
                           f"delta={fmt_float(dc.get('delta')):>8s}")
 
-    # --- Phase 2 Experiments ---
+    # phase 2 experiments
     section_header("8. PHASE 2: NEW EXPERIMENTS")
 
     for exp_key, exp_name in [
@@ -1495,7 +1467,7 @@ def print_report(summary):
                             print(f"  {ds:<16s} {fmt_float(d.get('mean_potential')):>10s} "
                                   f"{fmt_float(d.get('mean_utilization')):>10s}")
 
-    # --- Phase 3 Redesigned Tests ---
+    # phase 3 redesigned tests
     section_header("9. PHASE 3: REDESIGNED TESTS")
 
     for p3_key, p3_name in [
@@ -1548,7 +1520,7 @@ def print_report(summary):
                             print(f"  {ds:<16s} {fmt_float(d.get('eta2_vocabulary')):>12s} "
                                   f"{fmt_float(d.get('grammar_total_eta2')):>12s}")
 
-    # --- Key Findings Summary ---
+    # key findings summary
     section_header("10. KEY FINDINGS SUMMARY")
     findings = summary.get("key_findings", {})
     if findings:
@@ -1564,15 +1536,13 @@ def print_report(summary):
     print()
 
 
-# ---------------------------------------------------------------------------
-# Key Findings Extraction
-# ---------------------------------------------------------------------------
+# key findings extraction
 
 def extract_key_findings(summary):
     """Extract key findings from the collected data."""
     findings = OrderedDict()
 
-    # Module 1
+    # module 1
     m1 = summary.get("module1", {})
     if m1.get("v2"):
         v2 = m1["v2"]
@@ -1605,7 +1575,7 @@ def extract_key_findings(summary):
             f"likely due to dataset-specific probes and larger sample"
         )
 
-    # Module 2
+    # module 2
     m2 = summary.get("module2", {})
     if m2.get("comparison"):
         c = m2["comparison"]
@@ -1615,7 +1585,7 @@ def extract_key_findings(summary):
                 f"v2 extracted {n_rules['v2']:.0f} rules (v1: {n_rules['v1']:.0f})"
             )
 
-    # Module 3
+    # module 3
     m3 = summary.get("module3", {})
     if m3.get("comparison"):
         c = m3["comparison"]
@@ -1625,7 +1595,7 @@ def extract_key_findings(summary):
             f"(changed={c.get('classification_changed', '?')})"
         )
 
-    # Module 4
+    # module 4
     m4 = summary.get("module4", {})
     if m4.get("v2"):
         findings["transfer"] = (
@@ -1633,7 +1603,7 @@ def extract_key_findings(summary):
             f"cross-species R2={m4['v2'].get('mean_cross_r2', '?')}"
         )
 
-    # Module 6
+    # module 6
     m6 = summary.get("module6", {})
     if m6.get("comparison"):
         c = m6["comparison"]
@@ -1645,9 +1615,7 @@ def extract_key_findings(summary):
     return findings
 
 
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
+# main
 
 def main():
     """Collect all v2 results and produce summary report."""
@@ -1656,7 +1624,7 @@ def main():
     print()
 
     if not V2_DIR.exists():
-        print(f"ERROR: v2 results directory does not exist: {V2_DIR}")
+        print(f"v2 results directory does not exist: {V2_DIR}")
         print("Has the v2 pipeline been run?")
         sys.exit(1)
 
@@ -1669,11 +1637,11 @@ def main():
         "script": str(Path(__file__).resolve()),
     }
 
-    # 1. Completion status
+    # completion status
     print("Checking pipeline completion status...")
     summary["completion_status"] = check_completion_status()
 
-    # 2. Core modules
+    # core modules
     print("Collecting Module 1 (GSI Census)...")
     summary["module1"] = collect_module1()
 
@@ -1692,7 +1660,7 @@ def main():
     print("Collecting Module 6 (Completeness)...")
     summary["module6"] = collect_module6()
 
-    # 3. Phase 2 experiments
+    # phase 2 experiments
     print("Collecting Experiment B (Synthetic Probes)...")
     summary["experiment_b"] = collect_experiment_b()
 
@@ -1705,7 +1673,7 @@ def main():
     print("Collecting Experiment G (Grammar Potential)...")
     summary["experiment_g"] = collect_experiment_g()
 
-    # 4. Phase 3 redesigned tests
+    # phase 3 redesigned tests
     print("Collecting Phase 3: Compositionality v2...")
     summary["compositionality_v2"] = collect_phase3_compositionality_v2()
 
@@ -1718,18 +1686,18 @@ def main():
     print("Collecting Phase 3: ANOVA Decomposition...")
     summary["anova"] = collect_phase3_anova()
 
-    # 5. Key findings
+    # key findings
     print("Extracting key findings...")
     summary["key_findings"] = extract_key_findings(summary)
 
-    # 6. Write JSON
+    # write the json
     os.makedirs(V2_DIR, exist_ok=True)
     with open(OUTPUT_JSON, "w") as f:
         json.dump(summary, f, indent=2, default=str)
     print(f"Saved summary to: {OUTPUT_JSON}")
     print()
 
-    # 7. Print report
+    # print the report
     print_report(summary)
 
 

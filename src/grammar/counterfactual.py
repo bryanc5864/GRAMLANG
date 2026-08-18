@@ -1,10 +1,8 @@
 """
-Experiment G: Counterfactual Grammar Potential.
+Counterfactual grammar potential.
 
-Measures the maximum possible grammar effect for each enhancer:
-- Grammar potential: max(shuffles) - min(shuffles)
-- Grammar utilization: how much of the potential the natural arrangement exploits
-- Optimization headroom: how much expression could improve by rearranging
+How much could arrangement possibly matter for an enhancer, how much of that
+the natural arrangement actually uses, and how much headroom is left.
 """
 
 import numpy as np
@@ -25,20 +23,13 @@ def compute_grammar_potential(
     seed: int = 42,
 ) -> pd.DataFrame:
     """
-    Compute grammar potential for each enhancer.
-
-    For each enhancer, generates many shuffles and measures:
-    - grammar_potential: max(pred) - min(pred) across shuffles
-    - grammar_utilization: (original - min) / (max - min)
-    - optimization_headroom: max(pred) - original
-    - percentile_rank: where does original land in shuffle distribution
-
-    Returns DataFrame with one row per enhancer.
+    Per enhancer: grammar_potential = max - min over shuffles,
+    grammar_utilization = (original - min) / (max - min),
+    optimization_headroom = max - original, plus the original's percentile.
     """
     rng = np.random.default_rng(seed)
     results = []
 
-    # Filter to sequences with enough motifs
     seq_with_motifs = motif_hits.groupby('seq_id').size()
     eligible = seq_with_motifs[seq_with_motifs >= min_motifs].index
     eligible_df = dataset[dataset['seq_id'].isin(eligible)]
@@ -60,7 +51,6 @@ def compute_grammar_potential(
             'motifs': seq_motifs.to_dict('records'),
         }
 
-        # Generate shuffles using the function-based API
         try:
             shuffled_seqs = generate_vocabulary_preserving_shuffles(
                 seq, annotation, n_shuffles=n_shuffles,
@@ -72,14 +62,12 @@ def compute_grammar_potential(
         if len(shuffled_seqs) < 10:
             continue
 
-        # Predict expression for original + shuffles
         all_seqs = [seq] + shuffled_seqs
         preds = model.predict_expression(all_seqs, cell_type=cell_type)
 
         original_pred = float(preds[0])
         shuffle_preds = preds[1:]
 
-        # Compute metrics
         max_pred = float(shuffle_preds.max())
         min_pred = float(shuffle_preds.min())
         mean_pred = float(shuffle_preds.mean())

@@ -1,9 +1,8 @@
 """
-Experiment F: Grammar Heterogeneity Analysis.
+Grammar heterogeneity: which enhancers are grammar-rich, and what makes them so.
 
-Identifies grammar-rich enhancers and characterizes what makes them special.
-Shifts the narrative from 'grammar is weak on average' to 'grammar is a
-property of specific regulatory architectures.'
+The point is to move from "grammar is weak on average" to "grammar belongs to
+particular regulatory architectures".
 """
 
 import numpy as np
@@ -22,18 +21,10 @@ def analyze_grammar_heterogeneity(
     top_percentile: float = 0.05,
 ) -> Dict:
     """
-    Analyze grammar heterogeneity: what distinguishes grammar-rich enhancers?
-
-    Args:
-        gsi_results: GSI measurements with seq_id, gsi, dataset columns
-        dataset: Processed dataset with sequences
-        motif_hits: Motif annotations
-        top_percentile: Fraction for grammar-rich cutoff (default: top 5%)
-
-    Returns:
-        Dict with heterogeneity analysis results
+    What distinguishes grammar-rich enhancers? top_percentile sets the
+    grammar-rich cutoff (default: top 5% by GSI).
     """
-    # Aggregate GSI per enhancer (mean across models)
+    # mean GSI per enhancer across models
     gsi_per_seq = gsi_results.groupby('seq_id').agg(
         mean_gsi=('gsi', 'mean'),
         max_gsi=('gsi', 'max'),
@@ -41,22 +32,19 @@ def analyze_grammar_heterogeneity(
         n_models=('model', 'nunique'),
     ).reset_index()
 
-    # Merge with dataset features
     merged = gsi_per_seq.merge(dataset[['seq_id', 'sequence', 'expression']], on='seq_id', how='inner')
 
     if len(merged) < 20:
         return {'error': 'Too few sequences for heterogeneity analysis'}
 
-    # Compute sequence features
     features = _compute_sequence_features(merged, motif_hits)
 
-    # Classify grammar-rich vs grammar-poor
+    # split into grammar-rich and grammar-poor
     gsi_threshold = merged['mean_gsi'].quantile(1 - top_percentile)
     merged['grammar_rich'] = merged['mean_gsi'] >= gsi_threshold
     n_rich = merged['grammar_rich'].sum()
     n_poor = len(merged) - n_rich
 
-    # Compare features between grammar-rich and grammar-poor
     feature_comparison = {}
     feature_cols = [c for c in features.columns if c not in ['seq_id']]
     feature_df = features.merge(merged[['seq_id', 'mean_gsi', 'grammar_rich']], on='seq_id')
@@ -77,7 +65,7 @@ def analyze_grammar_heterogeneity(
             except Exception:
                 pass
 
-    # Train random forest to predict GSI from sequence features
+    # random forest: predict GSI from sequence features
     X = features.merge(merged[['seq_id', 'mean_gsi']], on='seq_id')
     y = X['mean_gsi'].values
     X_features = X[feature_cols].fillna(0).values
@@ -92,12 +80,11 @@ def analyze_grammar_heterogeneity(
         cv_scores = np.array([0])
         importances = {}
 
-    # Grammar type clustering among rich enhancers
+    # cluster grammar types among the rich ones
     grammar_types = _classify_grammar_types(
         merged[merged['grammar_rich']], gsi_results, motif_hits
     )
 
-    # Distribution statistics
     gsi_values = merged['mean_gsi'].values
     percentiles = {
         'p5': float(np.percentile(gsi_values, 5)),
@@ -135,18 +122,15 @@ def _compute_sequence_features(merged: pd.DataFrame, motif_hits: pd.DataFrame) -
         seq_id = row['seq_id']
         seq_hits = motif_hits[motif_hits['seq_id'] == seq_id]
 
-        # Basic features
         feat = {'seq_id': seq_id}
         feat['seq_length'] = len(seq)
         feat['gc_content'] = gc_content(seq)
         feat['expression'] = row.get('expression', np.nan)
 
-        # Motif features
         feat['n_motifs'] = len(seq_hits)
         feat['n_unique_motifs'] = seq_hits['motif_name'].nunique() if len(seq_hits) > 0 else 0
         feat['motif_density'] = len(seq_hits) / max(len(seq), 1) * 100
 
-        # Motif coverage
         if len(seq_hits) > 0 and 'start' in seq_hits.columns and 'end' in seq_hits.columns:
             covered = np.zeros(len(seq))
             for _, hit in seq_hits.iterrows():
@@ -154,7 +138,7 @@ def _compute_sequence_features(merged: pd.DataFrame, motif_hits: pd.DataFrame) -
                 covered[s:e] = 1
             feat['motif_coverage'] = float(covered.mean())
 
-            # Motif clustering: mean distance between consecutive motifs
+            # clustering = mean distance between consecutive motifs
             starts = sorted(seq_hits['start'].values)
             if len(starts) > 1:
                 distances = np.diff(starts)
@@ -171,7 +155,6 @@ def _compute_sequence_features(merged: pd.DataFrame, motif_hits: pd.DataFrame) -
             feat['min_motif_distance'] = float(len(seq))
             feat['motif_clustering'] = 0
 
-        # Dinucleotide frequencies
         dinucs = ['AA', 'AC', 'AG', 'AT', 'CA', 'CC', 'CG', 'CT',
                   'GA', 'GC', 'GG', 'GT', 'TA', 'TC', 'TG', 'TT']
         for di in dinucs:
@@ -196,11 +179,11 @@ def _classify_grammar_types(
     motif_hits: pd.DataFrame
 ) -> Dict:
     """Classify grammar-rich enhancers into grammar type categories."""
-    # For now, classify by motif count and density patterns
+    # crude for now: go by motif count and density
     types = {
-        'high_density': 0,  # Many motifs, tightly packed
-        'moderate_density': 0,  # Moderate motif count
-        'sparse': 0,  # Few motifs but strong grammar
+        'high_density': 0,  # many motifs, tightly packed
+        'moderate_density': 0,  # middling motif count
+        'sparse': 0,  # few motifs but strong grammar
     }
 
     for _, row in rich_df.iterrows():

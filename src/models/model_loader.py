@@ -1,8 +1,6 @@
-"""
-Unified model loading interface for GRAMLANG.
+"""One GrammarModel interface for all 9 pretrained models.
 
-Provides a consistent GrammarModel interface for all 9 pretrained models.
-Models are loaded one at a time to stay within memory budget.
+load one at a time; they don't fit in memory together.
 """
 
 import os
@@ -17,23 +15,23 @@ from src.utils.sequence import one_hot_encode, pad_sequence, reverse_complement
 
 
 class GrammarModel(ABC):
-    """Unified interface for all 9 genomic models."""
+    """Common interface for the genomic models."""
 
     @abstractmethod
     def predict_expression(self, sequences: List[str],
                            cell_type: str = None) -> np.ndarray:
-        """Predict expression for a batch of sequences."""
+        """Expression for a batch of sequences."""
         pass
 
     @abstractmethod
     def get_embeddings(self, sequences: List[str],
                        layer: int = -1) -> np.ndarray:
-        """Extract pooled embeddings from a specific layer."""
+        """Pooled embeddings from one layer."""
         pass
 
     @abstractmethod
     def get_all_layer_embeddings(self, sequences: List[str]) -> List[np.ndarray]:
-        """Extract embeddings from ALL layers."""
+        """Pooled embeddings from every layer."""
         pass
 
     @property
@@ -58,7 +56,7 @@ class GrammarModel(ABC):
         pass
 
     def _batch_process(self, sequences: List[str], fn, batch_size: int = 8):
-        """Process sequences in batches to manage memory."""
+        """Batched so we don't blow up gpu memory."""
         results = []
         for i in range(0, len(sequences), batch_size):
             batch = sequences[i:i + batch_size]
@@ -66,7 +64,7 @@ class GrammarModel(ABC):
         return np.concatenate(results, axis=0)
 
     def unload(self):
-        """Free GPU memory."""
+        """Drop the weights and free gpu memory."""
         if hasattr(self, 'model'):
             del self.model
         if hasattr(self, 'tokenizer'):
@@ -185,10 +183,10 @@ class NTGrammarModel(GrammarModel):
             model_name, trust_remote_code=True
         ).to(device)
         self.model.eval()
-        self._probe = None  # Set after training
+        self._probe = None  # set after training
 
     def set_probe(self, probe):
-        """Set the expression prediction probe."""
+        """Attach the trained expression probe."""
         self._probe = probe
 
     def predict_expression(self, sequences, cell_type=None):
@@ -262,16 +260,15 @@ class DNABERT2GrammarModel(GrammarModel):
                                     truncation=True, max_length=512).to(self.device)
             with torch.no_grad():
                 out = self.model(**tokens)
-                # Custom DNABERT-2 returns tuple: (last_hidden_state, pooled_output)
+                # custom class returns (last_hidden_state, pooled_output)
                 last_hidden = out[0]  # (batch, seq, 768)
                 pooled = last_hidden.mean(dim=1).cpu().numpy()
             return pooled
         return self._batch_process(sequences, _get_batch, batch_size=32)
 
     def get_all_layer_embeddings(self, sequences):
-        # DNABERT-2 custom model doesn't support output_hidden_states in tuple mode
-        # Use forward hooks to capture all layer outputs
-        # Note: DNABERT-2 uses unpadded inputs, so layer outputs are 2D (total_nnz, hidden_dim)
+        # no output_hidden_states in tuple mode, so hook every layer.
+        # inputs are unpadded, so outputs come back 2D (total_nnz, dim)
         captures = {}
         handles = []
         for li, layer_mod in enumerate(self.model.encoder.layer):
@@ -293,7 +290,7 @@ class DNABERT2GrammarModel(GrammarModel):
         result = []
         for i in range(len(captures)):
             t = captures[i]
-            # Handle both 2D (unpadded: total_nnz, dim) and 3D (batch, seq, dim)
+            # 2D means unpadded, 3D means (batch, seq, dim)
             if t.dim() == 2:
                 result.append(t.mean(dim=0).unsqueeze(0).numpy())
             else:
@@ -466,26 +463,14 @@ class GPNGrammarModel(GrammarModel):
     def num_layers(self): return 25
 
 
-# Deferred model classes (require special handling)
-# Borzoi, Sei, and Evo are more complex to load and will be implemented
-# as needed based on their specific package requirements.
+# borzoi, sei and evo need their own packages; add them when we need them
 
 
 def load_model(model_name: str, device: str = 'cuda',
                probe_dir: str = None, dataset_name: str = 'vaishnav2022') -> GrammarModel:
-    """
-    Load a single model by name, auto-loading expression probe if available.
+    """Load one model by name, attaching its expression probe if one exists.
 
-    Args:
-        model_name: One of 'enformer', 'nt', 'dnabert2', 'hyenadna',
-                    'caduceus', 'gpn', 'borzoi', 'sei', 'evo'
-        device: CUDA device string
-        probe_dir: Directory containing trained probes (auto-detected if None)
-        dataset_name: Dataset the probe was trained on
-
-    Returns:
-        GrammarModel instance (with probe loaded if available)
-    """
+    probe_dir defaults to <project>/data/probes."""
     loaders = {
         'enformer': EnformerGrammarModel,
         'nt': NTGrammarModel,
@@ -498,15 +483,13 @@ def load_model(model_name: str, device: str = 'cuda',
     if model_name not in loaders:
         raise ValueError(f"Unknown model: {model_name}. Available: {list(loaders.keys())}")
 
-    print(f"Loading model: {model_name}...")
+    print(f"loading model: {model_name}...")
     model = loaders[model_name](device=device)
-    print(f"  Loaded {model_name} ({model.architecture_type}, "
+    print(f"  loaded {model_name} ({model.architecture_type}, "
           f"hidden_dim={model.hidden_dim}, layers={model.num_layers})")
 
-    # Auto-load expression probe for foundation models
     if hasattr(model, 'set_probe') and model._probe is None:
         if probe_dir is None:
-            # Auto-detect probe directory
             import os
             project_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
             probe_dir = os.path.join(project_dir, 'data', 'probes')
@@ -517,19 +500,16 @@ def load_model(model_name: str, device: str = 'cuda',
             from src.models.expression_probes import load_probe
             probe = load_probe(probe_dir, probe_name, model.hidden_dim, device=device)
             model.set_probe(probe)
-            print(f"  Loaded expression probe from {probe_path}")
+            print(f"  loaded expression probe from {probe_path}")
         else:
-            print(f"  WARNING: No expression probe found at {probe_path}")
-            print(f"  predict_expression() will fail. Run train_probes.py first.")
+            print(f"  no expression probe found at {probe_path}")
+            print(f"  predict_expression() will fail. run train_probes.py first.")
 
     return model
 
 
 def load_models_sequential(model_names: List[str], device: str = 'cuda') -> Dict[str, GrammarModel]:
-    """
-    Load multiple models sequentially (one at a time, unloading previous).
-    Use this when running experiments across models to manage memory.
-    """
+    """Load models one at a time so only one sits in memory."""
     models = {}
     for name in model_names:
         models[name] = load_model(name, device)

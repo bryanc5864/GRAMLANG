@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 """
-GRAMLANG v2 Pipeline Runner
-
-Improvements over v1:
-1. Dataset-specific expression probes (not vaishnav-only)
-2. Enformer with native CAGE tracks for human datasets
-3. Increased sample sizes
-4. New experiments: synthetic probes, heterogeneity, counterfactual potential,
-   info-theoretic decomposition, redesigned compositionality & transfer,
-   attention analysis, ANOVA decomposition
-5. Power analysis for null results
+v2 pipeline. over v1: dataset-specific expression probes instead of
+vaishnav-only, Enformer on its native CAGE tracks for the human datasets,
+bigger samples, and the phase 2/3 experiments (synthetic probes,
+heterogeneity, grammar potential, information decomposition, attention,
+ANOVA, power analysis).
 
 Usage:
     python scripts/run_v2_pipeline.py [--phase N] [--models model1,model2]
@@ -47,7 +42,6 @@ from src.design.completeness import compute_grammar_completeness
 from src.utils.io import load_processed, save_json, check_disk_budget
 from src.utils import visualization as viz
 
-# New v2 modules
 from src.grammar.synthetic_probes import run_synthetic_grammar_probes, get_top_motif_pairs, summarize_synthetic_probes
 from src.grammar.heterogeneity import analyze_grammar_heterogeneity
 from src.grammar.counterfactual import compute_grammar_potential, summarize_grammar_potential
@@ -62,7 +56,7 @@ DATA_DIR = os.path.join(PROJECT_DIR, 'data')
 RESULTS_DIR = os.path.join(PROJECT_DIR, 'results', 'v2')
 PROBES_DIR = os.path.join(PROJECT_DIR, 'data', 'probes')
 
-# Foundation models (probe-based)
+# probe-based models
 FOUNDATION_MODELS = ['dnabert2', 'nt', 'hyenadna']
 
 ALL_DATASETS = {
@@ -79,11 +73,11 @@ SPECIES_MAP = {
     'plant': ['jores'],
 }
 
-# Enformer-compatible datasets (human only, with CAGE tracks)
+# human only: Enformer needs native CAGE tracks
 ENFORMER_DATASETS = {
     'agarwal': 'K562',
     'klein': 'HepG2',
-    'inoue': 'K562',  # Use K562 as best proxy
+    'inoue': 'K562',  # closest proxy we have
 }
 
 
@@ -94,24 +88,24 @@ def log_msg(msg):
 def swap_probe(model, model_name, ds_name, device='cuda'):
     """Swap the expression probe on an already-loaded model (no model reload)."""
     if model_name == 'enformer':
-        return  # Enformer uses built-in CAGE head
+        return  # Enformer has its own CAGE head
 
     if not hasattr(model, 'set_probe'):
         return
 
-    # Try dataset-specific probe first, fall back to vaishnav
+    # dataset-specific probe first, else fall back to vaishnav
     for probe_name in [f'{model_name}_{ds_name}', f'{model_name}_vaishnav', f'{model_name}_vaishnav2022']:
         probe_path = os.path.join(PROBES_DIR, f'{probe_name}_probe.pt')
         if os.path.exists(probe_path):
             probe = load_probe(PROBES_DIR, probe_name, model.hidden_dim, device=device)
             model.set_probe(probe)
-            log_msg(f"    Swapped probe: {probe_name}")
+            log_msg(f"    swapped probe: {probe_name}")
             return
-    log_msg(f"    WARNING: No probe found for {model_name}/{ds_name}")
+    log_msg(f"    warning: no probe found for {model_name}/{ds_name}")
 
 
 def load_model_with_probe(model_name, ds_name, device='cuda'):
-    """Load model with dataset-specific probe."""
+    """Load a model with its dataset-specific probe."""
     if model_name == 'enformer':
         return load_model('enformer', device=device)
 
@@ -129,24 +123,18 @@ def get_available_datasets():
     return available
 
 
-# ============================================================
-# Phase 1: Core Modules (re-run with dataset-specific probes)
-# ============================================================
+# phase 1 core modules, re-run with dataset-specific probes
 
 def run_phase1_module1(models, datasets, args):
-    """Module 1: GSI Census with dataset-specific probes + Enformer.
-
-    Optimized: loads each model once, swaps probes per dataset.
-    """
+    """Module 1: GSI census. loads each model once, swaps probes per dataset."""
     log_msg("=" * 60)
-    log_msg("PHASE 1 / MODULE 1: Grammar Sensitivity Census (v2)")
+    log_msg("phase 1 / module 1: grammar sensitivity census (v2)")
     log_msg("=" * 60)
 
     outdir = os.path.join(RESULTS_DIR, 'module1')
     os.makedirs(outdir, exist_ok=True)
     all_results = []
 
-    # Pre-load all dataset data
     dataset_data = {}
     for ds_name, ds_info in datasets.items():
         mh_path = os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed_motif_hits.parquet')
@@ -158,21 +146,19 @@ def run_phase1_module1(models, datasets, args):
             'info': ds_info,
         }
 
-    # Foundation models: load once, swap probes per dataset
     for model_name in models:
-        log_msg(f"  Loading model: {model_name}")
+        log_msg(f"  loading model: {model_name}")
         model = load_model(model_name, device='cuda', dataset_name='__dummy__')
 
         for ds_name, dd in dataset_data.items():
-            # Skip if result already exists
             result_path = os.path.join(outdir, f'{ds_name}_{model_name}_gsi.parquet')
             if os.path.exists(result_path):
-                log_msg(f"    {ds_name} already done, loading")
+                log_msg(f"    {ds_name} already done, reusing")
                 all_results.append(pd.read_parquet(result_path))
                 continue
 
             swap_probe(model, model_name, ds_name)
-            log_msg(f"    Running GSI: {ds_name}")
+            log_msg(f"    running GSI: {ds_name}")
 
             gsi = run_gsi_census(
                 dataset=dd['df'], model=model, motif_hits=dd['motif_hits'],
@@ -189,10 +175,10 @@ def run_phase1_module1(models, datasets, args):
         gc.collect()
         torch.cuda.empty_cache()
 
-    # Enformer for human datasets (separate because it's slow)
+    # Enformer runs separately, it is slow
     enformer_datasets = {k: v for k, v in dataset_data.items() if k in ENFORMER_DATASETS}
     if enformer_datasets:
-        log_msg(f"  Loading Enformer...")
+        log_msg(f"  loading Enformer...")
         try:
             enf_model = load_model('enformer', device='cuda')
             for ds_name, dd in enformer_datasets.items():
@@ -202,7 +188,7 @@ def run_phase1_module1(models, datasets, args):
                     continue
 
                 cell = ENFORMER_DATASETS[ds_name]
-                log_msg(f"    Running GSI: {ds_name} (Enformer, cell={cell})")
+                log_msg(f"    running GSI: {ds_name} (Enformer, cell={cell})")
                 gsi = run_gsi_census(
                     dataset=dd['df'], model=enf_model, motif_hits=dd['motif_hits'],
                     n_shuffles=args.n_shuffles, min_motifs=2,
@@ -234,16 +220,16 @@ def run_phase1_module1(models, datasets, args):
                 'models': list(ds_data['model'].unique()),
             }
         save_json(summary, os.path.join(outdir, 'gsi_summary.json'))
-        log_msg(f"  Module 1 complete: {len(combined)} GSI measurements")
+        log_msg(f"  module 1 done: {len(combined)} GSI measurements")
         return combined
 
     return pd.DataFrame()
 
 
 def run_phase1_module2(models, datasets, gsi_results, args):
-    """Module 2: Rule Extraction with dataset-specific probes."""
+    """Module 2: pairwise rule extraction."""
     log_msg("=" * 60)
-    log_msg("PHASE 1 / MODULE 2: Grammar Rule Extraction (v2)")
+    log_msg("phase 1 / module 2: grammar rule extraction (v2)")
     log_msg("=" * 60)
 
     outdir = os.path.join(RESULTS_DIR, 'module2')
@@ -252,7 +238,6 @@ def run_phase1_module2(models, datasets, gsi_results, args):
 
     sensitive = gsi_results[gsi_results['gsi'] > 0.05]['seq_id'].unique() if len(gsi_results) > 0 else []
 
-    # Pre-load dataset data
     dataset_data = {}
     for ds_name, ds_info in datasets.items():
         mh_path = os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed_motif_hits.parquet')
@@ -264,14 +249,13 @@ def run_phase1_module2(models, datasets, gsi_results, args):
             'info': ds_info,
         }
 
-    # Load each model once, iterate datasets
     for model_name in models:
-        log_msg(f"  Loading model: {model_name}")
+        log_msg(f"  loading model: {model_name}")
         model = load_model(model_name, device='cuda', dataset_name='__dummy__')
 
         for ds_name, dd in dataset_data.items():
             swap_probe(model, model_name, ds_name)
-            log_msg(f"    Extracting rules: {ds_name}")
+            log_msg(f"    extracting rules: {ds_name}")
 
             df = dd['df']
             motif_hits = dd['motif_hits']
@@ -323,16 +307,16 @@ def run_phase1_module2(models, datasets, gsi_results, args):
         global_cons = compute_global_consensus(consensus)
         save_json(global_cons, os.path.join(outdir, 'global_consensus.json'))
 
-        log_msg(f"  Module 2 complete: {len(rules_df)} rules")
+        log_msg(f"  module 2 done: {len(rules_df)} rules")
         return rules_df
     return pd.DataFrame()
 
 
 def run_phase1_modules3456(models, datasets, gsi_results, rules_df, args):
     """Modules 3-6 with dataset-specific probes."""
-    # Module 3: Compositionality (original)
+    # module 3: original compositionality sweep
     log_msg("=" * 60)
-    log_msg("PHASE 1 / MODULE 3: Compositionality (v2)")
+    log_msg("phase 1 / module 3: compositionality (v2)")
     log_msg("=" * 60)
     outdir3 = os.path.join(RESULTS_DIR, 'module3')
     os.makedirs(outdir3, exist_ok=True)
@@ -364,11 +348,11 @@ def run_phase1_modules3456(models, datasets, gsi_results, rules_df, args):
         gap_by_k = comp_df.groupby('n_motifs')['compositionality_gap'].agg(['mean', 'std']).reset_index()
         classification = classify_grammar_complexity(gap_by_k['n_motifs'].values, gap_by_k['mean'].values)
         save_json(classification, os.path.join(outdir3, 'complexity_classification.json'))
-        log_msg(f"  Module 3 complete: {classification['classification']}")
+        log_msg(f"  module 3 done: {classification['classification']}")
 
-    # Module 4: Transfer
+    # module 4: cross-species transfer
     log_msg("=" * 60)
-    log_msg("PHASE 1 / MODULE 4: Cross-Species Transfer (v2)")
+    log_msg("phase 1 / module 4: cross-species transfer (v2)")
     log_msg("=" * 60)
     outdir4 = os.path.join(RESULTS_DIR, 'module4')
     os.makedirs(outdir4, exist_ok=True)
@@ -400,11 +384,11 @@ def run_phase1_modules3456(models, datasets, gsi_results, rules_df, args):
         phylo = build_grammar_phylogeny(transfer_df, available_species)
         save_json(phylo, os.path.join(outdir4, 'grammar_phylogeny.json'))
         model.unload()
-        log_msg(f"  Module 4 complete: {len(available_species)} species")
+        log_msg(f"  module 4 done: {len(available_species)} species")
 
-    # Module 5: Causal determinants
+    # module 5: causal determinants
     log_msg("=" * 60)
-    log_msg("PHASE 1 / MODULE 5: Causal Determinants (v2)")
+    log_msg("phase 1 / module 5: causal determinants (v2)")
     log_msg("=" * 60)
     outdir5 = os.path.join(RESULTS_DIR, 'module5')
     os.makedirs(outdir5, exist_ok=True)
@@ -444,11 +428,11 @@ def run_phase1_modules3456(models, datasets, gsi_results, rules_df, args):
                 phase = compute_grammar_phase_diagram(ds_gsi, df)
                 save_json(phase, os.path.join(outdir5, f'{ds_name}_phase_diagram.json'))
 
-    log_msg("  Module 5 complete")
+    log_msg("  module 5 done")
 
-    # Module 6: Completeness
+    # module 6: grammar completeness
     log_msg("=" * 60)
-    log_msg("PHASE 1 / MODULE 6: Grammar Completeness (v2)")
+    log_msg("phase 1 / module 6: grammar completeness (v2)")
     log_msg("=" * 60)
     outdir6 = os.path.join(RESULTS_DIR, 'module6')
     os.makedirs(outdir6, exist_ok=True)
@@ -473,19 +457,17 @@ def run_phase1_modules3456(models, datasets, gsi_results, rules_df, args):
                     f"grammar={completeness['vocab_plus_full_grammar_r2']:.3f}")
         model.unload()
 
-    log_msg("  Module 6 complete")
+    log_msg("  module 6 done")
 
 
-# ============================================================
-# Phase 2: New Experiments
-# ============================================================
+# phase 2 experiments
 
 def run_phase2_new_experiments(models, datasets, gsi_results, rules_df, args):
-    """Phase 2: New experiments (B, E, F, G)."""
+    """Experiments B, E, F, G."""
 
-    # Experiment B: Synthetic Grammar Probes
+    # experiment B: synthetic grammar probes
     log_msg("=" * 60)
-    log_msg("PHASE 2 / EXPERIMENT B: Synthetic Grammar Probes")
+    log_msg("phase 2 / experiment B: synthetic grammar probes")
     log_msg("=" * 60)
     outdir_b = os.path.join(RESULTS_DIR, 'experiment_b')
     os.makedirs(outdir_b, exist_ok=True)
@@ -507,7 +489,7 @@ def run_phase2_new_experiments(models, datasets, gsi_results, rules_df, args):
         if not pairs:
             continue
 
-        for model_name in models[:2]:  # Use 2 models for speed
+        for model_name in models[:2]:  # 2 models only, for speed
             model = load_model_with_probe(model_name, ds_name)
             target_len = int(df['sequence'].str.len().median())
 
@@ -524,9 +506,9 @@ def run_phase2_new_experiments(models, datasets, gsi_results, rules_df, args):
                     f"{len(pairs)} pairs")
             model.unload()
 
-    # Experiment F: Grammar Heterogeneity
+    # experiment F: grammar heterogeneity
     log_msg("=" * 60)
-    log_msg("PHASE 2 / EXPERIMENT F: Grammar Heterogeneity")
+    log_msg("phase 2 / experiment F: grammar heterogeneity")
     log_msg("=" * 60)
     outdir_f = os.path.join(RESULTS_DIR, 'experiment_f')
     os.makedirs(outdir_f, exist_ok=True)
@@ -550,9 +532,9 @@ def run_phase2_new_experiments(models, datasets, gsi_results, rules_df, args):
             log_msg(f"  {ds_name}: {het['n_grammar_rich']} grammar-rich, "
                     f"predictor R²={het['predictor_r2_cv']:.3f}")
 
-    # Experiment G: Counterfactual Grammar Potential
+    # experiment G: counterfactual grammar potential
     log_msg("=" * 60)
-    log_msg("PHASE 2 / EXPERIMENT G: Grammar Potential")
+    log_msg("phase 2 / experiment G: grammar potential")
     log_msg("=" * 60)
     outdir_g = os.path.join(RESULTS_DIR, 'experiment_g')
     os.makedirs(outdir_g, exist_ok=True)
@@ -578,9 +560,9 @@ def run_phase2_new_experiments(models, datasets, gsi_results, rules_df, args):
                     f"utilization={summary['mean_utilization']:.2f}")
         model.unload()
 
-    # Experiment E: Information-Theoretic Decomposition
+    # experiment E: information-theoretic decomposition
     log_msg("=" * 60)
-    log_msg("PHASE 2 / EXPERIMENT E: Information Decomposition")
+    log_msg("phase 2 / experiment E: information decomposition")
     log_msg("=" * 60)
     outdir_e = os.path.join(RESULTS_DIR, 'experiment_e')
     os.makedirs(outdir_e, exist_ok=True)
@@ -602,19 +584,16 @@ def run_phase2_new_experiments(models, datasets, gsi_results, rules_df, args):
                     f"grammar info={info['grammar_information']:.3f}")
         model.unload()
 
-    log_msg("  Phase 2 experiments complete")
+    log_msg("  phase 2 done")
 
 
-# ============================================================
-# Phase 3: Redesigned Tests & Attention Analysis
-# ============================================================
+# phase 3 redesigned tests and attention analysis
 
 def run_phase3(models, datasets, gsi_results, rules_df, args):
-    """Phase 3: Redesigned compositionality, transfer, attention, ANOVA."""
+    """Compositionality v2, distributional transfer, attention, ANOVA."""
 
-    # Redesigned Compositionality (enhancer-specific)
     log_msg("=" * 60)
-    log_msg("PHASE 3 / COMPOSITIONALITY V2 (enhancer-specific)")
+    log_msg("phase 3 / compositionality v2 (enhancer-specific)")
     log_msg("=" * 60)
     outdir_cv2 = os.path.join(RESULTS_DIR, 'compositionality_v2')
     os.makedirs(outdir_cv2, exist_ok=True)
@@ -643,12 +622,11 @@ def run_phase3(models, datasets, gsi_results, rules_df, args):
         comp_v2_df.to_parquet(os.path.join(outdir_cv2, 'compositionality_v2_results.parquet'))
         summary = summarize_compositionality_v2(comp_v2_df)
         save_json(summary, os.path.join(outdir_cv2, 'compositionality_v2_summary.json'))
-        log_msg(f"  Compositionality v2: {summary.get('mean_compositionality', 0):.3f} "
+        log_msg(f"  compositionality v2: {summary.get('mean_compositionality', 0):.3f} "
                 f"({summary.get('n_tests', 0)} tests)")
 
-    # Distributional Transfer
     log_msg("=" * 60)
-    log_msg("PHASE 3 / DISTRIBUTIONAL TRANSFER")
+    log_msg("phase 3 / distributional transfer")
     log_msg("=" * 60)
     outdir_dt = os.path.join(RESULTS_DIR, 'distributional_transfer')
     os.makedirs(outdir_dt, exist_ok=True)
@@ -656,24 +634,24 @@ def run_phase3(models, datasets, gsi_results, rules_df, args):
     if len(rules_df) > 0 and len(gsi_results) > 0:
         dist_transfer = compute_distributional_transfer(rules_df, gsi_results, SPECIES_MAP)
         save_json(dist_transfer, os.path.join(outdir_dt, 'distributional_transfer.json'))
-        log_msg(f"  Distributional transfer: {dist_transfer.get('grammar_properties_conserved', 0):.1%} "
+        log_msg(f"  distributional transfer: {dist_transfer.get('grammar_properties_conserved', 0):.1%} "
                 f"properties conserved")
 
-    # Attention Analysis (transformers only)
+    # attention: transformers only
     log_msg("=" * 60)
-    log_msg("PHASE 3 / ATTENTION ANALYSIS")
+    log_msg("phase 3 / attention analysis")
     log_msg("=" * 60)
     outdir_attn = os.path.join(RESULTS_DIR, 'attention')
     os.makedirs(outdir_attn, exist_ok=True)
 
-    for ds_name, ds_info in list(datasets.items())[:2]:  # First 2 datasets
+    for ds_name, ds_info in list(datasets.items())[:2]:
         df = load_processed(os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed.parquet'))
         mh_path = os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed_motif_hits.parquet')
         if not os.path.exists(mh_path):
             continue
         motif_hits = pd.read_parquet(mh_path)
 
-        # Select grammar-sensitive sequences
+        # most grammar-sensitive sequences
         ds_gsi = gsi_results[gsi_results['dataset'] == ds_name] if len(gsi_results) > 0 else pd.DataFrame()
         if len(ds_gsi) > 0:
             top_seq_ids = ds_gsi.nlargest(20, 'gsi')['seq_id'].unique()
@@ -700,9 +678,8 @@ def run_phase3(models, datasets, gsi_results, rules_df, args):
                 log_msg(f"  {ds_name}/{model_name}: {grammar_heads.get('n_grammar_heads', 0)} grammar heads")
             model.unload()
 
-    # ANOVA Decomposition
     log_msg("=" * 60)
-    log_msg("PHASE 3 / ANOVA DECOMPOSITION")
+    log_msg("phase 3 / ANOVA decomposition")
     log_msg("=" * 60)
     outdir_anova = os.path.join(RESULTS_DIR, 'anova')
     os.makedirs(outdir_anova, exist_ok=True)
@@ -723,7 +700,7 @@ def run_phase3(models, datasets, gsi_results, rules_df, args):
             log_msg(f"  {ds_name}: vocab η²={anova['eta2_vocabulary']:.3f}, "
                     f"grammar η²={anova['grammar_total_eta2']:.3f}")
 
-            # Power analysis for null results
+            # power for the null results
             for test_name, effect in [
                 ('grammar_eta2', anova['grammar_total_eta2']),
             ]:
@@ -731,29 +708,29 @@ def run_phase3(models, datasets, gsi_results, rules_df, args):
                 save_json(power, os.path.join(outdir_anova, f'{ds_name}_{test_name}_power.json'))
         model.unload()
 
-    log_msg("  Phase 3 complete")
+    log_msg("  phase 3 done")
 
 
 def main():
-    parser = argparse.ArgumentParser(description='GRAMLANG v2 Pipeline')
-    parser.add_argument('--phase', type=int, default=0, help='Run specific phase (1-3), 0=all')
-    parser.add_argument('--models', type=str, default=None, help='Comma-separated model names')
-    parser.add_argument('--n-shuffles', type=int, default=100, help='Shuffles for GSI (v2 default: 100)')
-    parser.add_argument('--max-enhancers', type=int, default=500, help='Max enhancers for GSI (v2 default: 500)')
-    parser.add_argument('--max-enhancers-rules', type=int, default=100, help='Max for rule extraction')
-    parser.add_argument('--max-per-k', type=int, default=30, help='Max per motif count')
-    parser.add_argument('--n-arrangements', type=int, default=100, help='Arrangements per enhancer')
+    parser = argparse.ArgumentParser(description='GRAMLANG v2 pipeline')
+    parser.add_argument('--phase', type=int, default=0, help='run one phase (1-3), 0=all')
+    parser.add_argument('--models', type=str, default=None, help='comma-separated model names')
+    parser.add_argument('--n-shuffles', type=int, default=100, help='shuffles for GSI')
+    parser.add_argument('--max-enhancers', type=int, default=500, help='max enhancers for GSI')
+    parser.add_argument('--max-enhancers-rules', type=int, default=100, help='max enhancers for rule extraction')
+    parser.add_argument('--max-per-k', type=int, default=30, help='max enhancers per motif count')
+    parser.add_argument('--n-arrangements', type=int, default=100, help='arrangements per enhancer')
     args = parser.parse_args()
 
     models = args.models.split(',') if args.models else FOUNDATION_MODELS
     datasets = get_available_datasets()
 
     if not datasets:
-        log_msg("ERROR: No preprocessed datasets found")
+        log_msg("error: no preprocessed datasets found")
         return
 
-    log_msg(f"Models: {models}")
-    log_msg(f"Datasets: {list(datasets.keys())}")
+    log_msg(f"models: {models}")
+    log_msg(f"datasets: {list(datasets.keys())}")
     log_msg(f"v2 improvements: dataset-specific probes, Enformer, new experiments")
 
     gsi_results = pd.DataFrame()
@@ -764,7 +741,6 @@ def main():
         rules_df = run_phase1_module2(models, datasets, gsi_results, args)
         run_phase1_modules3456(models, datasets, gsi_results, rules_df, args)
     else:
-        # Load existing results
         gsi_path = os.path.join(RESULTS_DIR, 'module1', 'all_gsi_results.parquet')
         rules_path = os.path.join(RESULTS_DIR, 'module2', 'grammar_rules_database.parquet')
         if os.path.exists(gsi_path):
@@ -779,7 +755,7 @@ def main():
         run_phase3(models, datasets, gsi_results, rules_df, args)
 
     log_msg("=" * 60)
-    log_msg("v2 Pipeline complete!")
+    log_msg("v2 pipeline complete")
     log_msg("=" * 60)
 
 

@@ -9,17 +9,11 @@ def compute_grammar_strength_tradeoff(
     rules_df: pd.DataFrame,
     motif_hits: pd.DataFrame,
 ) -> dict:
-    """
-    Test: do weak motifs need more precise grammar?
-
-    Returns:
-        Dict with correlation and quartile analysis
-    """
-    # Merge rules with motif scores
+    """Do weak motifs need more precise grammar?"""
     merged = rules_df.copy()
     avg_scores = motif_hits.groupby(['seq_id', 'motif_name'])['score'].mean().reset_index()
 
-    # Get mean motif score per rule pair
+    # mean motif score per rule pair
     merged_a = merged.merge(
         avg_scores.rename(columns={'motif_name': 'motif_a', 'score': 'motif_a_score'}),
         on=['seq_id', 'motif_a'], how='left'
@@ -30,7 +24,7 @@ def compute_grammar_strength_tradeoff(
 
     merged_a['mean_strength'] = merged_a['motif_a_score'].fillna(0)
 
-    # Quartile analysis
+    # quartiles
     valid = merged_a.dropna(subset=['mean_strength', 'spacing_sensitivity'])
     if len(valid) < 20:
         return {'error': f'Too few valid rules ({len(valid)})'}
@@ -54,7 +48,6 @@ def compute_grammar_strength_tradeoff(
         n_rules=('pair', 'count')
     ).to_dict('index')
 
-    # Correlation
     corr, pval = spearmanr(
         valid['mean_strength'], valid['spacing_sensitivity']
     )

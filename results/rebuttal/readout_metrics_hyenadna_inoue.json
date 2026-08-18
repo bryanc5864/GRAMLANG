@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.1697145700454712,
+    "test_r": 0.23014190793037415,
+    "test_rho": 0.14350620503854863,
+    "test_r2": 0.03867870569229126,
+    "n_params": 769,
+    "perm_invariant": true,
+    "model": "hyenadna",
+    "dataset": "inoue"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.16232360899448395,
+    "test_r": 0.2508097290992737,
+    "test_rho": 0.16876606192618918,
+    "test_r2": 0.05111885070800781,
+    "n_params": 99329,
+    "perm_invariant": true,
+    "model": "hyenadna",
+    "dataset": "inoue"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.15785649418830872,
+    "test_r": 0.23255041241645813,
+    "test_rho": 0.21203987656797837,
+    "test_r2": 0.04437476396560669,
+    "n_params": 132610,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "inoue"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.2258012443780899,
+    "test_r": 0.32571256160736084,
+    "test_rho": 0.2588138775042274,
+    "test_r2": 0.08469325304031372,
+    "n_params": 678657,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "inoue"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.19830867648124695,
+    "test_r": 0.06422899663448334,
+    "test_rho": 0.025217343536537595,
+    "test_r2": -0.022553563117980957,
+    "n_params": 644289,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "inoue"
+  }
+]

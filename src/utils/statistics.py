@@ -12,15 +12,8 @@ def permutation_test(
     alternative: str = 'greater'
 ) -> dict:
     """
-    Standard permutation test.
-
-    Args:
-        observed_statistic: Test statistic on real data
-        null_distribution: Test statistics under null hypothesis
-        alternative: 'greater', 'less', or 'two-sided'
-
-    Returns:
-        Dict with p_value, z_score, effect_size
+    Permutation test. alternative is 'greater', 'less' or 'two-sided'.
+    Returns p_value, z_score and effect_size.
     """
     null_distribution = np.asarray(null_distribution)
 
@@ -31,7 +24,7 @@ def permutation_test(
     else:
         p_value = np.mean(np.abs(null_distribution) >= np.abs(observed_statistic))
 
-    # Ensure p > 0 (use 1/n as floor)
+    # floor p at 1/n
     if p_value == 0:
         p_value = 1.0 / (len(null_distribution) + 1)
 
@@ -84,19 +77,12 @@ def bootstrap_confidence_interval(
 def correct_pvalues(p_values: np.ndarray, method: str = 'fdr_bh',
                     alpha: float = 0.05) -> tuple:
     """
-    Apply multiple testing correction.
-
-    Args:
-        p_values: Array of p-values
-        method: Correction method ('fdr_bh', 'bonferroni', etc.)
-        alpha: Significance level
-
-    Returns:
-        (corrected_p_values, rejected_mask)
+    Multiple testing correction; method is a statsmodels name like 'fdr_bh'.
+    Returns (corrected_p_values, rejected_mask).
     """
     p_values = np.asarray(p_values)
 
-    # Handle edge cases
+    # edge cases
     if len(p_values) == 0:
         return np.array([]), np.array([], dtype=bool)
     if len(p_values) == 1:
@@ -132,7 +118,7 @@ def correlation_with_ci(x: np.ndarray, y: np.ndarray,
     x = np.asarray(x)
     y = np.asarray(y)
 
-    # Remove NaN pairs
+    # drop NaN pairs
     mask = ~(np.isnan(x) | np.isnan(y))
     x, y = x[mask], y[mask]
 
@@ -146,7 +132,7 @@ def correlation_with_ci(x: np.ndarray, y: np.ndarray,
     else:
         raise ValueError(f"Unknown method: {method}")
 
-    # Bootstrap CI
+    # bootstrap CI
     rng = np.random.default_rng(42)
     boot_rs = []
     for _ in range(n_bootstrap):

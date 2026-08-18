@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.27380311489105225,
+    "test_r": 0.2371295541524887,
+    "test_rho": 0.23787330464433704,
+    "test_r2": 0.05520927906036377,
+    "n_params": 769,
+    "perm_invariant": true,
+    "model": "hyenadna",
+    "dataset": "agarwal"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.2757800221443176,
+    "test_r": 0.2246016561985016,
+    "test_rho": 0.2237383020317231,
+    "test_r2": 0.048570990562438965,
+    "n_params": 99329,
+    "perm_invariant": true,
+    "model": "hyenadna",
+    "dataset": "agarwal"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.2943233847618103,
+    "test_r": 0.2618214190006256,
+    "test_rho": 0.2666510307028658,
+    "test_r2": 0.014667630195617676,
+    "n_params": 132610,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "agarwal"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.4550850987434387,
+    "test_r": 0.42104583978652954,
+    "test_rho": 0.38662189808864866,
+    "test_r2": 0.16133785247802734,
+    "n_params": 678657,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "agarwal"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.2950518727302551,
+    "test_r": 0.2355414479970932,
+    "test_rho": 0.24502633868521562,
+    "test_r2": 0.052210211753845215,
+    "n_params": 644289,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "agarwal"
+  }
+]

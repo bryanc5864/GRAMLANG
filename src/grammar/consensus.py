@@ -1,7 +1,5 @@
 """
-Cross-model grammar consensus analysis.
-
-Determines whether different model architectures agree on grammar rules.
+Cross-model grammar consensus: do different architectures agree on the rules?
 """
 
 import numpy as np
@@ -13,18 +11,8 @@ from collections import Counter
 
 def compute_grammar_consensus(rules_df: pd.DataFrame) -> pd.DataFrame:
     """
-    For each motif pair in each enhancer, compute cross-model agreement.
-
-    Agreement measured by:
-    1. Correlation of spacing profiles across models
-    2. Agreement on optimal spacing (+/-2bp)
-    3. Agreement on optimal orientation
-
-    Args:
-        rules_df: Grammar rules database from rule extraction
-
-    Returns:
-        DataFrame with consensus scores per (enhancer, motif_pair)
+    Cross-model agreement per (enhancer, motif pair): spacing profile
+    correlation, optimal spacing within +/-2bp, and optimal orientation.
     """
     results = []
 
@@ -35,7 +23,7 @@ def compute_grammar_consensus(rules_df: pd.DataFrame) -> pd.DataFrame:
         models = group['model'].tolist()
         n_models = len(models)
 
-        # 1. Spacing profile correlations
+        # spacing profile correlations
         spacing_correlations = []
         for m1, m2 in combinations(range(n_models), 2):
             p1 = np.array(group.iloc[m1]['spacing_profile'])
@@ -47,7 +35,7 @@ def compute_grammar_consensus(rules_df: pd.DataFrame) -> pd.DataFrame:
 
         mean_spacing_corr = np.mean(spacing_correlations) if spacing_correlations else 0
 
-        # 2. Optimal spacing agreement (+/-2bp)
+        # optimal spacing agreement, +/-2bp
         optimal_spacings = group['optimal_spacing'].values
         spacing_range = float(optimal_spacings.max() - optimal_spacings.min())
 
@@ -59,13 +47,12 @@ def compute_grammar_consensus(rules_df: pd.DataFrame) -> pd.DataFrame:
                 spacing_agreement += 1
         spacing_agreement = spacing_agreement / max(n_pairs, 1)
 
-        # 3. Orientation agreement
+        # orientation agreement
         optimal_orientations = group['optimal_orientation'].values
         orient_counts = Counter(optimal_orientations)
         mode_count = orient_counts.most_common(1)[0][1]
         orientation_agreement = mode_count / n_models
 
-        # Overall consensus
         consensus_score = (mean_spacing_corr + spacing_agreement + orientation_agreement) / 3
 
         results.append({

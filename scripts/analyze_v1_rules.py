@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 """
-Analyze the v1 grammar rules database to understand existing rules
-before v2 re-extraction.
-
-Outputs:
-  - Detailed printed report
-  - Summary JSON at /home/bcheng/grammar/results/v2/v1_rules_analysis.json
+what is actually in the v1 grammar rules database, before re-extracting for v2.
+prints a report and writes /home/bcheng/grammar/results/v2/v1_rules_analysis.json.
 """
 
 import json
@@ -14,19 +10,17 @@ import pandas as pd
 from collections import Counter
 from pathlib import Path
 
-# -- 0. Load --
 PARQUET = Path("/home/bcheng/grammar/results/module2/grammar_rules_database.parquet")
 OUT_JSON = Path("/home/bcheng/grammar/results/v2/v1_rules_analysis.json")
 
 df = pd.read_parquet(PARQUET)
 summary = {}
 
-# -- 1. Shape and columns --
 print("=" * 80)
-print("1. DATABASE SHAPE AND COLUMNS")
+print("1. database shape and columns")
 print("=" * 80)
-print(f"  Rows:    {df.shape[0]}")
-print(f"  Columns: {df.shape[1]}")
+print(f"  rows:    {df.shape[0]}")
+print(f"  columns: {df.shape[1]}")
 print()
 for col in df.columns:
     non_null = df[col].notna().sum()
@@ -36,9 +30,8 @@ print()
 summary["shape"] = {"rows": int(df.shape[0]), "columns": int(df.shape[1])}
 summary["column_names"] = list(df.columns)
 
-# -- 2. Unique counts --
 print("=" * 80)
-print("2. UNIQUE COUNTS")
+print("2. unique counts")
 print("=" * 80)
 n_rules = len(df)
 n_pairs = df["pair"].nunique()
@@ -49,14 +42,14 @@ n_datasets = df["dataset"].nunique()
 n_models = df["model"].nunique()
 n_seqs = df["seq_id"].nunique()
 
-print(f"  Total rule rows:       {n_rules}")
-print(f"  Unique motif pairs:    {n_pairs}")
-print(f"  Unique motif_a:        {n_motif_a}")
-print(f"  Unique motif_b:        {n_motif_b}")
-print(f"  Unique motifs (union): {n_unique_motifs}")
-print(f"  Datasets:              {n_datasets}  {sorted(df['dataset'].unique())}")
-print(f"  Models:                {n_models}  {sorted(df['model'].unique())}")
-print(f"  Unique sequences:      {n_seqs}")
+print(f"  total rule rows:       {n_rules}")
+print(f"  unique motif pairs:    {n_pairs}")
+print(f"  unique motif_a:        {n_motif_a}")
+print(f"  unique motif_b:        {n_motif_b}")
+print(f"  unique motifs (union): {n_unique_motifs}")
+print(f"  datasets:              {n_datasets}  {sorted(df['dataset'].unique())}")
+print(f"  models:                {n_models}  {sorted(df['model'].unique())}")
+print(f"  unique sequences:      {n_seqs}")
 print()
 
 summary["unique_counts"] = {
@@ -70,9 +63,8 @@ summary["unique_counts"] = {
     "unique_sequences": n_seqs,
 }
 
-# -- 3. Rules per (dataset, model) --
 print("=" * 80)
-print("3. RULES PER (DATASET, MODEL)")
+print("3. rules per (dataset, model)")
 print("=" * 80)
 dm_counts = df.groupby(["dataset", "model"]).size().reset_index(name="n_rules")
 dm_counts = dm_counts.sort_values("n_rules", ascending=False)
@@ -80,7 +72,7 @@ dm_pairs_unique = df.groupby(["dataset", "model"])["pair"].nunique().reset_index
 dm_seqs = df.groupby(["dataset", "model"])["seq_id"].nunique().reset_index(name="n_unique_seqs")
 
 dm_merged = dm_counts.merge(dm_pairs_unique).merge(dm_seqs)
-print(f"  {'Dataset':<20s} {'Model':<12s} {'Rules':>8s} {'Pairs':>8s} {'Seqs':>8s}")
+print(f"  {'dataset':<20s} {'model':<12s} {'rules':>8s} {'pairs':>8s} {'seqs':>8s}")
 print(f"  {'-'*20} {'-'*12} {'-'*8} {'-'*8} {'-'*8}")
 dm_dict = {}
 for _, row in dm_merged.iterrows():
@@ -93,13 +85,11 @@ for _, row in dm_merged.iterrows():
 print()
 summary["rules_per_dataset_model"] = dm_dict
 
-# -- 4. Rule type analysis --
 print("=" * 80)
-print("4. RULE TYPE ANALYSIS")
+print("4. rule type analysis")
 print("=" * 80)
 
-# 4a. Spacing preferences
-print("\n  4a. SPACING PREFERENCES")
+print("\n  4a. spacing preferences")
 print(f"      optimal_spacing range: [{df['optimal_spacing'].min()}, {df['optimal_spacing'].max()}]")
 print(f"      mean optimal_spacing:  {df['optimal_spacing'].mean():.2f}")
 print(f"      median optimal_spacing: {df['optimal_spacing'].median():.1f}")
@@ -107,7 +97,7 @@ print(f"      median optimal_spacing: {df['optimal_spacing'].median():.1f}")
 spacing_median = df["spacing_sensitivity"].median()
 strong_spacing = (df["spacing_sensitivity"] > spacing_median).sum()
 print(f"      spacing_sensitivity median: {spacing_median:.4f}")
-print(f"      Rules with above-median spacing sensitivity: {strong_spacing} ({100*strong_spacing/len(df):.1f}%)")
+print(f"      rules above median spacing sensitivity: {strong_spacing} ({100*strong_spacing/len(df):.1f}%)")
 
 def is_helical(spacing, tol=1.5):
     remainder = spacing % 10.5
@@ -115,15 +105,14 @@ def is_helical(spacing, tol=1.5):
 
 df["helical_spacing"] = df["optimal_spacing"].apply(is_helical)
 n_helical = df["helical_spacing"].sum()
-print(f"      Rules with helical-periodic spacing (within 1.5bp of 10.5n): {n_helical} ({100*n_helical/len(df):.1f}%)")
+print(f"      helical-periodic spacing (within 1.5bp of 10.5n): {n_helical} ({100*n_helical/len(df):.1f}%)")
 
 spacing_bins = pd.cut(df["optimal_spacing"], bins=[0, 10, 20, 30, 40, 50, 100], right=True)
-print(f"\n      Spacing distribution:")
+print(f"\n      spacing distribution:")
 for interval, count in spacing_bins.value_counts().sort_index().items():
     print(f"        {str(interval):>12s}: {count:>6d} ({100*count/len(df):5.1f}%)")
 
-# 4b. Orientation preferences
-print("\n  4b. ORIENTATION PREFERENCES")
+print("\n  4b. orientation preferences")
 orient_counts = df["optimal_orientation"].value_counts()
 for orient, count in orient_counts.items():
     print(f"      {orient}: {count:>6d} ({100*count/len(df):5.1f}%)")
@@ -131,19 +120,17 @@ for orient, count in orient_counts.items():
 orient_median = df["orientation_sensitivity"].median()
 strong_orient = (df["orientation_sensitivity"] > orient_median).sum()
 print(f"      orientation_sensitivity median: {orient_median:.4f}")
-print(f"      Rules with above-median orient sensitivity: {strong_orient} ({100*strong_orient/len(df):.1f}%)")
+print(f"      rules above median orientation sensitivity: {strong_orient} ({100*strong_orient/len(df):.1f}%)")
 
-# 4c. Helical phase
-print("\n  4c. HELICAL PHASE SCORES")
+print("\n  4c. helical phase scores")
 print(f"      helical_phase_score range: [{df['helical_phase_score'].min():.4f}, {df['helical_phase_score'].max():.4f}]")
 print(f"      mean:   {df['helical_phase_score'].mean():.4f}")
 print(f"      median: {df['helical_phase_score'].median():.4f}")
 print(f"      std:    {df['helical_phase_score'].std():.4f}")
 strong_helical = (df["helical_phase_score"] > 2.0).sum()
-print(f"      Rules with helical_phase_score > 2.0 (strong periodicity): {strong_helical} ({100*strong_helical/len(df):.1f}%)")
+print(f"      helical_phase_score > 2.0 (strong periodicity): {strong_helical} ({100*strong_helical/len(df):.1f}%)")
 
-# 4d. Classify rules by dominant grammar feature
-print("\n  4d. RULE CLASSIFICATION BY DOMINANT FEATURE")
+print("\n  4d. rule classification by dominant feature")
 
 spacing_z = (df["spacing_sensitivity"] - df["spacing_sensitivity"].mean()) / df["spacing_sensitivity"].std()
 orient_z = (df["orientation_sensitivity"] - df["orientation_sensitivity"].mean()) / df["orientation_sensitivity"].std()
@@ -165,7 +152,7 @@ def classify_rule(row_idx):
 
 df["rule_type"] = [classify_rule(i) for i in range(len(df))]
 type_counts = df["rule_type"].value_counts()
-print(f"      {'Rule Type':<45s} {'Count':>7s} {'Pct':>7s}")
+print(f"      {'rule type':<45s} {'count':>7s} {'pct':>7s}")
 print(f"      {'-'*45} {'-'*7} {'-'*7}")
 rule_type_dict = {}
 for rtype, count in type_counts.head(20).items():
@@ -194,12 +181,11 @@ summary["rule_types"] = {
     "rule_classification": rule_type_dict,
 }
 
-# -- 5. Top 20 most common motif pairs --
 print("=" * 80)
-print("5. TOP 20 MOST COMMON MOTIF PAIRS")
+print("5. top 20 most common motif pairs")
 print("=" * 80)
 pair_counts = df["pair"].value_counts().head(20)
-print(f"  {'Rank':>4s}  {'Motif Pair':<45s} {'Count':>7s} {'Pct':>7s}")
+print(f"  {'rank':>4s}  {'motif pair':<45s} {'count':>7s} {'pct':>7s}")
 print(f"  {'-'*4}  {'-'*45} {'-'*7} {'-'*7}")
 top_pairs_dict = {}
 for rank, (pair, count) in enumerate(pair_counts.items(), 1):
@@ -209,12 +195,11 @@ print()
 
 summary["top_20_motif_pairs"] = top_pairs_dict
 
-# -- 6. Effect size statistics --
 print("=" * 80)
-print("6. EFFECT SIZE STATISTICS")
+print("6. effect size statistics")
 print("=" * 80)
 
-print("\n  6a. FOLD CHANGE")
+print("\n  6a. fold change")
 fc = df["fold_change"]
 print(f"      count:    {fc.notna().sum()}")
 print(f"      min:      {fc.min():.4f}")
@@ -229,7 +214,7 @@ for thresh in [1.5, 2.0, 3.0, 5.0]:
     n_above = (fc >= thresh).sum()
     print(f"      fold_change >= {thresh}: {n_above} ({100*n_above/len(df):.1f}%)")
 
-print("\n  6b. SPACING SENSITIVITY")
+print("\n  6b. spacing sensitivity")
 ss = df["spacing_sensitivity"]
 print(f"      count:    {ss.notna().sum()}")
 print(f"      min:      {ss.min():.4f}")
@@ -240,7 +225,7 @@ print(f"      max:      {ss.max():.4f}")
 print(f"      mean:     {ss.mean():.4f}")
 print(f"      std:      {ss.std():.4f}")
 
-print("\n  6c. ORIENTATION SENSITIVITY")
+print("\n  6c. orientation sensitivity")
 os_ = df["orientation_sensitivity"]
 print(f"      count:    {os_.notna().sum()}")
 print(f"      min:      {os_.min():.4f}")
@@ -251,7 +236,7 @@ print(f"      max:      {os_.max():.4f}")
 print(f"      mean:     {os_.mean():.4f}")
 print(f"      std:      {os_.std():.4f}")
 
-print("\n  6d. FOLD CHANGE DISTRIBUTION BY DATASET")
+print("\n  6d. fold change distribution by dataset")
 fc_by_ds = df.groupby("dataset")["fold_change"].describe()
 print(fc_by_ds.to_string())
 print()
@@ -286,9 +271,8 @@ summary["effect_sizes"] = {
     },
 }
 
-# -- 7. Consensus rules --
 print("=" * 80)
-print("7. CONSENSUS RULES (AGREED BY MULTIPLE MODELS WITHIN A DATASET)")
+print("7. consensus rules (same pair agreed by 2+ models in a dataset)")
 print("=" * 80)
 
 consensus_groups = df.groupby(["dataset", "pair"]).agg(
@@ -302,7 +286,7 @@ consensus_groups = df.groupby(["dataset", "pair"]).agg(
 ).reset_index()
 
 multi_model = consensus_groups[consensus_groups["n_models"] >= 2].copy()
-print(f"\n  Pairs appearing in 2+ models within same dataset: {len(multi_model)}")
+print(f"\n  pairs appearing in 2+ models within same dataset: {len(multi_model)}")
 
 if len(multi_model) > 0:
     multi_model["orient_agree"] = multi_model["orientations"].apply(
@@ -317,25 +301,25 @@ if len(multi_model) > 0:
     n_spacing_agree = multi_model["spacing_agree"].sum()
     n_full = multi_model["full_consensus"].sum()
 
-    print(f"  Orientation agreement:   {n_orient_agree} ({100*n_orient_agree/len(multi_model):.1f}%)")
-    print(f"  Spacing agreement (std<=5): {n_spacing_agree} ({100*n_spacing_agree/len(multi_model):.1f}%)")
-    print(f"  Full consensus (both):   {n_full} ({100*n_full/len(multi_model):.1f}%)")
+    print(f"  orientation agreement:   {n_orient_agree} ({100*n_orient_agree/len(multi_model):.1f}%)")
+    print(f"  spacing agreement (std<=5): {n_spacing_agree} ({100*n_spacing_agree/len(multi_model):.1f}%)")
+    print(f"  full consensus (both):   {n_full} ({100*n_full/len(multi_model):.1f}%)")
 
     three_model = multi_model[multi_model["n_models"] == 3]
-    print(f"\n  Pairs in ALL 3 models: {len(three_model)}")
+    print(f"\n  pairs in all 3 models: {len(three_model)}")
     three_full = 0
     if len(three_model) > 0:
         three_full = three_model["full_consensus"].sum()
         print(f"  3-model full consensus: {three_full}")
 
     top_consensus = multi_model.sort_values("mean_fc", ascending=False).head(15)
-    print(f"\n  Top 15 multi-model rules by mean fold change:")
-    print(f"  {'Dataset':<16s} {'Pair':<40s} {'#Mod':>4s} {'Orient':>7s} {'SpStd':>6s} {'MeanFC':>7s} {'Consensus':>9s}")
+    print(f"\n  top 15 multi-model rules by mean fold change:")
+    print(f"  {'dataset':<16s} {'pair':<40s} {'#mod':>4s} {'orient':>7s} {'spstd':>6s} {'meanfc':>7s} {'consensus':>9s}")
     print(f"  {'-'*16} {'-'*40} {'-'*4} {'-'*7} {'-'*6} {'-'*7} {'-'*9}")
     for _, row in top_consensus.iterrows():
         orient_str = "yes" if row["orient_agree"] else "no"
         sp_std_str = f"{row['spacing_std']:.1f}" if pd.notna(row["spacing_std"]) else "N/A"
-        cons_str = "FULL" if row["full_consensus"] else "partial"
+        cons_str = "full" if row["full_consensus"] else "partial"
         print(f"  {row['dataset']:<16s} {row['pair']:<40s} {row['n_models']:>4d} {orient_str:>7s} {sp_std_str:>6s} {row['mean_fc']:>7.3f} {cons_str:>9s}")
 
     summary["consensus"] = {
@@ -347,14 +331,13 @@ if len(multi_model) > 0:
         "three_model_full_consensus": int(three_full),
     }
 else:
-    print("  No multi-model rules found.")
+    print("  no multi-model rules found")
     summary["consensus"] = {"pairs_in_2plus_models": 0}
 
 print()
 
-# -- 8. Cross-species analysis --
 print("=" * 80)
-print("8. CROSS-SPECIES ANALYSIS")
+print("8. cross-species analysis")
 print("=" * 80)
 
 species_map = {
@@ -368,19 +351,19 @@ species_map = {
 df["species"] = df["dataset"].map(species_map)
 unmapped = df[df["species"].isna()]["dataset"].unique()
 if len(unmapped) > 0:
-    print(f"  WARNING: Unmapped datasets: {unmapped}")
+    print(f"  warning: unmapped datasets: {unmapped}")
     for ds in unmapped:
         species_map[ds] = "unknown"
     df["species"] = df["dataset"].map(species_map)
 
-print(f"\n  Species classification:")
+print(f"\n  species classification:")
 for species in sorted(df["species"].unique()):
     datasets = sorted(df[df["species"] == species]["dataset"].unique())
     n_rules_sp = (df["species"] == species).sum()
     n_pairs_sp = df[df["species"] == species]["pair"].nunique()
     print(f"    {species:<10s}: datasets={datasets}, rules={n_rules_sp}, unique_pairs={n_pairs_sp}")
 
-print(f"\n  Motif pairs by species:")
+print(f"\n  motif pairs by species:")
 species_pairs = {}
 for species in sorted(df["species"].unique()):
     pairs_set = set(df[df["species"] == species]["pair"].unique())
@@ -388,17 +371,17 @@ for species in sorted(df["species"].unique()):
     print(f"    {species:<10s}: {len(pairs_set)} unique pairs")
 
 species_list = sorted(species_pairs.keys())
-print(f"\n  Pairwise pair overlaps:")
+print(f"\n  pairwise pair overlaps:")
 cross_species_shared = {}
 for i, sp1 in enumerate(species_list):
     for sp2 in species_list[i+1:]:
         shared = species_pairs[sp1] & species_pairs[sp2]
         print(f"    {sp1} & {sp2}: {len(shared)} shared pairs")
         if len(shared) > 0:
-            print(f"      Examples: {sorted(list(shared))[:5]}")
+            print(f"      examples: {sorted(list(shared))[:5]}")
             cross_species_shared[f"{sp1}__{sp2}"] = sorted(list(shared))
 
-print(f"\n  Individual motifs by species:")
+print(f"\n  individual motifs by species:")
 species_motifs = {}
 for species in sorted(df["species"].unique()):
     sub = df[df["species"] == species]
@@ -406,7 +389,7 @@ for species in sorted(df["species"].unique()):
     species_motifs[species] = motifs
     print(f"    {species:<10s}: {len(motifs)} unique motifs")
 
-print(f"\n  Pairwise motif overlaps:")
+print(f"\n  pairwise motif overlaps:")
 shared_motifs_count = {}
 for i, sp1 in enumerate(species_list):
     for sp2 in species_list[i+1:]:
@@ -414,7 +397,7 @@ for i, sp1 in enumerate(species_list):
         shared_motifs_count[f"{sp1}__{sp2}"] = len(shared)
         print(f"    {sp1} & {sp2}: {len(shared)} shared motifs")
         if len(shared) > 0:
-            print(f"      Examples: {sorted(list(shared))[:10]}")
+            print(f"      examples: {sorted(list(shared))[:10]}")
 
 summary["cross_species"] = {
     "species_map": species_map,
@@ -425,10 +408,9 @@ summary["cross_species"] = {
     "shared_motifs_count": shared_motifs_count,
 }
 
-# -- 9. Summary observations for v2 --
 print()
 print("=" * 80)
-print("9. KEY OBSERVATIONS FOR v2 MODULE 2 IMPROVEMENTS")
+print("9. observations for v2 module 2")
 print("=" * 80)
 
 obs = []
@@ -461,10 +443,9 @@ print()
 
 summary["v2_observations"] = obs
 
-# -- Save JSON --
 OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
 with open(OUT_JSON, "w") as f:
     json.dump(summary, f, indent=2, default=str)
 
-print(f"Summary JSON saved to: {OUT_JSON}")
-print("Done.")
+print(f"summary JSON saved to: {OUT_JSON}")
+print("done")

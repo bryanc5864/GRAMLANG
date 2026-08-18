@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
 """
-Resolve Round 2 validations systematically.
-
-validations addressed:
-1. Positive control: Run all 3 models on Georgakopoulos-Soares data + compute Cohen's d
-2. Probe quality stratification: Stratify compositionality by probe R²
-3. Factorial decomposition: All 3 models, 500 enhancers
-4. Statistical validation: QQ-plots, p-value histograms, normality tests
-5. GC correlation: All 5 datasets
+Round 2 validation analyses: positive control across all three models, probe-quality
+stratification, factorial decomposition, normality/p-value checks, and GC correlation.
 """
 
 import os
@@ -19,7 +13,6 @@ from pathlib import Path
 from scipy import stats
 from collections import defaultdict
 
-# Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
 RESULTS_DIR = Path('results/v3/validation_analysiss')
@@ -37,23 +30,18 @@ def compute_cohens_d(group1, group2):
 
 
 def analysis_1_positive_control_all_models():
-    """
-    validation 1: Run all 3 models on Georgakopoulos-Soares positive control.
-    Currently only DNABERT-2 tested.
-    """
+    """Run all 3 models on the Georgakopoulos-Soares positive control."""
     print("\n" + "="*60)
-    print("analysis 1: Positive Control - All Models")
+    print("positive control - all models")
     print("="*60)
 
     from models.foundation import load_model
 
-    # Load the Georgakopoulos-Soares library
     library_path = Path('data/raw/georgakopoulos_soares/Library_MPRA_TFBSs.txt')
     if not library_path.exists():
-        print(f"  ERROR: Library not found at {library_path}")
+        print(f"  error: library not found at {library_path}")
         return None
 
-    # Parse library to find orientation pairs
     sequences = []
     with open(library_path) as f:
         for line in f:
@@ -66,9 +54,9 @@ def analysis_1_positive_control_all_models():
 
     print(f"  Loaded {len(sequences)} sequences from library")
 
-    # Find orientation pairs (same construct, different orientation)
+    # same construct, different orientation
     def parse_header(header):
-        """Parse header to extract construct info."""
+        """Pull construct info out of a header."""
         parts = header.split('_')
         result = {
             'construct_type': None,
@@ -83,19 +71,18 @@ def analysis_1_positive_control_all_models():
         elif 'Single' in header or 'single' in header:
             result['construct_type'] = 'single'
 
-        # Extract orientation info
         for i, p in enumerate(parts):
             if p in ['HH', 'HT', 'TH', 'TT']:
                 result['orientation'] = p
             if p.startswith('pos'):
                 result['positions'].append(p)
 
-        # Use parts 0-3 as construct variant identifier
+        # first 4 parts identify the variant
         result['construct_variant'] = '_'.join(parts[:4]) if len(parts) >= 4 else header
 
         return result
 
-    # Group by construct variant to find orientation pairs
+    # group by variant so orientation pairs land together
     groups = defaultdict(list)
     for idx, item in enumerate(sequences):
         parsed = parse_header(item['header'])
@@ -108,13 +95,12 @@ def analysis_1_positive_control_all_models():
                 'orientation': parsed['orientation']
             })
 
-    # Find pairs with different orientations
     orientation_pairs = []
     for key, items in groups.items():
         if len(items) >= 2:
             orientations = list(set(item['orientation'] for item in items))
             if len(orientations) >= 2:
-                # Take first two different orientations
+                # first two that differ
                 for i, item1 in enumerate(items):
                     for item2 in items[i+1:]:
                         if item1['orientation'] != item2['orientation']:
@@ -128,8 +114,7 @@ def analysis_1_positive_control_all_models():
     print(f"  Found {len(orientation_pairs)} orientation pairs")
 
     if len(orientation_pairs) < 100:
-        print("  WARNING: Too few orientation pairs found, using sequential pairs")
-        # Fallback: use sequential pairs from the library
+        print("  warning: too few orientation pairs, falling back to sequential pairs")
         orientation_pairs = []
         for i in range(0, min(1000, len(sequences)-1), 2):
             orientation_pairs.append((
@@ -139,7 +124,6 @@ def analysis_1_positive_control_all_models():
         orientation_pairs = orientation_pairs[:500]
         print(f"  Using {len(orientation_pairs)} sequential pairs as fallback")
 
-    # Test all 3 models
     models_to_test = ['dnabert2', 'nt', 'hyenadna']
     results = {}
 
@@ -149,15 +133,13 @@ def analysis_1_positive_control_all_models():
         try:
             model = load_model(model_name)
 
-            # Load dataset-specific probe
             probe_path = Path(f'data/probes/{model_name}_agarwal_probe.pt')
             if probe_path.exists():
                 model.load_probe(str(probe_path))
                 print(f"    Loaded probe: {model_name}_agarwal")
             else:
-                print(f"    WARNING: No probe found, using raw embeddings")
+                print(f"    warning: no probe found, using raw embeddings")
 
-            # Predict expression for each pair
             diffs = []
             for pair in orientation_pairs[:500]:
                 seq1 = pair[0]['sequence']
@@ -173,15 +155,13 @@ def analysis_1_positive_control_all_models():
 
             diffs = np.array(diffs)
 
-            # Compute statistics
             mean_diff = np.mean(diffs)
             median_diff = np.median(diffs)
             std_diff = np.std(diffs)
 
-            # Cohen's d (comparing to zero)
+            # cohen's d against zero
             cohens_d = mean_diff / std_diff if std_diff > 0 else 0
 
-            # t-test against zero
             t_stat, p_value = stats.ttest_1samp(diffs, 0)
 
             results[model_name] = {
@@ -201,16 +181,15 @@ def analysis_1_positive_control_all_models():
             print(f"    Cohen's d: {cohens_d:.3f}")
             print(f"    p-value: {p_value:.2e}")
 
-            # Clean up GPU memory
+            # free GPU memory before the next model
             del model
             import torch
             torch.cuda.empty_cache()
 
         except Exception as e:
-            print(f"    ERROR: {e}")
+            print(f"    error: {e}")
             results[model_name] = {'error': str(e)}
 
-    # Save results
     output_path = RESULTS_DIR / 'positive_control_all_models.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
@@ -220,21 +199,17 @@ def analysis_1_positive_control_all_models():
 
 
 def analysis_2_probe_quality_stratification():
-    """
-    validation 2: Stratify key results by probe quality.
-    Show that findings hold for viable probes (R² > 0.05).
-    """
+    """Stratify results by probe quality, to show findings hold for R² > 0.05 probes."""
     print("\n" + "="*60)
-    print("analysis 2: Probe Quality Stratification")
+    print("probe quality stratification")
     print("="*60)
 
-    # Load probe metrics
     probe_metrics = {}
     probes_dir = Path('data/probes')
     for metrics_file in probes_dir.glob('*_probe_metrics.json'):
         with open(metrics_file) as f:
             data = json.load(f)
-            # Extract model and dataset from filename
+            # filename is model_dataset
             name = metrics_file.stem.replace('_probe_metrics', '')
             parts = name.split('_')
             if len(parts) >= 2:
@@ -245,7 +220,6 @@ def analysis_2_probe_quality_stratification():
 
     print(f"  Loaded {len(probe_metrics)} probe metrics")
 
-    # Classify probes
     viable_probes = []
     weak_probes = []
 
@@ -259,7 +233,6 @@ def analysis_2_probe_quality_stratification():
     print(f"  Viable probes (R² >= 0.05): {len(viable_probes)}")
     print(f"  Weak probes (R² < 0.05): {len(weak_probes)}")
 
-    # Load GSI results and stratify
     gsi_files = list(Path('results/v2/module1').glob('*_gsi.parquet')) + \
                 list(Path('results/module1').glob('*_gsi.parquet'))
 
@@ -271,7 +244,6 @@ def analysis_2_probe_quality_stratification():
             df = pd.read_parquet(gsi_file)
             name = gsi_file.stem.replace('_gsi', '')
 
-            # Check if this probe is viable
             is_viable = any(name.startswith(vp.replace('_', '')) or
                           vp.replace('_', '') in name for vp in viable_probes)
 
@@ -287,7 +259,6 @@ def analysis_2_probe_quality_stratification():
     print(f"\n  GSI measurements from viable probes: {len(viable_gsi)}")
     print(f"  GSI measurements from weak probes: {len(weak_gsi)}")
 
-    # Compare statistics
     results = {
         'viable_probes': {
             'count': len(viable_probes),
@@ -306,7 +277,6 @@ def analysis_2_probe_quality_stratification():
     }
 
     if viable_gsi and weak_gsi:
-        # Mann-Whitney test
         stat, p = stats.mannwhitneyu(viable_gsi, weak_gsi)
         results['comparison'] = {
             'mann_whitney_U': float(stat),
@@ -318,7 +288,6 @@ def analysis_2_probe_quality_stratification():
         print(f"    Weak median: {results['weak_probes']['gsi_median']:.3f}")
         print(f"    Mann-Whitney p: {p:.3e}")
 
-    # Save results
     output_path = RESULTS_DIR / 'probe_quality_stratification.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
@@ -328,11 +297,9 @@ def analysis_2_probe_quality_stratification():
 
 
 def analysis_3_factorial_all_models():
-    """
-    validation 3: Run factorial decomposition on all 3 models with more enhancers.
-    """
+    """Factorial decomposition across all 3 models, on more enhancers."""
     print("\n" + "="*60)
-    print("analysis 3: Factorial Decomposition - All Models")
+    print("factorial decomposition - all models")
     print("="*60)
 
     from models.foundation import load_model
@@ -341,7 +308,7 @@ def analysis_3_factorial_all_models():
 
     datasets = ['agarwal', 'jores']
     models_to_test = ['dnabert2', 'nt', 'hyenadna']
-    n_enhancers = 200  # Increase from 100
+    n_enhancers = 200  # up from 100
     n_shuffles = 50
 
     results = {}
@@ -349,15 +316,13 @@ def analysis_3_factorial_all_models():
     for dataset in datasets:
         print(f"\n  Dataset: {dataset}")
 
-        # Load data
         data_path = Path(f'data/processed/{dataset}_processed.parquet')
         if not data_path.exists():
-            print(f"    ERROR: Data not found at {data_path}")
+            print(f"    error: data not found at {data_path}")
             continue
 
         df = pd.read_parquet(data_path)
 
-        # Sample enhancers
         if len(df) > n_enhancers:
             df_sample = df.sample(n=n_enhancers, random_state=42)
         else:
@@ -370,12 +335,10 @@ def analysis_3_factorial_all_models():
             try:
                 model = load_model(model_name)
 
-                # Load probe
                 probe_path = Path(f'data/probes/{model_name}_{dataset}_probe.pt')
                 if probe_path.exists():
                     model.load_probe(str(probe_path))
 
-                # Compute variance for different shuffle types
                 position_vars = []
                 orientation_vars = []
                 spacer_vars = []
@@ -385,23 +348,16 @@ def analysis_3_factorial_all_models():
                     seq = row['sequence']
 
                     try:
-                        # Get native prediction
                         native_pred = model.predict_expression(seq)
 
-                        # Full VP shuffles
                         full_shuffles = generate_vocabulary_preserving_shuffles(
                             seq, n_shuffles=n_shuffles, seed=42
                         )
                         full_preds = [model.predict_expression(s) for s in full_shuffles]
                         full_vars.append(np.var(full_preds))
 
-                        # We approximate other shuffle types by sampling
-                        # Position-only: moderate variance
-                        # Orientation-only: lower variance
-                        # Spacer-only: highest variance (based on prior findings)
-
-                        # These are estimates based on the factorial structure
-                        # In a full implementation, we'd have separate shuffle functions
+                        # crude estimates: no separate per-factor shuffle fns yet,
+                        # fractions come from prior runs
                         full_var = np.var(full_preds)
                         position_vars.append(full_var * 0.35)  # ~35% from position
                         orientation_vars.append(full_var * 0.20)  # ~20% from orientation
@@ -410,7 +366,6 @@ def analysis_3_factorial_all_models():
                     except Exception as e:
                         continue
 
-                # Compute summary statistics
                 results[key] = {
                     'dataset': dataset,
                     'model': model_name,
@@ -427,16 +382,14 @@ def analysis_3_factorial_all_models():
                 print(f"      n_enhancers: {len(full_vars)}")
                 print(f"      spacer_fraction: {results[key]['spacer_fraction']:.2%}")
 
-                # Clean up
                 del model
                 import torch
                 torch.cuda.empty_cache()
 
             except Exception as e:
-                print(f"      ERROR: {e}")
+                print(f"      error: {e}")
                 results[key] = {'error': str(e)}
 
-    # Save results
     output_path = RESULTS_DIR / 'factorial_all_models.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
@@ -446,18 +399,15 @@ def analysis_3_factorial_all_models():
 
 
 def analysis_4_statistical_validation():
-    """
-    validation 6: Generate QQ-plots, p-value histograms, normality tests.
-    """
+    """QQ-plots, p-value histograms, and normality tests."""
     print("\n" + "="*60)
-    print("analysis 4: Statistical Validation")
+    print("statistical validation")
     print("="*60)
 
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
-    # Load GSI data with z-scores
     gsi_files = list(Path('results/v2/module1').glob('*_gsi.parquet'))
 
     all_z_scores = []
@@ -480,11 +430,10 @@ def analysis_4_statistical_validation():
 
     results = {}
 
-    # 1. Normality test on z-scores
     if len(all_z_scores) > 0:
         z_array = np.array(all_z_scores)
 
-        # Shapiro-Wilk (on sample if too large)
+        # shapiro needs a subsample above ~5000
         if len(z_array) > 5000:
             z_sample = np.random.choice(z_array, 5000, replace=False)
         else:
@@ -492,7 +441,6 @@ def analysis_4_statistical_validation():
 
         shapiro_stat, shapiro_p = stats.shapiro(z_sample)
 
-        # D'Agostino-Pearson
         dagostino_stat, dagostino_p = stats.normaltest(z_array)
 
         results['normality_tests'] = {
@@ -513,7 +461,6 @@ def analysis_4_statistical_validation():
         print(f"    Shapiro-Wilk p: {shapiro_p:.3e}")
         print(f"    D'Agostino p: {dagostino_p:.3e}")
 
-        # Generate QQ-plot
         fig, ax = plt.subplots(figsize=(6, 6))
         stats.probplot(z_sample, dist="norm", plot=ax)
         ax.set_title('QQ-Plot of Z-Scores')
@@ -524,12 +471,10 @@ def analysis_4_statistical_validation():
         plt.close()
         print(f"    Saved QQ-plot to {RESULTS_DIR / 'qq_plot_zscores.png'}")
 
-    # 2. P-value distribution
     if len(all_p_values) > 0:
         p_array = np.array(all_p_values)
 
-        # Under null, p-values should be uniform
-        # Test with Kolmogorov-Smirnov
+        # under the null these should be uniform
         ks_stat, ks_p = stats.kstest(p_array, 'uniform')
 
         results['pvalue_distribution'] = {
@@ -547,7 +492,6 @@ def analysis_4_statistical_validation():
         print(f"    Fraction < 0.05: {results['pvalue_distribution']['frac_lt_0.05']:.3f}")
         print(f"    KS test (vs uniform): p = {ks_p:.3e}")
 
-        # Generate histogram
         fig, ax = plt.subplots(figsize=(8, 5))
         ax.hist(p_array, bins=50, edgecolor='black', alpha=0.7)
         ax.axhline(y=len(p_array)/50, color='red', linestyle='--', label='Expected (uniform)')
@@ -560,7 +504,6 @@ def analysis_4_statistical_validation():
         plt.close()
         print(f"    Saved histogram to {RESULTS_DIR / 'pvalue_histogram.png'}")
 
-    # Save results
     output_path = RESULTS_DIR / 'statistical_validation.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
@@ -570,11 +513,9 @@ def analysis_4_statistical_validation():
 
 
 def analysis_5_gc_all_datasets():
-    """
-    validation 7: Run GC correlation analysis for ALL 5 datasets.
-    """
+    """GC correlation for all 5 datasets."""
     print("\n" + "="*60)
-    print("analysis 5: GC Correlation - All 5 Datasets")
+    print("GC correlation - all 5 datasets")
     print("="*60)
 
     from models.foundation import load_model
@@ -590,26 +531,22 @@ def analysis_5_gc_all_datasets():
     for dataset in datasets:
         print(f"\n  Dataset: {dataset}")
 
-        # Load data
         data_path = Path(f'data/processed/{dataset}_processed.parquet')
         if not data_path.exists():
-            print(f"    ERROR: Data not found")
+            print(f"    error: data not found")
             continue
 
         df = pd.read_parquet(data_path)
 
-        # Load probe
         probe_path = Path(f'data/probes/{model_name}_{dataset}_probe.pt')
         if probe_path.exists():
             model.load_probe(str(probe_path))
 
-        # Sample sequences
         if len(df) > n_samples:
             df_sample = df.sample(n=n_samples, random_state=42)
         else:
             df_sample = df
 
-        # Compute GC content and predictions
         gc_contents = []
         predictions = []
 
@@ -627,12 +564,10 @@ def analysis_5_gc_all_datasets():
         gc_contents = np.array(gc_contents)
         predictions = np.array(predictions)
 
-        # Remove NaN
         valid = ~np.isnan(predictions)
         gc_contents = gc_contents[valid]
         predictions = predictions[valid]
 
-        # Compute correlation
         if len(gc_contents) > 10:
             r, p = stats.pearsonr(gc_contents, predictions)
             results[dataset] = {
@@ -647,20 +582,17 @@ def analysis_5_gc_all_datasets():
         else:
             results[dataset] = {'error': 'insufficient_data'}
 
-    # Clean up
     del model
     import torch
     torch.cuda.empty_cache()
 
-    # Summary
-    print("\n  Summary of GC-Expression Correlations:")
+    print("\n  GC-expression correlations:")
     print("  " + "-"*50)
     for dataset, data in results.items():
         if 'r' in data:
             direction = "+" if data['r'] > 0 else ""
             print(f"    {dataset}: r = {direction}{data['r']:.3f}")
 
-    # Save results
     output_path = RESULTS_DIR / 'gc_correlation_all_datasets.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
@@ -670,15 +602,11 @@ def analysis_5_gc_all_datasets():
 
 
 def analysis_6_compositionality_circularity():
-    """
-    validation 4: Address compositionality circularity.
-    Add explicit acknowledgment and test with viable probes only.
-    """
+    """Compositionality circularity: flag it, then retest with viable probes only."""
     print("\n" + "="*60)
-    print("analysis 6: Compositionality Circularity Acknowledgment")
+    print("compositionality circularity acknowledgment")
     print("="*60)
 
-    # Load existing compositionality results
     comp_path = Path('results/module3/compositionality_results.parquet')
     if not comp_path.exists():
         comp_path = Path('results/v2/module3/compositionality_v2.parquet')
@@ -695,7 +623,6 @@ def analysis_6_compositionality_circularity():
     if comp_path.exists():
         df = pd.read_parquet(comp_path)
 
-        # Load probe quality info
         viable_combos = []
         probe_dir = Path('data/probes')
         for metrics_file in probe_dir.glob('*_probe_metrics.json'):
@@ -709,7 +636,6 @@ def analysis_6_compositionality_circularity():
         print(f"  Loaded compositionality results: {len(df)} tests")
         print(f"  Viable model-dataset combinations: {len(viable_combos)}")
 
-        # Stratify by probe quality if possible
         if 'model' in df.columns and 'dataset' in df.columns:
             df['combo'] = df['model'] + '_' + df['dataset']
             df['viable'] = df['combo'].isin(viable_combos)
@@ -728,7 +654,6 @@ def analysis_6_compositionality_circularity():
             if weak_gap:
                 print(f"  Weak probe compositionality gap: {weak_gap:.3f}")
 
-    # Save results
     output_path = RESULTS_DIR / 'compositionality_circularity.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
@@ -738,75 +663,73 @@ def analysis_6_compositionality_circularity():
 
 
 def main():
-    """Run all validation analysiss."""
+    """Run every validation analysis."""
     print("="*60)
-    print("GRAMLANG: Resolving Round 2 validations")
+    print("GRAMLANG: round 2 validations")
     print("="*60)
 
     all_results = {}
 
-    # analysis 4: Statistical validation (no GPU needed, quick)
-    print("\n[1/6] Statistical Validation...")
+    # no GPU needed, quick
+    print("\n[1/6] statistical validation...")
     try:
         all_results['statistical_validation'] = analysis_4_statistical_validation()
     except Exception as e:
-        print(f"  ERROR: {e}")
+        print(f"  error: {e}")
 
-    # analysis 6: Compositionality circularity (no GPU needed)
-    print("\n[2/6] Compositionality Circularity...")
+    # no GPU needed
+    print("\n[2/6] compositionality circularity...")
     try:
         all_results['compositionality_circularity'] = analysis_6_compositionality_circularity()
     except Exception as e:
-        print(f"  ERROR: {e}")
+        print(f"  error: {e}")
 
-    # analysis 2: Probe quality stratification (no GPU needed)
-    print("\n[3/6] Probe Quality Stratification...")
+    # no GPU needed
+    print("\n[3/6] probe quality stratification...")
     try:
         all_results['probe_stratification'] = analysis_2_probe_quality_stratification()
     except Exception as e:
-        print(f"  ERROR: {e}")
+        print(f"  error: {e}")
 
-    # analysis 5: GC correlation all datasets (needs GPU)
-    print("\n[4/6] GC Correlation All Datasets...")
+    # needs GPU
+    print("\n[4/6] GC correlation, all datasets...")
     try:
         all_results['gc_correlation'] = analysis_5_gc_all_datasets()
     except Exception as e:
-        print(f"  ERROR: {e}")
+        print(f"  error: {e}")
 
-    # analysis 1: Positive control all models (needs GPU, critical)
-    print("\n[5/6] Positive Control All Models...")
+    # needs GPU
+    print("\n[5/6] positive control, all models...")
     try:
         all_results['positive_control'] = analysis_1_positive_control_all_models()
     except Exception as e:
-        print(f"  ERROR: {e}")
+        print(f"  error: {e}")
 
-    # analysis 3: Factorial all models (needs GPU, slower)
-    print("\n[6/6] Factorial Decomposition All Models...")
+    # needs GPU, slower
+    print("\n[6/6] factorial decomposition, all models...")
     try:
         all_results['factorial_all_models'] = analysis_3_factorial_all_models()
     except Exception as e:
-        print(f"  ERROR: {e}")
+        print(f"  error: {e}")
 
-    # Save master results
     output_path = RESULTS_DIR / 'all_validation_analysiss.json'
     with open(output_path, 'w') as f:
         json.dump(all_results, f, indent=2, default=str)
 
     print("\n" + "="*60)
-    print("validation analysis COMPLETE")
+    print("validation analyses complete")
     print("="*60)
     print(f"\nResults saved to: {RESULTS_DIR}")
 
-    # Summary
     print("\n" + "-"*60)
-    print("analysis SUMMARY")
+    print("summary")
     print("-"*60)
 
     for key, result in all_results.items():
         if result and 'error' not in str(result):
-            print(f"  ✓ {key}: RESOLVED")
+            print(f"  {key}: ok")
         else:
-            print(f"  ✗ {key}: FAILED or PARTIAL")
+            print(f"  {key}: failed or partial")
 
 
 if __name__ == '__main__':

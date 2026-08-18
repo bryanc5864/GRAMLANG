@@ -1,8 +1,7 @@
 """
-Causal grammar rule extraction via controlled perturbation.
+Causal grammar rule extraction by controlled perturbation.
 
-For each motif pair, systematically varies spacing and orientation
-to extract explicit, interpretable grammar rules.
+Sweep spacing and orientation for each motif pair and read off explicit rules.
 """
 
 import numpy as np
@@ -27,12 +26,7 @@ class GrammarRuleExtractor:
         spacing_range: Tuple[int, int] = (2, 50),
         spacing_step: int = 1,
     ) -> Dict[str, dict]:
-        """
-        For each motif pair, extract spacing and orientation preferences.
-
-        Returns:
-            Dict keyed by "motifA_motifB", values contain spacing/orientation profiles
-        """
+        """Spacing and orientation preferences per motif pair, keyed "motifA_motifB"."""
         motifs = motif_annotations.get('motifs', [])
         if len(motifs) < 2:
             return {}
@@ -41,7 +35,7 @@ class GrammarRuleExtractor:
         seq_len = len(sequence)
         rules = {}
 
-        for i, j in combinations(range(min(len(motifs), 10)), 2):  # Cap at 10 motifs
+        for i, j in combinations(range(min(len(motifs), 10)), 2):  # cap at 10 motifs
             motif_a = motifs[i]
             motif_b = motifs[j]
             pair_key = f"{motif_a.get('motif_name', 'A')}_{motif_b.get('motif_name', 'B')}"
@@ -52,16 +46,15 @@ class GrammarRuleExtractor:
             if not seq_a or not seq_b:
                 continue
 
-            # --- v3 FIX: Optimize spacing INDEPENDENTLY per orientation ---
+            # v3 fix: optimize spacing independently per orientation
             spacings = list(range(spacing_range[0], spacing_range[1] + 1, spacing_step))
             orientations = ['+/+', '+/-', '-/+', '-/-']
 
-            # Randomize orientation testing order to eliminate first-element bias
+            # randomize orientation order, otherwise the first one is favoured
             rng = np.random.default_rng(hash(pair_key) % (2**32))
             orient_order = rng.permutation(len(orientations)).tolist()
             orientations_shuffled = [orientations[k] for k in orient_order]
 
-            # Scan spacing for EACH orientation independently
             orient_spacing_profiles = {}
             orient_optimal_spacings = {}
             orient_optimal_exprs = {}
@@ -98,51 +91,49 @@ class GrammarRuleExtractor:
             if not orient_optimal_exprs:
                 continue
 
-            # --- v3 FIX: Select optimal orientation via permutation test ---
-            # Use the expression at each orientation's own optimal spacing
+            # v3 fix: pick the orientation by permutation test, scoring each at
+            # its own optimal spacing
             orient_max_exprs = np.array([orient_optimal_exprs[o] for o in orientations_shuffled
                                           if o in orient_optimal_exprs])
             orient_names = [o for o in orientations_shuffled if o in orient_optimal_exprs]
 
             orient_sensitivity = float(np.std(orient_max_exprs)) if len(orient_max_exprs) > 1 else 0.0
 
-            # v3 FIX: Only assign optimal orientation if sensitivity is above threshold
+            # only claim an orientation preference if sensitivity clears threshold
             ORIENT_SENSITIVITY_THRESHOLD = 0.01  # minimum std to call a preference
             if orient_sensitivity >= ORIENT_SENSITIVITY_THRESHOLD and len(orient_names) >= 2:
-                # Use the orientation with highest expression at its optimal spacing
                 best_orient_idx = int(np.argmax(orient_max_exprs))
                 optimal_orientation = orient_names[best_orient_idx]
             else:
-                # v3 FIX: "undetermined" instead of defaulting to +/+
+                # v3 fix: say "undetermined" rather than defaulting to +/+
                 optimal_orientation = 'undetermined'
 
-            # Build orientation effects dict at each orientation's own optimal spacing
+            # orientation effects, each at its own optimal spacing
             orientation_effects = {o: orient_optimal_exprs[o] for o in orient_names}
 
-            # Use +/+ spacing profile for the main profile (for backward compatibility)
-            # but also store per-orientation profiles
+            # main profile stays +/+ for backward compatibility, but keep the
+            # per-orientation profiles too
             if '+/+' in orient_spacing_profiles:
                 main_profile = orient_spacing_profiles['+/+']
             else:
-                # Use first available orientation's profile
+                # fall back to the first orientation available
                 first_orient = orient_names[0]
                 main_profile = orient_spacing_profiles[first_orient]
 
             main_exprs = np.array(main_profile['expressions'])
             main_spacings = main_profile['spacings']
 
-            # Global optimal: best expression across ALL orientations and spacings
+            # global optimum over all orientations and spacings
             global_best_expr = max(orient_optimal_exprs.values())
             global_worst_expr = min(
                 min(p['expressions']) for p in orient_spacing_profiles.values()
             )
 
-            # Helical phase score (from +/+ profile or first available)
+            # helical phase, from +/+ or whatever is available
             helical_score = self._compute_helical_phase(
                 np.array(main_spacings[:len(main_exprs)]), main_exprs
             )
 
-            # Compile rule
             rules[pair_key] = {
                 'motif_a_name': motif_a.get('motif_name', 'A'),
                 'motif_b_name': motif_b.get('motif_name', 'B'),
@@ -192,11 +183,11 @@ class GrammarRuleExtractor:
         spacings = np.array(spacings, dtype=float)
         expressions = np.array(expressions, dtype=float)
 
-        # Detrend
+        # detrend
         coeffs = np.polyfit(spacings, expressions, 1)
         detrended = expressions - np.polyval(coeffs, spacings)
 
-        # Interpolate to uniform spacing
+        # interpolate onto a uniform grid
         try:
             fn = interp1d(spacings, detrended, kind='linear', fill_value='extrapolate')
             uniform = np.arange(spacings[0], spacings[-1] + 1)
@@ -204,7 +195,6 @@ class GrammarRuleExtractor:
         except Exception:
             return 0.0
 
-        # FFT
         if len(uniform_expr) < 5:
             return 0.0
 
@@ -212,7 +202,7 @@ class GrammarRuleExtractor:
         freqs = np.fft.rfftfreq(len(uniform_expr), d=1.0)
         power = np.abs(fft_vals) ** 2
 
-        # Find power at helical repeat frequency (1/10.5 ~ 0.095 cycles/bp)
+        # power at the helical repeat, 1/10.5 ~ 0.095 cycles/bp
         helical_freq = 1.0 / 10.5
         freq_idx = np.argmin(np.abs(freqs - helical_freq))
 

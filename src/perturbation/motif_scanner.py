@@ -1,8 +1,6 @@
 """
-Motif scanning using FIMO from the MEME Suite.
-
-Scans DNA sequences for transcription factor binding motifs
-from JASPAR and other motif databases.
+Motif scanning with FIMO from the MEME suite, with a numpy PWM fallback for
+when FIMO is not installed.
 """
 
 import subprocess
@@ -16,7 +14,7 @@ from typing import List, Optional
 class MotifScanner:
     """Scan sequences for TF binding motifs using FIMO."""
 
-    # Default FIMO binary path from local MEME Suite install
+    # local MEME suite install
     _FIMO_PATHS = [
         os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
             os.path.abspath(__file__)))), 'tools', 'meme', 'bin', 'fimo'),
@@ -26,11 +24,8 @@ class MotifScanner:
     def __init__(self, motif_database_path: str, p_threshold: float = 1e-4,
                  score_fraction: float = 0.7, fimo_path: str = None):
         """
-        Args:
-            motif_database_path: Path to MEME-format motif database
-            p_threshold: FIMO p-value threshold (used when FIMO is available)
-            score_fraction: Min fraction of max PWM score for fallback scanner
-            fimo_path: Explicit path to FIMO binary (auto-detected if None)
+        p_threshold applies when FIMO is available; score_fraction is the
+        min fraction of the max PWM score used by the fallback scanner.
         """
         self.motif_db = motif_database_path
         self.p_threshold = p_threshold
@@ -60,11 +55,8 @@ class MotifScanner:
     def scan_sequences(self, sequences: List[str],
                        sequence_ids: Optional[List[str]] = None) -> pd.DataFrame:
         """
-        Scan sequences for all motifs in database.
-
-        Returns:
-            DataFrame with columns: seq_id, motif_id, motif_name,
-            start, end, strand, score, p_value, matched_sequence
+        Scan every sequence against every motif. Columns: seq_id, motif_id,
+        motif_name, start, end, strand, score, p_value, matched_sequence.
         """
         if sequence_ids is None:
             sequence_ids = [f"seq_{i}" for i in range(len(sequences))]
@@ -92,7 +84,7 @@ class MotifScanner:
             fasta_path
         ]
 
-        timeout = max(300, 10 * len(sequences))  # Scale with batch size
+        timeout = max(300, 10 * len(sequences))  # scale with batch size
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         os.unlink(fasta_path)
 
@@ -123,10 +115,7 @@ class MotifScanner:
         return pd.DataFrame(records) if records else self._empty_result()
 
     def _scan_fallback(self, sequences, sequence_ids):
-        """
-        Vectorized PWM-based fallback scanner when FIMO is not available.
-        Uses numpy for fast batch scoring across all sequences.
-        """
+        """Vectorized PWM fallback for when FIMO is missing."""
         pwms = self._parse_meme_file()
         if not pwms:
             return self._empty_result()
@@ -136,7 +125,7 @@ class MotifScanner:
         BASE_MAP = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
         records = []
 
-        # Convert all sequences to integer arrays once
+        # sequences to integer arrays, once
         seq_arrays_fwd = []
         seq_arrays_rev = []
         seq_uppers = []
@@ -149,16 +138,15 @@ class MotifScanner:
             arr_rc = np.array([BASE_MAP.get(c, -1) for c in rc], dtype=np.int8)
             seq_arrays_rev.append(arr_rc)
 
-        # Precompute log-odds matrices for all motifs
+        # precompute log-odds for every motif
         motif_logodds = {}
         for motif_name, pwm in pwms.items():
             logodds = np.log2(np.maximum(pwm, 1e-6) / 0.25)  # (motif_len, 4)
             motif_logodds[motif_name] = logodds
 
-        # Score all sequences against all motifs using vectorized operations
         for motif_name, logodds in motif_logodds.items():
             motif_len = len(logodds)
-            # Max possible score for this specific PWM
+            # max attainable score for this PWM
             max_score = float(logodds.max(axis=1).sum())
             if max_score <= 0:
                 continue
@@ -172,16 +160,16 @@ class MotifScanner:
 
                 n_pos = seq_len - motif_len + 1
 
-                # Forward strand - vectorized scoring
+                # forward strand
                 for strand, arr, is_rev in [('+', arr_fwd, False), ('-', arr_rev, True)]:
-                    # Build position matrix: (n_pos, motif_len) of base indices
+                    # (n_pos, motif_len) of base indices
                     positions = np.lib.stride_tricks.as_strided(
                         arr,
                         shape=(n_pos, motif_len),
                         strides=(arr.strides[0], arr.strides[0]),
                     ).copy()
 
-                    # Mask N positions
+                    # mask out N
                     valid_mask = np.all(positions >= 0, axis=1)  # (n_pos,)
 
                     if not np.any(valid_mask):
@@ -190,14 +178,12 @@ class MotifScanner:
                     valid_positions = positions[valid_mask]  # (n_valid, motif_len)
                     valid_indices = np.where(valid_mask)[0]
 
-                    # Score: sum logodds[pos_in_motif, base] across motif
                     motif_idx = np.arange(motif_len)
                     scores = logodds[motif_idx, valid_positions].sum(axis=1)  # (n_valid,)
 
-                    # Score fraction threshold (more reliable than approximate p-values)
+                    # score fraction is more reliable than the approximate p-values
                     fracs = scores / max_score
 
-                    # Filter by score fraction threshold
                     passing = fracs >= self.score_fraction
                     if not np.any(passing):
                         continue
@@ -208,7 +194,7 @@ class MotifScanner:
                             orig_start = seq_len - pos - motif_len
                         else:
                             orig_start = pos
-                        # Approximate p-value from score fraction
+                        # approximate p-value from the score fraction
                         frac = float(fracs[idx])
                         approx_p = float(np.exp(-max_score * max(frac, 0)))
                         records.append({
@@ -244,7 +230,7 @@ class MotifScanner:
                     parts = line.split()
                     current_motif = parts[1] if len(parts) > 1 else None
                     if len(parts) > 2:
-                        current_motif = parts[2]  # Use alt name if available
+                        current_motif = parts[2]  # alt name if there is one
                     current_pwm = []
                     reading_pwm = False
                 elif line.startswith('letter-probability matrix'):
@@ -269,23 +255,22 @@ class MotifScanner:
         for i, base in enumerate(seq):
             if base in base_map:
                 prob = pwm[i][base_map[base]]
-                score += np.log2(max(prob, 1e-6) / 0.25)  # Log-odds vs uniform
+                score += np.log2(max(prob, 1e-6) / 0.25)  # log-odds vs uniform
         return score
 
     def _score_to_pvalue(self, score, motif_len, max_score=None):
-        """Approximate p-value from PWM score.
+        """Approximate p-value from a PWM score, calibrated off the score fraction.
 
-        Uses a calibration based on the fraction of max possible score.
-        For typical JASPAR motifs: 80% of max ≈ p~1e-4 for 8-12bp motifs.
+        For typical JASPAR motifs 80% of max is roughly p ~ 1e-4 at 8-12bp.
         """
         if max_score is None:
             max_score = 2.0 * motif_len
         if max_score <= 0:
             return 1.0
         frac = score / max_score
-        # Calibrated: frac=0.5 -> p~0.01, frac=0.7 -> p~5e-4, frac=0.85 -> p~1e-5
-        # Uses exponential scaled by motif information content
-        ic_scale = max(max_score / 2.0, 3.0)  # Higher IC = steeper curve
+        # calibration: frac=0.5 -> p~0.01, 0.7 -> ~5e-4, 0.85 -> ~1e-5,
+        # exponential scaled by motif information content
+        ic_scale = max(max_score / 2.0, 3.0)  # higher IC, steeper curve
         return float(np.exp(-ic_scale * max(frac, 0)))
 
     def _empty_result(self):

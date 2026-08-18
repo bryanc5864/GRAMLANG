@@ -1,8 +1,7 @@
-"""
-Motif Encoder: Extract motif-level embeddings from frozen foundation model.
+"""Motif-level embeddings pulled out of a frozen foundation model.
 
-Given a sequence and motif annotations, extracts embeddings at motif positions
-and pools them into motif-level representations.
+given a sequence plus motif annotations, pool the token embeddings that fall
+inside each motif span.
 """
 
 import torch
@@ -10,21 +9,15 @@ import torch.nn as nn
 import numpy as np
 from typing import List, Dict, Optional, Tuple
 
-# Use the existing model loader that handles DNABERT-2 correctly
+# model_loader is the only thing that loads DNABERT-2 correctly
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 
 
 class MotifEncoder(nn.Module):
-    """
-    Extracts motif-level embeddings from a frozen foundation model.
-
-    For each motif in the sequence:
-    1. Get token embeddings from foundation model
-    2. Pool tokens within motif span → motif embedding
-    3. Return list of motif embeddings + their metadata
-    """
+    """Per-motif embeddings: token embeddings pooled over each motif span,
+    returned with the motif metadata."""
 
     def __init__(
         self,
@@ -39,11 +32,9 @@ class MotifEncoder(nn.Module):
         self.device = device
         self._freeze = freeze
 
-        # Use existing model loader
         from src.models.model_loader import load_model
         self._base_model = load_model(model_name, dataset_name='__dummy__')
 
-        # Access internal model and tokenizer
         self.model = self._base_model.model
         self.tokenizer = self._base_model.tokenizer
 
@@ -55,14 +46,7 @@ class MotifEncoder(nn.Module):
         self.hidden_dim = self._base_model.hidden_dim
 
     def _get_token_embeddings(self, sequence: str) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
-        """
-        Get token-level embeddings and character-to-token mapping.
-
-        Returns:
-            embeddings: (seq_len, hidden_dim) token embeddings
-            char_to_token: list of (start_char, end_char) for each token
-        """
-        # Tokenize with offset mapping
+        """(seq_len, hidden_dim) token embeddings + per-token char offsets."""
         encoding = self.tokenizer(
             sequence,
             return_tensors='pt',
@@ -76,11 +60,10 @@ class MotifEncoder(nn.Module):
 
         with torch.no_grad():
             outputs = self.model(input_ids, output_hidden_states=True)
-            # Use last hidden state
             if hasattr(outputs, 'last_hidden_state'):
                 embeddings = outputs.last_hidden_state[0]  # (n_tokens, hidden_dim)
             else:
-                embeddings = outputs[0][0]  # Fallback for tuple output
+                embeddings = outputs[0][0]  # tuple output
 
         return embeddings, offset_mapping
 
@@ -91,20 +74,16 @@ class MotifEncoder(nn.Module):
         motif_start: int,
         motif_end: int
     ) -> torch.Tensor:
-        """
-        Pool token embeddings within a motif span.
-        """
-        # Find tokens that overlap with motif
+        """Pool token embeddings inside one motif span."""
         motif_token_indices = []
         for idx, (tok_start, tok_end) in enumerate(offset_mapping):
             if tok_start is None or tok_end is None:
                 continue
-            # Check overlap
             if tok_start < motif_end and tok_end > motif_start:
                 motif_token_indices.append(idx)
 
         if len(motif_token_indices) == 0:
-            # Fallback: return zero embedding
+            # no token overlaps the span
             return torch.zeros(self.hidden_dim, device=self.device)
 
         motif_embeddings = embeddings[motif_token_indices]  # (n_motif_tokens, hidden_dim)
@@ -114,7 +93,7 @@ class MotifEncoder(nn.Module):
         elif self.pool_strategy == 'max':
             return motif_embeddings.max(dim=0)[0]
         elif self.pool_strategy == 'cls':
-            return motif_embeddings[0]  # First token
+            return motif_embeddings[0]
         else:
             return motif_embeddings.mean(dim=0)
 
@@ -123,24 +102,14 @@ class MotifEncoder(nn.Module):
         sequence: str,
         motif_annotations: List[Dict]
     ) -> Tuple[torch.Tensor, List[Dict]]:
-        """
-        Extract motif embeddings from sequence.
+        """Motif_annotations: dicts with 'start', 'end', 'motif_name', 'strand'.
 
-        Args:
-            sequence: DNA sequence string
-            motif_annotations: List of dicts with 'start', 'end', 'motif_name', 'strand'
-
-        Returns:
-            motif_embeddings: (n_motifs, hidden_dim) tensor
-            motif_metadata: List of dicts with position/name info
-        """
+        returns (n_motifs, hidden_dim) embeddings + matching metadata dicts."""
         if len(motif_annotations) == 0:
             return torch.zeros(0, self.hidden_dim, device=self.device), []
 
-        # Get token embeddings
         token_embeddings, offset_mapping = self._get_token_embeddings(sequence)
 
-        # Pool for each motif
         motif_embeddings = []
         motif_metadata = []
 
@@ -171,9 +140,7 @@ class MotifEncoder(nn.Module):
         sequences: List[str],
         motif_annotations_batch: List[List[Dict]],
     ) -> List[Tuple[torch.Tensor, List[Dict]]]:
-        """
-        Batch forward pass.
-        """
+        """Forward() over a batch, one sequence at a time."""
         results = []
         for seq, motifs in zip(sequences, motif_annotations_batch):
             results.append(self.forward(seq, motifs))
@@ -181,10 +148,8 @@ class MotifEncoder(nn.Module):
 
 
 class SequenceEncoder(nn.Module):
-    """
-    Full sequence encoder for composition features.
-    Returns pooled sequence embedding (for GC, k-mer info implicitly encoded).
-    """
+    """Whole-sequence pooled embedding, used for the composition features
+    (GC and k-mer content end up encoded implicitly)."""
 
     def __init__(
         self,
@@ -196,7 +161,6 @@ class SequenceEncoder(nn.Module):
         self.model_name = model_name
         self.device = device
 
-        # Use existing model loader
         from src.models.model_loader import load_model
         self._base_model = load_model(model_name, dataset_name='__dummy__')
 
@@ -211,15 +175,7 @@ class SequenceEncoder(nn.Module):
         self.hidden_dim = self._base_model.hidden_dim
 
     def forward(self, sequences: List[str]) -> torch.Tensor:
-        """
-        Get pooled sequence embeddings.
-
-        Args:
-            sequences: List of DNA sequences
-
-        Returns:
-            embeddings: (batch_size, hidden_dim)
-        """
+        """Mean-pooled embeddings, (batch_size, hidden_dim)."""
         encoding = self.tokenizer(
             sequences,
             return_tensors='pt',
@@ -235,7 +191,6 @@ class SequenceEncoder(nn.Module):
             else:
                 hidden = outputs[0]
 
-            # Mean pool over sequence length
             mask = encoding['attention_mask'].unsqueeze(-1)
             pooled = (hidden * mask).sum(dim=1) / mask.sum(dim=1)
 

@@ -1,4 +1,4 @@
-"""Generate all final summary figures for GRAMLANG project."""
+"""Final summary figures for GRAMLANG."""
 
 import json
 import numpy as np
@@ -38,7 +38,7 @@ MODEL_COLORS = {
 
 
 def fig1_gsi_overview():
-    """Figure 1: Grammar Existence - GSI Distribution and Summary."""
+    """GSI distributions and grammar info content."""
     gsi_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module1', 'all_gsi_results.parquet'))
 
     fig, axes = plt.subplots(2, 2, figsize=(14, 11))
@@ -76,7 +76,7 @@ def fig1_gsi_overview():
         ax.set_title('(B) GSI by Dataset and Model')
         ax.legend()
 
-    # (C) Grammar information content
+    # (C) grammar information content
     ax = axes[1, 0]
     info_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module1', 'grammar_information.parquet'))
     models = info_df['model'].unique()
@@ -92,7 +92,7 @@ def fig1_gsi_overview():
     ax.set_title('(C) Grammar Information Content')
     ax.legend()
 
-    # (D) Max disruption by model
+    # (D) max disruption by model
     ax = axes[1, 1]
     for model in ['dnabert2', 'nt', 'hyenadna']:
         data = gsi_df[gsi_df['model'] == model]['max_disruption']
@@ -108,16 +108,16 @@ def fig1_gsi_overview():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig1_grammar_existence.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig1_grammar_existence.png'))
     plt.close()
-    print("  Fig 1: Grammar existence complete")
+    print("  fig 1: grammar existence done")
 
 
 def fig2_compositionality():
-    """Figure 2: Compositionality and Chomsky Classification."""
+    """Compositionality gap and Chomsky bands."""
     comp_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module3', 'compositionality_results.parquet'))
 
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
 
-    # (A) Compositionality gap vs k
+    # (A) compositionality gap vs k
     ax = axes[0]
     gap_by_k = comp_df.groupby('n_motifs')['compositionality_gap'].agg(
         ['mean', 'std', 'count']
@@ -134,7 +134,7 @@ def fig2_compositionality():
     ax.legend(fontsize=8)
     ax.set_ylim(0, 1.05)
 
-    # (B) Per-model compositionality
+    # (B) per-model compositionality
     ax = axes[1]
     for model in ['dnabert2', 'nt', 'hyenadna']:
         model_data = comp_df[comp_df['model'] == model]
@@ -147,7 +147,7 @@ def fig2_compositionality():
     ax.legend()
     ax.set_ylim(0.95, 1.0)
 
-    # (C) Pairwise R² distribution
+    # (C) pairwise R² distribution
     ax = axes[2]
     ax.hist(comp_df['pairwise_r2'], bins=50, color='steelblue', alpha=0.7, edgecolor='black', linewidth=0.3)
     ax.axvline(x=comp_df['pairwise_r2'].mean(), color='red', linestyle='--',
@@ -162,17 +162,17 @@ def fig2_compositionality():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig2_compositionality.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig2_compositionality.png'))
     plt.close()
-    print("  Fig 2: Compositionality complete")
+    print("  fig 2: compositionality done")
 
 
 def fig3_rules_consensus():
-    """Figure 3: Grammar Rules & Cross-Model Consensus."""
+    """Rule strength, spacing, consensus, helical phasing."""
     rules_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module2', 'grammar_rules_database.parquet'))
     consensus_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module2', 'consensus_scores.parquet'))
 
     fig, axes = plt.subplots(2, 2, figsize=(14, 11))
 
-    # (A) Rule fold change distribution
+    # (A) rule fold change distribution
     ax = axes[0, 0]
     ax.hist(rules_df['fold_change'], bins=50, color='coral', alpha=0.7, edgecolor='black', linewidth=0.3)
     ax.axvline(x=rules_df['fold_change'].mean(), color='red', linestyle='--',
@@ -182,14 +182,14 @@ def fig3_rules_consensus():
     ax.set_title('(A) Grammar Rule Strength Distribution')
     ax.legend()
 
-    # (B) Spacing sensitivity distribution
+    # (B) spacing sensitivity distribution
     ax = axes[0, 1]
     ax.hist(rules_df['spacing_sensitivity'], bins=50, color='steelblue', alpha=0.7, edgecolor='black', linewidth=0.3)
     ax.set_xlabel('Spacing Sensitivity (CV across spacings)')
     ax.set_ylabel('Count')
     ax.set_title('(B) Spacing Sensitivity Distribution')
 
-    # (C) Consensus score distribution
+    # (C) consensus score distribution
     ax = axes[1, 0]
     if 'consensus_score' in consensus_df.columns:
         ax.hist(consensus_df['consensus_score'], bins=40, color='mediumpurple',
@@ -201,7 +201,7 @@ def fig3_rules_consensus():
         ax.set_title('(C) Cross-Model Consensus Distribution')
         ax.legend()
 
-    # (D) Helical phasing score
+    # (D) helical phasing score
     ax = axes[1, 1]
     if 'helical_phase_score' in rules_df.columns:
         ax.hist(rules_df['helical_phase_score'], bins=50, color='forestgreen',
@@ -218,16 +218,16 @@ def fig3_rules_consensus():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_rules_consensus.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_rules_consensus.png'))
     plt.close()
-    print("  Fig 3: Rules & consensus complete")
+    print("  fig 3: rules and consensus done")
 
 
 def fig4_transfer():
-    """Figure 4: Cross-Species Grammar Transfer."""
+    """Cross-species transfer heatmaps."""
     transfer_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module4', 'transfer_matrix.parquet'))
 
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
-    # (A) Transfer R² heatmap
+    # (A) transfer R² heatmap
     ax = axes[0]
     species = sorted(transfer_df['source'].unique())
     n = len(species)
@@ -243,7 +243,7 @@ def fig4_transfer():
     ax.set_ylabel('Source Species')
     ax.set_title('(A) Cross-Species Grammar Transfer (R²)')
 
-    # (B) Transfer correlation heatmap
+    # (B) transfer correlation heatmap
     ax = axes[1]
     corr_matrix = np.zeros((n, n))
     for _, row in transfer_df.iterrows():
@@ -262,14 +262,14 @@ def fig4_transfer():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig4_transfer.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig4_transfer.png'))
     plt.close()
-    print("  Fig 4: Transfer complete")
+    print("  fig 4: transfer done")
 
 
 def fig5_biophysics():
-    """Figure 5: Causal Determinants - Biophysics and Phase Diagrams."""
+    """Biophysics R2 and phase diagrams."""
     fig, axes = plt.subplots(2, 2, figsize=(14, 11))
 
-    # (A) Biophysics R² comparison
+    # (A) biophysics R² comparison
     ax = axes[0, 0]
     datasets_bio = ['Vaishnav\n(Yeast)', 'Klein\n(Human)']
     r2_vals = [0.218, 0.375]  # v2 corrected (gsi_robust): Vaishnav=0.218, Klein=0.375
@@ -282,7 +282,7 @@ def fig5_biophysics():
     ax.set_title('(A) Biophysical Explanation of Grammar')
     ax.set_ylim(0, 0.5)
 
-    # (B) Top features comparison
+    # (B) top features
     ax = axes[0, 1]
     with open(os.path.join(RESULTS_DIR, 'module5', 'klein_biophysics.json')) as f:
         klein_bio = json.load(f)
@@ -340,11 +340,11 @@ def fig5_biophysics():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_biophysics.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_biophysics.png'))
     plt.close()
-    print("  Fig 5: Biophysics & phase diagrams complete")
+    print("  fig 5: biophysics and phase diagrams done")
 
 
 def fig6_completeness():
-    """Figure 6: Grammar Completeness Ceiling."""
+    """Grammar completeness ceiling."""
     datasets = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
     labels = ['Agarwal\n(K562)', 'Inoue\n(Neural)', 'Vaishnav\n(Yeast)', 'Jores\n(Plant)', 'Klein\n(HepG2)']
 
@@ -357,7 +357,7 @@ def fig6_completeness():
 
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 
-    # (A) Stacked R² comparison across datasets
+    # (A) stacked R² across datasets
     ax = axes[0]
     x = np.arange(len(datasets))
     vocab_r2 = [completeness_data[ds]['vocabulary_r2'] for ds in datasets]
@@ -379,7 +379,7 @@ def fig6_completeness():
     ax.legend(fontsize=8)
     ax.set_ylim(0, 1.0)
 
-    # (B) Grammar completeness percentages
+    # (B) completeness percentages
     ax = axes[1]
     completeness_pct = [completeness_data[ds]['grammar_completeness'] * 100 for ds in datasets]
     grammar_contrib = [completeness_data[ds]['grammar_contribution'] for ds in datasets]
@@ -400,14 +400,14 @@ def fig6_completeness():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig6_completeness.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig6_completeness.png'))
     plt.close()
-    print("  Fig 6: Completeness complete")
+    print("  fig 6: completeness done")
 
 
 def fig7_summary():
-    """Figure 7: Grand Summary - Key Findings Overview."""
+    """Everything on one page."""
     fig, axes = plt.subplots(2, 3, figsize=(18, 11))
 
-    # (A) Key numbers
+    # (A) key numbers
     ax = axes[0, 0]
     ax.axis('off')
     summary_text = (
@@ -444,7 +444,7 @@ def fig7_summary():
     ax.set_title('(B) Grammar Sensitivity by Model')
     ax.set_ylim(0, 0.22)
 
-    # (C) Compositionality gap summary
+    # (C) compositionality gap summary
     ax = axes[0, 2]
     k_vals = [3, 4, 5, 6, 7]
     gaps = [0.992, 0.989, 0.988, 0.989, 0.991]
@@ -456,7 +456,7 @@ def fig7_summary():
     ax.set_ylim(0.98, 1.0)
     ax.axhline(y=0.99, color='red', linestyle=':', alpha=0.3)
 
-    # (D) Transfer matrix
+    # (D) transfer matrix
     ax = axes[1, 0]
     transfer_matrix = np.array([[0.151, 0.000], [0.000, 0.004]])  # v2 corrected
     sns.heatmap(transfer_matrix, xticklabels=['Human', 'Yeast'],
@@ -465,7 +465,7 @@ def fig7_summary():
                 cbar_kws={'label': 'R²'})
     ax.set_title('(D) Cross-Species Transfer')
 
-    # (E) Biophysics R²
+    # (E) biophysics R²
     ax = axes[1, 1]
     species = ['Yeast', 'Human']
     bio_r2 = [0.218, 0.375]  # v2 corrected (gsi_robust)
@@ -477,7 +477,7 @@ def fig7_summary():
     ax.legend(fontsize=8)
     ax.set_xlim(0, 1)
 
-    # (F) Completeness
+    # (F) completeness
     ax = axes[1, 2]
     ds_labels = ['Agarwal', 'Inoue', 'Vaishnav', 'Jores', 'Klein']
     completeness = [17.7, 5.7, 11.1, 12.4, 16.6]
@@ -496,7 +496,7 @@ def fig7_summary():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig7_summary.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig7_summary.png'))
     plt.close()
-    print("  Fig 7: Summary complete")
+    print("  fig 7: summary done")
 
 
 if __name__ == '__main__':
@@ -509,7 +509,7 @@ if __name__ == '__main__':
     fig6_completeness()
     fig7_summary()
     print(f"\nAll figures saved to {FIGURES_DIR}/")
-    print("Files generated:")
+    print("files generated:")
     for f in sorted(os.listdir(FIGURES_DIR)):
         size = os.path.getsize(os.path.join(FIGURES_DIR, f))
         print(f"  {f}: {size/1024:.1f} KB")

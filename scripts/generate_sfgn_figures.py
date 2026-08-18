@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Generate publication-quality figures for SFGN NeurIPS submission.
-"""
+"""Figures for the SFGN results."""
 
 import os
 import sys
@@ -14,7 +12,6 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Set style
 plt.style.use('seaborn-v0_8-whitegrid')
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.size'] = 11
@@ -35,7 +32,7 @@ DATASET_LABELS = {
 
 
 def load_training_history():
-    """Load training history for all datasets."""
+    """Training history per dataset."""
     histories = {}
     for dataset in DATASETS:
         path = Path(f'results/sfgn/{dataset}_sfgn_history.json')
@@ -46,7 +43,7 @@ def load_training_history():
 
 
 def load_metrics():
-    """Load final metrics for all datasets."""
+    """Final metrics per dataset."""
     metrics = {}
     for dataset in DATASETS:
         path = Path(f'results/sfgn/{dataset}_sfgn_metrics.json')
@@ -57,7 +54,7 @@ def load_metrics():
 
 
 def load_sf_gsi_results():
-    """Load SF-GSI results."""
+    """SF-GSI results per dataset."""
     results = {}
     for dataset in DATASETS:
         path = Path(f'results/sf_gsi/{dataset}_sf_gsi.json')
@@ -68,7 +65,7 @@ def load_sf_gsi_results():
 
 
 def fig1_alpha_trajectory(histories):
-    """Figure 1: Grammar weight (α) trajectory during training."""
+    """Alpha trajectory over training."""
     fig, ax = plt.subplots(figsize=(8, 5))
 
     colors = plt.cm.tab10(np.linspace(0, 1, len(histories)))
@@ -94,7 +91,7 @@ def fig1_alpha_trajectory(histories):
 
 
 def fig2_final_alpha_vs_r2(metrics):
-    """Figure 2: Final α vs R² scatter plot."""
+    """Final alpha vs R2 scatter."""
     fig, ax = plt.subplots(figsize=(7, 5))
 
     datasets = []
@@ -118,7 +115,6 @@ def fig2_final_alpha_vs_r2(metrics):
     ax.axhline(y=0, color='gray', linestyle='--', alpha=0.5)
     ax.axvline(x=0.5, color='gray', linestyle='--', alpha=0.5)
 
-    # Add annotation
     ax.annotate('Higher α, but\nlower/similar R²',
                 xy=(0.85, -0.15), fontsize=10, style='italic',
                 ha='center')
@@ -131,7 +127,7 @@ def fig2_final_alpha_vs_r2(metrics):
 
 
 def fig3_sf_gsi_decomposition(sf_gsi_results):
-    """Figure 3: SF-GSI decomposition showing spacer contribution."""
+    """SF-GSI decomposition, spacer vs grammar."""
     fig, ax = plt.subplots(figsize=(9, 5))
 
     datasets = []
@@ -142,7 +138,6 @@ def fig3_sf_gsi_decomposition(sf_gsi_results):
     for dataset in DATASETS:
         if dataset in sf_gsi_results:
             res = sf_gsi_results[dataset]['results']
-            # Use regression method
             if 'regression' in res and 'error' not in res['regression']:
                 datasets.append(DATASET_LABELS.get(dataset, dataset))
                 gsi_values.append(res['regression']['gsi'])
@@ -162,7 +157,6 @@ def fig3_sf_gsi_decomposition(sf_gsi_results):
     ax.set_xticklabels(datasets, rotation=15, ha='right')
     ax.legend()
 
-    # Add spacer contribution annotations
     for i, (d, sc) in enumerate(zip(datasets, spacer_contrib)):
         ax.annotate(f'{sc:.0f}% spacer', xy=(i, max(gsi_values[i], sf_gsi_values[i]) + 0.05),
                     ha='center', fontsize=9, color='gray')
@@ -175,12 +169,12 @@ def fig3_sf_gsi_decomposition(sf_gsi_results):
 
 
 def fig4_training_loss(histories):
-    """Figure 4: Training loss curves."""
+    """Training curves."""
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
 
     colors = plt.cm.tab10(np.linspace(0, 1, len(histories)))
 
-    # Left: Training MSE
+    # left: train mse
     ax = axes[0]
     for i, (dataset, history) in enumerate(histories.items()):
         epochs = [h['epoch'] for h in history]
@@ -192,7 +186,7 @@ def fig4_training_loss(histories):
     ax.set_title('Training Loss Decreases')
     ax.legend(loc='upper right')
 
-    # Right: Validation R²
+    # right: val R2
     ax = axes[1]
     for i, (dataset, history) in enumerate(histories.items()):
         epochs = [h['epoch'] for h in history]
@@ -213,11 +207,10 @@ def fig4_training_loss(histories):
 
 
 def fig5_summary_table(metrics, sf_gsi_results):
-    """Figure 5: Summary table as a figure."""
+    """Summary table rendered as a figure."""
     fig, ax = plt.subplots(figsize=(10, 4))
     ax.axis('off')
 
-    # Prepare data
     rows = []
     for dataset in DATASETS:
         row = [DATASET_LABELS.get(dataset, dataset)]
@@ -251,12 +244,10 @@ def fig5_summary_table(metrics, sf_gsi_results):
     table.set_fontsize(11)
     table.scale(1.2, 1.8)
 
-    # Style header
     for i in range(len(columns)):
         table[(0, i)].set_facecolor('#4472C4')
         table[(0, i)].set_text_props(color='white', fontweight='bold')
 
-    # Alternate row colors
     for i in range(1, len(rows) + 1):
         for j in range(len(columns)):
             if i % 2 == 0:
@@ -272,10 +263,9 @@ def fig5_summary_table(metrics, sf_gsi_results):
 
 
 def fig6_billboard_model(metrics):
-    """Figure 6: Visual explanation of billboard model finding."""
+    """Billboard model cartoon."""
     fig, ax = plt.subplots(figsize=(8, 6))
 
-    # Create conceptual diagram
     ax.text(0.5, 0.95, 'The Billboard Model of Regulatory DNA',
             ha='center', va='top', fontsize=14, fontweight='bold',
             transform=ax.transAxes)
@@ -290,7 +280,6 @@ def fig6_billboard_model(metrics):
     ax.text(0.5, 0.55, 'Interpretation:', ha='center', va='top',
             fontsize=12, fontweight='bold', transform=ax.transAxes)
 
-    # Two columns
     ax.text(0.25, 0.42, 'Grammar is learnable\n(motif positions matter\nduring training)',
             ha='center', va='top', fontsize=10, transform=ax.transAxes,
             bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.5))

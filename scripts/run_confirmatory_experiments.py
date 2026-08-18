@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 """
-Run comprehensive confirmatory experiments for the Billboard Model.
-
-Experiments:
-1. Per-enhancer grammar classification (billboard/soft/strong/enhanceosome)
-2. Motif-pair hotspot analysis (which TF pairs show grammar?)
-3. Cross-dataset consistency check
+Confirmatory experiments for the billboard model: per-enhancer grammar
+classification, motif-pair hotspots, and a cross-dataset consistency check.
 """
 
 import os
@@ -26,13 +22,9 @@ from src.models.model_loader import load_model
 
 def classify_enhancer(gsi_value, p_value, effect_size=None):
     """
-    Classify enhancer by grammar contribution.
-
-    Categories:
-    - billboard: No significant grammar (p > 0.05 or GSI < 0.1)
-    - soft: Weak grammar (p < 0.05, GSI 0.1-0.3)
-    - moderate: Moderate grammar (p < 0.01, GSI 0.3-0.5)
-    - strong: Strong grammar (p < 0.001, GSI > 0.5)
+    Bucket an enhancer by grammar contribution: billboard (p > 0.05 or
+    GSI < 0.1), soft (p < 0.05, GSI 0.1-0.3), moderate (p < 0.01, GSI 0.3-0.5),
+    strong (p < 0.001, GSI > 0.5).
     """
     if p_value > 0.05 or gsi_value < 0.1:
         return 'billboard'
@@ -53,7 +45,6 @@ def run_per_enhancer_classification(dataset_name, model_name='dnabert2',
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Load data
     data_path = Path('data/processed') / f'{dataset_name}_processed.parquet'
     motif_path = Path('data/processed') / f'{dataset_name}_processed_motif_hits.parquet'
 
@@ -64,10 +55,9 @@ def run_per_enhancer_classification(dataset_name, model_name='dnabert2',
     df = pd.read_parquet(data_path)
     motif_df = pd.read_parquet(motif_path)
 
-    # Load model with correct probe
+    # dataset-specific probe
     model = load_model(model_name, dataset_name=dataset_name)
 
-    # Sample enhancers
     if len(df) > n_enhancers:
         sample_idx = np.random.choice(len(df), n_enhancers, replace=False)
         df_sample = df.iloc[sample_idx].reset_index(drop=True)
@@ -83,7 +73,6 @@ def run_per_enhancer_classification(dataset_name, model_name='dnabert2',
         seq_id = row['seq_id']
         sequence = row['sequence']
 
-        # Get motifs for this sequence
         if seq_id not in motif_groups.groups:
             continue
 
@@ -101,7 +90,6 @@ def run_per_enhancer_classification(dataset_name, model_name='dnabert2',
             })
 
         try:
-            # Compute GSI
             gsi_result = compute_gsi(
                 sequence=sequence,
                 motif_annotations={'motifs': motif_list},
@@ -112,7 +100,6 @@ def run_per_enhancer_classification(dataset_name, model_name='dnabert2',
             gsi_value = gsi_result.get('gsi', 0)
             p_value = gsi_result.get('p_value', 1.0)
 
-            # Handle NaN
             if np.isnan(gsi_value) or np.isnan(p_value):
                 classification = 'billboard'
                 gsi_value = 0
@@ -134,7 +121,6 @@ def run_per_enhancer_classification(dataset_name, model_name='dnabert2',
             print(f"  Error on {seq_id}: {e}")
             continue
 
-    # Summary
     total = sum(classifications.values())
     summary = {
         'dataset': dataset_name,
@@ -146,7 +132,6 @@ def run_per_enhancer_classification(dataset_name, model_name='dnabert2',
         'per_enhancer_results': results
     }
 
-    # Save
     out_file = output_path / f'{dataset_name}_enhancer_classification.json'
     with open(out_file, 'w') as f:
         json.dump(summary, f, indent=2)
@@ -171,7 +156,6 @@ def run_motif_pair_analysis(dataset_name, model_name='dnabert2',
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Load data
     data_path = Path('data/processed') / f'{dataset_name}_processed.parquet'
     motif_path = Path('data/processed') / f'{dataset_name}_processed_motif_hits.parquet'
 
@@ -182,10 +166,9 @@ def run_motif_pair_analysis(dataset_name, model_name='dnabert2',
     df = pd.read_parquet(data_path)
     motif_df = pd.read_parquet(motif_path)
 
-    # Load model with correct probe
+    # dataset-specific probe
     model = load_model(model_name, dataset_name=dataset_name)
 
-    # Sample enhancers
     if len(df) > n_enhancers:
         sample_idx = np.random.choice(len(df), n_enhancers, replace=False)
         df_sample = df.iloc[sample_idx].reset_index(drop=True)
@@ -194,7 +177,6 @@ def run_motif_pair_analysis(dataset_name, model_name='dnabert2',
 
     motif_groups = motif_df.groupby('seq_id')
 
-    # Track pair-specific effects
     pair_effects = defaultdict(list)
 
     for idx, row in tqdm(df_sample.iterrows(), total=len(df_sample), desc="Analyzing pairs"):
@@ -220,7 +202,6 @@ def run_motif_pair_analysis(dataset_name, model_name='dnabert2',
             motif_names.append(m.get('motif_name', 'unknown'))
 
         try:
-            # Compute GSI
             gsi_result = compute_gsi(
                 sequence=sequence,
                 motif_annotations={'motifs': motif_list},
@@ -232,7 +213,7 @@ def run_motif_pair_analysis(dataset_name, model_name='dnabert2',
             if np.isnan(gsi_value):
                 gsi_value = 0
 
-            # Record for each unique pair
+            # one record per unique pair
             unique_motifs = sorted(set(motif_names))
             for i, m1 in enumerate(unique_motifs):
                 for m2 in unique_motifs[i:]:
@@ -242,10 +223,9 @@ def run_motif_pair_analysis(dataset_name, model_name='dnabert2',
         except Exception as e:
             continue
 
-    # Compute pair statistics
     pair_stats = []
     for pair, gsi_values in pair_effects.items():
-        if len(gsi_values) >= 5:  # Require at least 5 observations
+        if len(gsi_values) >= 5:  # need 5+ observations to say anything
             pair_stats.append({
                 'pair': pair,
                 'mean_gsi': float(np.mean(gsi_values)),
@@ -254,10 +234,9 @@ def run_motif_pair_analysis(dataset_name, model_name='dnabert2',
                 'frac_significant': float(np.mean([g > 0.3 for g in gsi_values]))
             })
 
-    # Sort by mean GSI
     pair_stats = sorted(pair_stats, key=lambda x: x['mean_gsi'], reverse=True)
 
-    # Identify hotspots (top 5%) and inert (bottom 50%)
+    # hotspots are the top 5%, inert the bottom 50%
     n_pairs = len(pair_stats)
     hotspot_threshold = int(n_pairs * 0.05)
     inert_threshold = int(n_pairs * 0.5)
@@ -270,14 +249,13 @@ def run_motif_pair_analysis(dataset_name, model_name='dnabert2',
         'model': model_name,
         'n_enhancers': len(df_sample),
         'n_unique_pairs': n_pairs,
-        'hotspot_pairs': hotspots[:20],  # Top 20
-        'inert_pairs': inert[:20],  # Bottom 20
+        'hotspot_pairs': hotspots[:20],
+        'inert_pairs': inert[:20],
         'all_pairs': pair_stats,
         'hotspot_mean_gsi': float(np.mean([p['mean_gsi'] for p in hotspots])) if hotspots else 0,
         'inert_mean_gsi': float(np.mean([p['mean_gsi'] for p in inert])) if inert else 0
     }
 
-    # Save
     out_file = output_path / f'{dataset_name}_motif_pair_analysis.json'
     with open(out_file, 'w') as f:
         json.dump(summary, f, indent=2)
@@ -303,7 +281,6 @@ def run_cross_dataset_consistency(datasets, model_name='dnabert2',
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Load existing classification results
     all_results = []
     for dataset in datasets:
         result_file = output_path / f'{dataset}_enhancer_classification.json'
@@ -323,7 +300,6 @@ def run_cross_dataset_consistency(datasets, model_name='dnabert2',
         print("  No classification results found. Run per-enhancer classification first.")
         return None
 
-    # Compute cross-dataset statistics
     billboard_pcts = [r['billboard_pct'] for r in all_results]
 
     summary = {
@@ -334,11 +310,10 @@ def run_cross_dataset_consistency(datasets, model_name='dnabert2',
             'std_billboard_pct': float(np.std(billboard_pcts)),
             'min_billboard_pct': float(np.min(billboard_pcts)),
             'max_billboard_pct': float(np.max(billboard_pcts)),
-            'consistent': float(np.std(billboard_pcts)) < 10  # <10% std = consistent
+            'consistent': float(np.std(billboard_pcts)) < 10  # under 10% std counts as consistent
         }
     }
 
-    # Save
     out_file = output_path / 'cross_dataset_consistency.json'
     with open(out_file, 'w') as f:
         json.dump(summary, f, indent=2)

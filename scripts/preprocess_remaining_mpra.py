@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-"""
-Preprocess remaining MPRA datasets into standardized parquet format.
+"""Preprocess the leftover MPRA datasets into parquet.
 
-Handles: Agarwal 2025, Jores 2021, Inoue (Inoue/Kreimer 2019)
-Skips: Kircher 2019 (saturation mutagenesis, not full-sequence MPRA)
-
-Output format: parquet with columns [seq_id, sequence, expression, ...]
+covers Agarwal 2025, Jores 2021 and Inoue/Kreimer 2019. Kircher 2019 is skipped,
+it is saturation mutagenesis rather than full-sequence MPRA.
+output columns: seq_id, sequence, expression, plus dataset-specific extras.
 """
 
 import os
@@ -24,11 +22,7 @@ os.makedirs(PROCESSED_DIR, exist_ok=True)
 
 
 def preprocess_agarwal():
-    """
-    Agarwal et al. (2025, Nature) - K562 lentiMPRA
-    Table S2: sequences (230nt with 15nt adaptors on each end)
-    Table S3: expression (log2 RNA/DNA ratios)
-    """
+    """Agarwal 2025 K562 lentiMPRA: table S2 has the 230nt sequences, S3 the log2 RNA/DNA."""
     print("\n" + "=" * 60)
     print("Preprocessing: Agarwal 2025 (K562)")
     print("=" * 60)
@@ -36,34 +30,31 @@ def preprocess_agarwal():
     s2_path = os.path.join(MPRA_DIR, 'agarwal2025', 'Supplementary_Table_2.xlsx')
     s3_path = os.path.join(MPRA_DIR, 'agarwal2025', 'Supplementary_Table_3.xlsx')
 
-    # Load sequences (K562 large-scale, header at row 1)
+    # K562 large-scale sheet, header sits on row 1
     print("  Loading sequences from Table S2...")
     seq_df = pd.read_excel(s2_path, sheet_name='K562 large-scale', skiprows=1)
-    # Columns: name, category, chr.hg38, start.hg38, stop.hg38, str.hg38, 230nt sequence
+    # columns: name, category, chr.hg38, start.hg38, stop.hg38, str.hg38, 230nt sequence
     seq_df.columns = ['name', 'category', 'chr', 'start', 'end', 'strand', 'sequence_230nt']
     print(f"  Loaded {len(seq_df)} sequences")
 
-    # Strip adaptors: 15nt 5' (AGGACCGGATCAACT) + 15nt 3' (CATTGCGTGAACCGA)
+    # 15nt adaptor on each end: AGGACCGGATCAACT / CATTGCGTGAACCGA
     seq_df['sequence'] = seq_df['sequence_230nt'].str[15:-15]
     print(f"  Stripped adaptors: 230bp -> {seq_df['sequence'].str.len().iloc[0]}bp elements")
 
-    # Load expression (K562 summary)
     print("  Loading expression from Table S3...")
     expr_df = pd.read_excel(s3_path, sheet_name='K562_summary_data', header=0)
-    # Columns: name, rep1, rep2, rep3, mean
+    # columns: name, rep1, rep2, rep3, mean
     expr_df.columns = ['name', 'rep1', 'rep2', 'rep3', 'expression']
     expr_df['expression'] = pd.to_numeric(expr_df['expression'], errors='coerce')
     print(f"  Loaded {len(expr_df)} expression values")
 
-    # Merge
     merged = seq_df.merge(expr_df[['name', 'expression']], on='name', how='inner')
     merged = merged.dropna(subset=['sequence', 'expression'])
 
-    # Remove reversed duplicates (keep forward orientation only)
+    # forward orientation only
     merged_fwd = merged[~merged['name'].str.endswith('_Reversed:')].copy()
     print(f"  Forward-only elements: {len(merged_fwd)}")
 
-    # Create standardized output
     result = pd.DataFrame({
         'seq_id': merged_fwd['name'].values,
         'sequence': merged_fwd['sequence'].values,
@@ -74,7 +65,6 @@ def preprocess_agarwal():
         'end': merged_fwd['end'].values,
     })
 
-    # Remove sequences with non-ACGT characters
     valid = result['sequence'].str.match(r'^[ACGTacgt]+$')
     result = result[valid].reset_index(drop=True)
     print(f"  Valid sequences: {len(result)}")
@@ -88,12 +78,7 @@ def preprocess_agarwal():
 
 
 def preprocess_jores():
-    """
-    Jores et al. (2021, Nature Plants) - Plant promoters
-    Table S1: promoter sequences (170bp)
-    Table S2: promoter strength (log2, 6 conditions)
-    Use 'with enhancer, dark, tobacco leaves' as primary expression.
-    """
+    """Jores 2021 plant promoters: S1 has 170bp sequences, S2 the log2 strengths."""
     print("\n" + "=" * 60)
     print("Preprocessing: Jores 2021 (Plant promoters)")
     print("=" * 60)
@@ -101,26 +86,24 @@ def preprocess_jores():
     s1_path = os.path.join(MPRA_DIR, 'jores2021', 'Supplementary_Table_1.xlsx')
     s2_path = os.path.join(MPRA_DIR, 'jores2021', 'Supplementary_Table_2.xlsx')
 
-    # Load sequences (header at row 3, 0-indexed)
+    # header sits on row 3
     print("  Loading sequences from Table S1...")
     seq_df = pd.read_excel(s1_path, skiprows=3)
-    # Columns: gene, species, barcodes, type, chromosome, start, end, strand, GC, UTR, mutations, sequence
+    # columns: gene, species, barcodes, type, chromosome, start, end, strand, GC, UTR, mutations, sequence
     print(f"  Loaded {len(seq_df)} promoters")
     print(f"  Species: {seq_df['species'].value_counts().to_dict()}")
 
-    # Load expression
     print("  Loading expression from Table S2...")
     expr_df = pd.read_excel(s2_path, skiprows=3)
-    # Use 'with enhancer, dark, tobacco leaves' as primary expression
+    # 'with enhancer, dark, tobacco leaves' is our primary condition
     expr_cols = expr_df.columns.tolist()
     print(f"  Expression columns: {expr_cols}")
 
-    # Find the tobacco dark with-enhancer column
     tobacco_col = [c for c in expr_cols if 'with enhancer' in c and 'dark' in c and 'tobacco' in c]
     if tobacco_col:
         expr_col = tobacco_col[0]
     else:
-        # Fallback: any with-enhancer condition
+        # fall back to any with-enhancer condition
         enhancer_col = [c for c in expr_cols if 'with enhancer' in c]
         expr_col = enhancer_col[0] if enhancer_col else expr_cols[2]
     print(f"  Using expression column: {expr_col}")
@@ -132,7 +115,6 @@ def preprocess_jores():
     })
     expr_df['expression'] = pd.to_numeric(expr_df['expression'], errors='coerce')
 
-    # Merge on gene + species
     merged = seq_df.merge(
         expr_df[['gene', 'species', 'expression']],
         on=['gene', 'species'],
@@ -141,7 +123,6 @@ def preprocess_jores():
     merged = merged.dropna(subset=['sequence', 'expression'])
     print(f"  Merged: {len(merged)} promoters with expression")
 
-    # Create standardized output
     result = pd.DataFrame({
         'seq_id': [f"jores_{i}" for i in range(len(merged))],
         'sequence': merged['sequence'].values,
@@ -151,10 +132,9 @@ def preprocess_jores():
         'promoter_type': merged['type'].values,
     })
 
-    # Remove invalid sequences
     valid = result['sequence'].str.match(r'^[ACGTacgt]+$')
     result = result[valid].reset_index(drop=True)
-    # Re-assign seq_ids
+    # renumber after filtering
     result['seq_id'] = [f"jores_{i}" for i in range(len(result))]
     print(f"  Valid sequences: {len(result)}")
 
@@ -167,11 +147,9 @@ def preprocess_jores():
 
 
 def preprocess_dealmeida():
-    """
-    Inoue & Kreimer et al. (2019, Cell Stem Cell) - Neural induction MPRA
-    FASTA: barcoded sequences (multiple barcodes per element)
-    Count TSVs: barcode counts per timepoint/replicate
-    Compute log2(RNA/DNA) per element, use T48h timepoint.
+    """Inoue & Kreimer 2019 neural induction MPRA.
+
+    barcoded FASTA plus per-timepoint count TSVs; expression is log2(RNA/DNA) at T48h.
     """
     print("\n" + "=" * 60)
     print("Preprocessing: Inoue / Inoue-Kreimer 2019 (Neural induction)")
@@ -180,10 +158,9 @@ def preprocess_dealmeida():
     data_dir = os.path.join(MPRA_DIR, 'dealmeida2022')
     fasta_path = os.path.join(data_dir, 'GSE115042_plasmid_library_MPRA.fa.gz')
 
-    # Step 1: Parse FASTA to get element sequences keyed by genomic coordinates
-    # FASTA IDs: Half_Array1_seq2_[chr1:2478386-2478556]_barcode1
-    # Count IDs: A1_seq1258_[chr5:116095916-116096086]_barcode111430
-    # Common key: genomic coordinates [chrN:start-end]
+    # FASTA ids: Half_Array1_seq2_[chr1:2478386-2478556]_barcode1
+    # count ids: A1_seq1258_[chr5:116095916-116096086]_barcode111430
+    # the [chrN:start-end] coordinate is the only key they share
     print("  Parsing FASTA library...")
     coord_to_seq = {}  # coordinate -> core sequence
 
@@ -198,13 +175,13 @@ def preprocess_dealmeida():
                 if coord_match:
                     coord = coord_match.group(1)
                     if coord not in coord_to_seq:
-                        # Core sequence: strip 15nt 5' adaptor and last 15nt (barcode + 3' adaptor)
+                        # strip the 15nt 5' adaptor and the barcode + 3' adaptor
                         core = line[15:-15]
                         coord_to_seq[coord] = core
 
     print(f"  Unique elements (by coordinate): {len(coord_to_seq)}")
 
-    # Step 2: Parse count files for a timepoint (use T48h for mature response)
+    # T48h is the mature response
     timepoint = 'T48h'
     reps = ['rep1', 'rep2', 'rep3']
 
@@ -215,7 +192,7 @@ def preprocess_dealmeida():
         # DNA counts
         dna_file = os.path.join(data_dir, f'{timepoint}_{rep}_DNA.tsv.gz')
         if not os.path.exists(dna_file):
-            print(f"  WARNING: Missing {dna_file}")
+            print(f"  missing {dna_file}")
             continue
 
         with gzip.open(dna_file, 'rt') as f:
@@ -231,7 +208,7 @@ def preprocess_dealmeida():
         # RNA counts
         rna_file = os.path.join(data_dir, f'{timepoint}_{rep}_RNA.tsv.gz')
         if not os.path.exists(rna_file):
-            print(f"  WARNING: Missing {rna_file}")
+            print(f"  missing {rna_file}")
             continue
 
         with gzip.open(rna_file, 'rt') as f:
@@ -246,7 +223,7 @@ def preprocess_dealmeida():
 
         print(f"  Loaded {timepoint} {rep}: {len(dna_counts)} DNA, {len(rna_counts)} RNA elements")
 
-    # Step 3: Compute expression as mean log2(RNA/DNA) across replicates
+    # expression is the mean log2(RNA/DNA) over replicates
     print("  Computing expression values...")
     print(f"  Coordinates in FASTA: {len(coord_to_seq)}")
     print(f"  Coordinates in DNA counts: {len(dna_counts)}")
@@ -266,7 +243,7 @@ def preprocess_dealmeida():
                 log2_ratios.append(np.log2(ratio))
 
         if len(log2_ratios) >= 2:  # require at least 2 replicates
-            # Sanitize seq_id: replace colons/special chars for FIMO compatibility
+            # FIMO chokes on colons in sequence ids
             safe_id = coord.replace(':', '_').replace('-', '_')
             records.append({
                 'seq_id': safe_id,
@@ -281,7 +258,6 @@ def preprocess_dealmeida():
     result = pd.DataFrame(records)
     print(f"  Elements with expression: {len(result)}")
 
-    # Remove invalid sequences
     valid = result['sequence'].str.match(r'^[ACGTacgt]+$')
     result = result[valid].reset_index(drop=True)
     print(f"  Valid sequences: {len(result)}")
@@ -292,7 +268,7 @@ def preprocess_dealmeida():
         print(f"  Saved: {out_path}")
         print(f"  Expression range: [{result['expression'].min():.2f}, {result['expression'].max():.2f}]")
     else:
-        print("  WARNING: No valid elements found!")
+        print("  no valid elements found")
 
     return result
 
@@ -300,33 +276,29 @@ def preprocess_dealmeida():
 def main():
     results = {}
 
-    # Agarwal 2025
     try:
         results['agarwal'] = preprocess_agarwal()
     except Exception as e:
-        print(f"  ERROR in agarwal: {e}")
+        print(f"  error in agarwal: {e}")
         import traceback
         traceback.print_exc()
 
-    # Jores 2021
     try:
         results['jores'] = preprocess_jores()
     except Exception as e:
-        print(f"  ERROR in jores: {e}")
+        print(f"  error in jores: {e}")
         import traceback
         traceback.print_exc()
 
-    # Inoue 2019
     try:
         results['dealmeida'] = preprocess_dealmeida()
     except Exception as e:
-        print(f"  ERROR in dealmeida: {e}")
+        print(f"  error in dealmeida: {e}")
         import traceback
         traceback.print_exc()
 
-    # Summary
     print("\n" + "=" * 60)
-    print("PREPROCESSING SUMMARY")
+    print("preprocessing summary")
     print("=" * 60)
     for name, df in results.items():
         if df is not None and len(df) > 0:
@@ -334,10 +306,9 @@ def main():
                   f"seq_len={df['sequence'].str.len().median():.0f}bp, "
                   f"expr=[{df['expression'].min():.2f}, {df['expression'].max():.2f}]")
         else:
-            print(f"  {name}: FAILED")
+            print(f"  {name}: failed")
 
-    # Note about Kircher
-    print("\n  NOTE: Kircher 2019 skipped - saturation mutagenesis data")
+    print("\n  Kircher 2019 skipped: saturation mutagenesis data")
     print("  (single-nucleotide variants, not full-sequence MPRA)")
 
 

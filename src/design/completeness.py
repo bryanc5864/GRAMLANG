@@ -1,8 +1,6 @@
 """
-Grammar completeness: the ceiling test.
-
-Measures how much of expression variation can be explained by
-vocabulary alone, vocabulary + grammar, and the full model.
+Grammar completeness: how much of expression can vocabulary alone explain,
+versus vocabulary plus grammar, versus the full model.
 """
 
 import numpy as np
@@ -21,19 +19,10 @@ def compute_grammar_completeness(
     replicate_r2: float = 0.85,
 ) -> dict:
     """
-    Compute grammar completeness: how far does grammar take us?
-
-    Levels:
-    1. Vocabulary only: motif counts
-    2. + Simple grammar: pairwise spacing/orientation stats
-    3. + Full grammar: all grammar features
-    4. Full model: pretrained model prediction
-    5. MPRA replicate: technical ceiling
-
-    Returns:
-        Dict with R^2 at each level
+    R2 at four nested levels: motif counts, + simple grammar stats, + full
+    grammar features, and the pretrained model prediction. The MPRA replicate
+    ceiling is the reference the levels are read against.
     """
-    # Ensure we have expression values
     if 'expression' not in dataset.columns:
         return {'error': 'No expression column in dataset'}
 
@@ -44,19 +33,19 @@ def compute_grammar_completeness(
     if len(y) < 50:
         return {'error': f'Too few samples ({len(y)})'}
 
-    # Level 1: Vocabulary features
+    # vocabulary
     X_vocab = _build_vocabulary_features(dataset[valid], motif_hits)
     r2_vocab = _cv_r2(X_vocab, y)
 
-    # Level 2: + Simple grammar
+    # + simple grammar
     X_simple = _build_simple_grammar_features(dataset[valid], motif_hits, grammar_features)
     r2_simple = _cv_r2(X_simple, y)
 
-    # Level 3: + Full grammar
+    # + full grammar
     X_full = _build_full_grammar_features(dataset[valid], motif_hits, grammar_features)
     r2_full = _cv_r2(X_full, y)
 
-    # Level 4: Full model
+    # full model
     seqs = dataset[valid]['sequence'].tolist()
     preds = model.predict_expression(seqs, cell_type=cell_type)
     if np.std(preds) > 0 and np.std(y) > 0:
@@ -65,7 +54,6 @@ def compute_grammar_completeness(
     else:
         r2_model = 0.0
 
-    # Compute metrics
     grammar_contribution = (r2_full - r2_vocab) / max(replicate_r2 - r2_vocab, 0.01)
     grammar_gap = r2_model - r2_full
 
@@ -109,7 +97,7 @@ def _build_simple_grammar_features(dataset, motif_hits, grammar_features):
 
 
 def _build_full_grammar_features(dataset, motif_hits, grammar_features):
-    """Full grammar features (same as simple for now, extend later)."""
+    """Full grammar features. Same as simple for now."""
     return _build_simple_grammar_features(dataset, motif_hits, grammar_features)
 
 

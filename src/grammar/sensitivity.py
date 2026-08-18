@@ -1,9 +1,8 @@
 """
-Grammar Sensitivity Index (GSI) computation.
+Grammar sensitivity index (GSI).
 
-The GSI quantifies how much arrangement (syntax) matters for each
-enhancer by comparing expression predictions across vocabulary-preserving
-shuffles.
+How much does arrangement matter for a given enhancer? Compare predictions
+across vocabulary-preserving shuffles.
 """
 
 import numpy as np
@@ -24,35 +23,18 @@ def compute_gsi(
     seed: Optional[int] = None
 ) -> dict:
     """
-    Compute Grammar Sensitivity Index for a single enhancer.
+    GSI for one enhancer: CV of expression across shuffles, std / |mean|.
 
-    GSI = CV(expression across shuffles) = std / |mean|
-    High GSI = grammar-sensitive (arrangement matters)
-    Low GSI = billboard-like (arrangement doesn't matter)
-
-    Args:
-        sequence: Original enhancer DNA sequence
-        motif_annotations: From MotifScanner.annotate_enhancer()
-        model: GrammarModel instance
-        n_shuffles: Number of vocabulary-preserving shuffles
-        cell_type: Cell type for expression prediction
-        seed: Random seed for reproducibility
-
-    Returns:
-        Dict with GSI metrics
+    High GSI means arrangement matters, low means billboard-like.
     """
-    # Original expression
     original_expr = model.predict_expression([sequence], cell_type=cell_type)[0]
 
-    # Generate vocabulary-preserving shuffles
     shuffles = generate_vocabulary_preserving_shuffles(
         sequence, motif_annotations, n_shuffles=n_shuffles, seed=seed
     )
 
-    # Predict expression for all shuffles
     shuffle_exprs = model.predict_expression(shuffles, cell_type=cell_type)
 
-    # Compute GSI
     shuffle_mean = np.mean(shuffle_exprs)
     shuffle_std = np.std(shuffle_exprs)
 
@@ -61,11 +43,11 @@ def compute_gsi(
     else:
         gsi = 0.0
 
-    # Normalized GSI
+    # normalized GSI
     total_var = np.var(np.concatenate([[original_expr], shuffle_exprs]))
     gsi_normalized = np.var(shuffle_exprs) / max(total_var, 1e-10)
 
-    # Disruption metrics
+    # disruption metrics
     if abs(original_expr) > 1e-10:
         max_disruption = (original_expr - np.min(shuffle_exprs)) / abs(original_expr)
         mean_disruption = (original_expr - np.mean(shuffle_exprs)) / abs(original_expr)
@@ -73,32 +55,27 @@ def compute_gsi(
         max_disruption = 0.0
         mean_disruption = 0.0
 
-    # P-value: permutation-based test
-    # Models are deterministic at inference, so repeated predictions of the same
-    # sequence give identical results (noise_var = 0). Instead of wasting 20
-    # redundant forward passes, use a permutation p-value: where does the
-    # original expression rank among the shuffled expressions?
+    # models are deterministic at inference, so repeating a prediction gives an
+    # identical number and noise_var is 0. use a permutation p-value instead of
+    # 20 wasted forward passes: where does the original rank among shuffles?
     n_above = np.sum(np.abs(shuffle_exprs - shuffle_mean) >= np.abs(original_expr - shuffle_mean))
     p_value = float(n_above / len(shuffle_exprs)) if len(shuffle_exprs) > 0 else 1.0
 
-    # --- v3 metrics ---
-    # Grammar Effect Size (GES): robust z-score using median/MAD
+    # GES: robust z-score off median/MAD
     shuffle_median = np.median(shuffle_exprs)
     shuffle_mad = np.median(np.abs(shuffle_exprs - shuffle_median))
     if shuffle_mad > 1e-10:
-        ges = abs(original_expr - shuffle_median) / (shuffle_mad * 1.4826)  # 1.4826 scales MAD to σ
+        ges = abs(original_expr - shuffle_median) / (shuffle_mad * 1.4826)  # 1.4826 scales MAD to sigma
     else:
         ges = abs(original_expr - shuffle_median) / max(shuffle_std, 1e-10)
 
-    # Grammar Practical Effect (GPE): dynamic range relative to median
+    # GPE: dynamic range relative to the median
     gpe = (np.max(shuffle_exprs) - np.min(shuffle_exprs)) / max(abs(shuffle_median), 1e-10)
 
-    # Robust GSI: stabilize denominator
+    # robust GSI, stabilized denominator
     gsi_robust = shuffle_std / max(abs(shuffle_mean), shuffle_std * 0.1, 1e-10)
 
-    # z-score (standard, for p-value computation)
     z_score = abs(original_expr - shuffle_mean) / max(shuffle_std, 1e-10)
-    # Two-sided p-value from z-score
     from scipy.stats import norm
     p_value_zscore = float(2 * (1 - norm.cdf(z_score)))
 
@@ -133,22 +110,7 @@ def run_gsi_census(
     max_enhancers: Optional[int] = None,
     seed: int = 42,
 ) -> pd.DataFrame:
-    """
-    Run GSI computation across enhancers for a single model.
-
-    Args:
-        dataset: Preprocessed MPRA DataFrame with 'sequence', 'seq_id', 'n_motifs'
-        model: GrammarModel instance
-        motif_hits: DataFrame of motif scanning results
-        n_shuffles: Shuffles per enhancer
-        min_motifs: Minimum motifs to include
-        cell_type: Cell type context
-        max_enhancers: Cap on number of enhancers (for speed)
-        seed: Random seed
-
-    Returns:
-        DataFrame with GSI for each enhancer
-    """
+    """GSI across many enhancers for one model."""
     eligible = dataset[dataset['n_motifs'] >= min_motifs].copy()
     if max_enhancers and len(eligible) > max_enhancers:
         eligible = eligible.sample(n=max_enhancers, random_state=seed)
@@ -210,39 +172,27 @@ def compute_grammar_information(
     shuffle_expressions: np.ndarray,
     n_bins: int = 20
 ) -> dict:
-    """
-    Compute the information content of grammar for a single enhancer.
-
-    Args:
-        original_expression: Expression of natural arrangement
-        shuffle_expressions: Expressions of vocabulary-matched shuffles
-        n_bins: Bins for entropy estimation
-
-    Returns:
-        Dict with entropy, percentile, specificity, bits of grammar
-    """
+    """Entropy, percentile and specificity of the shuffle distribution."""
     from scipy.stats import entropy as scipy_entropy
 
     all_expr = np.concatenate([[original_expression], shuffle_expressions])
     bins = np.linspace(all_expr.min() - 1e-10, all_expr.max() + 1e-10, n_bins + 1)
 
-    # Entropy of shuffle distribution
     shuffle_hist, _ = np.histogram(shuffle_expressions, bins=bins)
     shuffle_hist = shuffle_hist / max(shuffle_hist.sum(), 1)
     shuffle_hist = shuffle_hist[shuffle_hist > 0]
     h_shuffles = scipy_entropy(shuffle_hist, base=2)
 
-    # Percentile of original in shuffle distribution
     percentile = float(np.mean(shuffle_expressions <= original_expression))
 
-    # Grammar specificity
+    # grammar specificity
     shuffle_std = np.std(shuffle_expressions)
     if shuffle_std > 0:
         grammar_specificity = abs(original_expression - np.mean(shuffle_expressions)) / shuffle_std
     else:
         grammar_specificity = 0.0
 
-    # Bits of grammar (approximate)
+    # approximate bits of grammar
     bits = h_shuffles * (1 - 1 / max(grammar_specificity + 1, 1))
 
     return {

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """
-Download and verify all 9 pretrained genomic models.
-Downloads sequentially to manage disk space.
-Tests each model with a dummy sequence.
+Download and smoke-test the 9 pretrained genomic models.
+
+Sequential, to keep disk usage bounded; each model gets one dummy sequence
+pushed through it.
 """
 
 import os
@@ -21,7 +22,7 @@ HF_CACHE = os.path.expanduser("~/.cache/huggingface/hub")
 def get_model_size_mb(model):
     """Estimate model size in MB from parameters."""
     total_params = sum(p.numel() for p in model.parameters())
-    return total_params * 4 / (1024 ** 2)  # FP32 bytes
+    return total_params * 4 / (1024 ** 2)  # fp32 bytes
 
 
 def test_model(name, load_fn, test_fn):
@@ -36,7 +37,7 @@ def test_model(name, load_fn, test_fn):
         print(f"  Parameters: {sum(p.numel() for p in model.parameters()):,}")
         print(f"  Size: {size_mb:.1f} MB (FP32)")
 
-        # Test with dummy sequence
+        # dummy sequence
         result = test_fn(model, tokenizer)
         print(f"  Test output shape/value: {result}")
 
@@ -47,7 +48,6 @@ def test_model(name, load_fn, test_fn):
             'test_result': str(result),
         }
 
-        # Clean up
         del model
         if tokenizer is not None:
             del tokenizer
@@ -83,7 +83,7 @@ def test_dnabert2(model, tokenizer):
     inputs = tokenizer(seq, return_tensors="pt", truncation=True, max_length=512).to("cuda")
     with torch.no_grad():
         out = model(**inputs)
-    # Custom model returns tuple: (last_hidden_state, pooled_output)
+    # the custom model returns (last_hidden_state, pooled_output)
     return f"last_hidden_state shape={out[0].shape}, pooled shape={out[1].shape}"
 
 
@@ -139,9 +139,8 @@ def load_enformer():
 
 def test_enformer(model, tokenizer):
     import numpy as np
-    # Create minimal input
     seq_len = 196608
-    # Use random one-hot
+    # random one-hot
     np.random.seed(42)
     bases = np.eye(4)[np.random.randint(0, 4, seq_len)]
     tensor = torch.tensor(bases, dtype=torch.float32).unsqueeze(0).cuda()
@@ -155,7 +154,7 @@ if __name__ == '__main__':
     print("GRAMLANG Model Download & Verification")
     print("=" * 60)
 
-    # Test models from smallest to largest
+    # smallest first, so failures show up cheap
     models_to_test = [
         ("DNABERT-2", load_dnabert2, test_dnabert2),
         ("Nucleotide Transformer v2-500M", load_nt, test_nt),
@@ -167,7 +166,6 @@ if __name__ == '__main__':
     for name, load_fn, test_fn in models_to_test:
         test_model(name, load_fn, test_fn)
 
-    # Save results
     output_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                                 'results', 'model_verification.json')
     os.makedirs(os.path.dirname(output_path), exist_ok=True)

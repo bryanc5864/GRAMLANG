@@ -1,17 +1,10 @@
 #!/usr/bin/env python3
 """
-GRAMLANG v3: Detailed Spacer Ablation Experiment (P3.3)
+Spacer ablation.
 
-Given that factorial decomposition showed spacer DNA accounts for 78-86% of GSI variance,
-this experiment does a more detailed ablation to understand exactly what aspect of
-spacer DNA the models are sensitive to.
-
-Tests:
-1. Spacer length distribution effects
-2. Spacer GC content effects
-3. Spacer dinucleotide composition effects
-4. Spacer k-mer content effects
-5. Spacer vs motif position interactions
+Factorial decomposition put 78-86% of GSI variance on spacer DNA, so this asks
+which aspect of it the models actually track: length distribution, GC content,
+dinucleotide composition, k-mer content, or the interaction with motif position.
 
 Usage:
     python scripts/run_spacer_ablation.py --datasets agarwal,jores --n-enhancers 100
@@ -54,7 +47,7 @@ def swap_probe(model, model_name, ds_name, device='cuda'):
             model.set_probe(probe)
             print(f"  Loaded probe: {probe_name}")
             return
-    print(f"  WARNING: No probe found for {model_name}/{ds_name}")
+    print(f"  no probe found for {model_name}/{ds_name}")
 
 
 def extract_motifs_and_spacers(sequence, motif_annotations):
@@ -77,7 +70,6 @@ def extract_motifs_and_spacers(sequence, motif_annotations):
         })
         motif_positions.append((m['start'], m['end']))
 
-    # Extract spacer regions
     spacer_regions = []
     prev_end = 0
     for start, end in motif_positions:
@@ -101,14 +93,9 @@ def extract_motifs_and_spacers(sequence, motif_annotations):
 def generate_spacer_variants(sequence, motif_seqs, spacer_regions, motif_positions,
                              variant_type='gc_shift', n_variants=20, rng=None):
     """
-    Generate sequence variants with modified spacer DNA.
-
-    variant_types:
-    - 'gc_shift': Change spacer GC content (+10%, +20%, -10%, -20%)
-    - 'length_shift': Change spacer lengths (redistribute)
-    - 'dinuc_shuffle': Dinucleotide shuffle each spacer
-    - 'random_replace': Replace spacers with random DNA
-    - 'kmer_preserve': Preserve k-mer frequencies but shuffle
+    Variants with modified spacer DNA. variant_types: 'gc_shift' (+/-10 and
+    +/-20% GC), 'length_shift' (redistribute lengths), 'dinuc_shuffle',
+    'random_replace', 'kmer_preserve'.
     """
     if rng is None:
         rng = np.random.default_rng()
@@ -120,7 +107,7 @@ def generate_spacer_variants(sequence, motif_seqs, spacer_regions, motif_positio
     variants = []
 
     if variant_type == 'gc_shift':
-        # Generate spacers with shifted GC content
+        # spacers at shifted GC
         gc_shifts = [-0.2, -0.1, 0, +0.1, +0.2]
         for gc_shift in gc_shifts:
             target_gc = max(0.1, min(0.9, original_gc + gc_shift))
@@ -140,7 +127,7 @@ def generate_spacer_variants(sequence, motif_seqs, spacer_regions, motif_positio
                 })
 
     elif variant_type == 'dinuc_shuffle':
-        # Dinucleotide shuffle each spacer independently
+        # shuffle each spacer independently
         for _ in range(n_variants):
             new_seq = list(sequence)
             for spacer in spacer_regions:
@@ -155,7 +142,7 @@ def generate_spacer_variants(sequence, motif_seqs, spacer_regions, motif_positio
             })
 
     elif variant_type == 'random_replace':
-        # Replace spacers with completely random DNA
+        # spacers become random DNA
         for _ in range(n_variants):
             new_seq = list(sequence)
             for spacer in spacer_regions:
@@ -171,23 +158,22 @@ def generate_spacer_variants(sequence, motif_seqs, spacer_regions, motif_positio
             })
 
     elif variant_type == 'motif_only':
-        # Keep spacers fixed, only move motifs to different positions
+        # spacers fixed, only motif positions move
         total_motif_len = sum(len(m['seq']) for m in motif_seqs)
         total_spacer_len = sum(len(s['seq']) for s in spacer_regions)
 
         for _ in range(n_variants):
-            # Randomly permute motif order
             perm = rng.permutation(len(motif_seqs))
             permuted_motifs = [motif_seqs[i] for i in perm]
 
-            # Reconstruct sequence with same spacer order but permuted motifs
+            # same spacer order, permuted motifs
             new_seq = ''
             for i, spacer in enumerate(spacer_regions):
                 new_seq += spacer['seq']
                 if i < len(permuted_motifs):
                     new_seq += permuted_motifs[i]['seq']
 
-            # Pad/trim to original length
+            # back to the original length
             if len(new_seq) > seq_len:
                 new_seq = new_seq[:seq_len]
             elif len(new_seq) < seq_len:
@@ -208,16 +194,13 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
     print(f"SPACER ABLATION — {dataset_name} / {model_name}")
     print(f"{'='*60}")
 
-    # Load data
     dataset = load_processed(f'data/processed/{dataset_name}_processed.parquet')
     motif_hits = pd.read_parquet(f'data/processed/{dataset_name}_processed_motif_hits.parquet')
 
-    # Load model
     print(f"  Loading model {model_name}...")
     model = load_model(model_name, dataset_name='__dummy__')
     swap_probe(model, model_name, dataset_name)
 
-    # Sample enhancers
     eligible = dataset[dataset['n_motifs'] >= 3].copy()
     if len(eligible) > n_enhancers:
         eligible = eligible.sample(n=n_enhancers, random_state=seed)
@@ -236,14 +219,12 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
         seq = row['sequence']
         seq_id = str(row['seq_id'])
 
-        # Get motif annotations
         seq_motifs = motif_hits[motif_hits['seq_id'] == seq_id]
         annotation = {
             'sequence': seq,
             'motifs': seq_motifs.to_dict('records'),
         }
 
-        # Extract structure
         motif_seqs, spacer_regions, motif_positions = extract_motifs_and_spacers(
             seq, annotation
         )
@@ -251,10 +232,8 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
         if motif_seqs is None or len(spacer_regions) == 0:
             continue
 
-        # Original expression
         original_expr = float(model.predict_expression([seq])[0])
 
-        # Spacer statistics
         all_spacer = ''.join(s['seq'] for s in spacer_regions)
         spacer_gc = gc_content(all_spacer) if all_spacer else 0.5
         spacer_lengths = [len(s['seq']) for s in spacer_regions]
@@ -269,7 +248,6 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
             'mean_spacer_len': np.mean(spacer_lengths),
         }
 
-        # Test each variant type
         for vtype in variant_types:
             try:
                 variants = generate_spacer_variants(
@@ -288,7 +266,7 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
                 var_min = float(np.min(var_exprs))
                 var_max = float(np.max(var_exprs))
 
-                # Effect size: how much does this perturbation change expression?
+                # how much does this perturbation move expression?
                 delta = abs(original_expr - var_mean)
                 z_score = delta / max(var_std, 1e-10)
 
@@ -307,7 +285,6 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
 
     df = pd.DataFrame(all_results)
 
-    # Summary statistics
     summary = {
         'dataset': dataset_name,
         'model': model_name,
@@ -338,7 +315,7 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
             print(f"  {vtype:15s}: median Δexpr={median_delta:.4f}, "
                   f"range={median_range:.4f}, z={median_z:.2f}")
 
-    # Compare: which perturbation type has the biggest effect?
+    # which perturbation moves things most?
     if len(summary['variant_effects']) > 0:
         effects = {k: v['median_delta'] for k, v in summary['variant_effects'].items()}
         max_effect = max(effects, key=effects.get)
@@ -346,13 +323,12 @@ def run_spacer_ablation(dataset_name, model_name='dnabert2', n_enhancers=100,
         summary['effect_ranking'] = sorted(effects.items(), key=lambda x: -x[1])
         print(f"\n  Dominant factor: {max_effect} (Δ={effects[max_effect]:.4f})")
 
-    # Correlation: does spacer GC content predict expression change?
+    # does spacer GC predict the expression change?
     if 'gc_shift_delta' in df.columns:
         gc_expr_corr = df['spacer_gc'].corr(df['original_expression'])
         summary['gc_expression_correlation'] = float(gc_expr_corr)
         print(f"  Spacer GC vs expression: r={gc_expr_corr:.3f}")
 
-    # Save
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     df.to_parquet(RESULTS_DIR / f'{dataset_name}_{model_name}_spacer_ablation.parquet')
     save_json(summary, RESULTS_DIR / f'{dataset_name}_{model_name}_spacer_summary.json')
@@ -381,9 +357,8 @@ def main():
         )
         all_summaries[ds] = summary
 
-    # Cross-dataset summary
     print(f"\n{'='*60}")
-    print("CROSS-DATASET SUMMARY")
+    print("cross-dataset summary")
     print(f"{'='*60}")
 
     for ds, summary in all_summaries.items():

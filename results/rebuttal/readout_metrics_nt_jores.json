@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.5599081516265869,
+    "test_r": 0.5590784549713135,
+    "test_rho": 0.5846915734162466,
+    "test_r2": 0.3103070855140686,
+    "n_params": 3073,
+    "perm_invariant": true,
+    "model": "nt",
+    "dataset": "jores"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.5757204294204712,
+    "test_r": 0.5704326629638672,
+    "test_rho": 0.5875781492967107,
+    "test_r2": 0.3166261911392212,
+    "n_params": 297473,
+    "perm_invariant": true,
+    "model": "nt",
+    "dataset": "jores"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.5849865078926086,
+    "test_r": 0.5974105596542358,
+    "test_rho": 0.6062377101111351,
+    "test_r2": 0.3486114740371704,
+    "n_params": 330754,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "jores"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.6272194385528564,
+    "test_r": 0.603161096572876,
+    "test_rho": 0.6147654979586596,
+    "test_r2": 0.3578410744667053,
+    "n_params": 827649,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "jores"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.6101248264312744,
+    "test_r": 0.5999733209609985,
+    "test_rho": 0.6099220118769142,
+    "test_r2": 0.25159382820129395,
+    "n_params": 793281,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "jores"
+  }
+]

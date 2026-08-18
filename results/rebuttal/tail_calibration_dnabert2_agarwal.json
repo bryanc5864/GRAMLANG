@@ -1,0 +1,42 @@
+{
+  "model": "dnabert2",
+  "dataset": "agarwal",
+  "head": "mean_linear",
+  "n_big_draws": 1000,
+  "n_enhancers": 60,
+  "bh_threshold_p_at_rank9_of_7650": 5.882e-05,
+  "z_stability": {
+    "pearson_z_census_vs_z_big": 0.7579094585630062,
+    "median_abs_change": 0.6213172307108272,
+    "median_z_census": 0.8515039222414666,
+    "median_z_big": 0.9065441898029616,
+    "note": "z_census comes from the submitted probe; z_big from a freshly trained mean-pooled head, so that comparison mixes two changes. The z_at_100 columns hold everything fixed except the number of draws and are the clean measurement."
+  },
+  "draw_count_instability": {
+    "median_sd_of_z_across_disjoint_100_draw_subsamples": 0.11974008786195381,
+    "median_z_at_100_minus_z_at_1000": 0.007578649015562711,
+    "median_spread_max_minus_min_at_100": 0.36827006797151685,
+    "n_enhancers_where_some_100_draw_subsample_exceeds_bh_z_4.02": 2,
+    "n_enhancers_where_1000_draw_z_exceeds_bh_z_4.02": 0,
+    "interpretation": "A z threshold of 4.02 is what BH survival required. If a single 100-draw subsample can push an enhancer over that line while the 1000-draw estimate does not, the census survivors are largely sampling noise in the shuffle SD denominator."
+  },
+  "shuffle_distribution_normality": {
+    "median_shapiro_W": 0.9983820782403039,
+    "frac_shapiro_p_lt_0.05": 0.11666666666666667,
+    "median_skew": 0.022642946130119176,
+    "median_excess_kurtosis": 0.03293434928471184
+  },
+  "tail_agreement": {
+    "median_log10_ratio_emp_over_par": 0.003940717012294756,
+    "n_parametric_lt_bh_thr": 0,
+    "n_empirical_lt_bh_thr": 0,
+    "n_gpd_lt_bh_thr": 1,
+    "note": "With 1000 draws the smallest attainable empirical p is 1/1001 = 1.0e-3, still above the BH threshold of 5.9e-5, so the empirical column can only bound the parametric one, not replace it; the GPD column is the only one that can reach the threshold from finite draws."
+  },
+  "high_z_subset": {
+    "n": 20,
+    "median_p_parametric": 0.015511504461057202,
+    "median_p_gpd": 0.01921385609783397,
+    "median_log10_ratio_gpd_over_par": 0.003071820361940544
+  }
+}

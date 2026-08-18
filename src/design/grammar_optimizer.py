@@ -16,15 +16,9 @@ def design_grammar_optimized_enhancer(
     seed: int = 42,
 ) -> dict:
     """
-    Design a synthetic enhancer optimized for grammar.
-
-    Three strategies:
-    - 'expression': Optimize predicted expression via random search
-    - 'grammar': Fix motifs, optimize arrangement using grammar rules
-    - 'joint': Optimize both
-
-    Returns:
-        Dict with best sequence, predicted expression, grammar score
+    Design a synthetic enhancer. strategy is 'expression' (random search on
+    predicted expression), 'grammar' (fix motifs, arrange by the rules) or
+    'joint'.
     """
     rng = np.random.default_rng(seed)
 
@@ -49,7 +43,6 @@ def design_grammar_optimized_enhancer(
     if not candidates:
         return {'error': 'Failed to generate candidates'}
 
-    # Score all candidates
     expressions = model.predict_expression(candidates, cell_type=cell_type)
     best_idx = np.argmax(expressions)
 
@@ -77,7 +70,7 @@ def _generate_grammar_optimized(motif_set, grammar_rules, seq_len, n, rng):
 
         for i, motif in enumerate(motifs):
             if i > 0:
-                # Look up optimal spacing
+                # look up the optimal spacing
                 pair = f"{motifs[i-1][:6]}_{motif[:6]}"
                 if pair in grammar_rules:
                     sp = grammar_rules[pair].get('optimal_spacing', 10)
@@ -88,13 +81,13 @@ def _generate_grammar_optimized(motif_set, grammar_rules, seq_len, n, rng):
                 remaining -= sp
                 parts.append(generate_neutral_spacer(sp, gc=0.5, rng=rng))
 
-            # Random orientation
+            # random orientation
             if rng.random() < 0.5:
                 parts.append(reverse_complement(motif))
             else:
                 parts.append(motif)
 
-        # Pad to target length
+        # pad to target length
         assembled = ''.join(parts)
         if len(assembled) < seq_len:
             pad = generate_neutral_spacer(seq_len - len(assembled), gc=0.5, rng=rng)

@@ -1,0 +1,13 @@
+{
+  "model": "PARM-K562",
+  "dataset": "agarwal",
+  "n": 200,
+  "median_sf_gsi": 0.056140220837811845,
+  "median_gsi_naive": 0.19013105546575554,
+  "median_arrangement_share": 0.09912312139731896,
+  "median_spacer_share": 0.6643348696343399,
+  "frac_p_perm_lt_0.05": 0.03,
+  "frac_survive_bh": 0.015,
+  "storey_pi0_billboard_fraction": 1.0,
+  "note": "no probe and no pooling: PARM's own expression head is used"
+}

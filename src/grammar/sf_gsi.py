@@ -1,20 +1,11 @@
 """
-Spacer-Factored Grammar Sensitivity Index (SF-GSI)
+Spacer-factored grammar sensitivity index.
 
-The original GSI measures expression variance under vocab-preserving shuffles:
-    GSI = σ_shuffle / |μ_shuffle|
-
-However, v3 experiments showed that 78-86% of this variance comes from
-spacer composition changes, not motif arrangement. SF-GSI decomposes this:
-
-    SF-GSI = σ_grammar / |μ_ref|
-
-Where σ_grammar is the residual variance after controlling for spacer effects.
-
-Methods:
-1. Motif-only shuffle: Replace spacers with fixed sequence, shuffle motifs
-2. Regression residual: Regress out spacer GC/k-mer effects from predictions
-3. Matched shuffles: Match spacer composition while permuting motifs
+Plain GSI is sd/|mean| of predictions under vocab-preserving shuffles, but v3
+showed 78-86% of that variance comes from spacer composition rather than motif
+arrangement. SF-GSI tries to strip the spacer part out, three ways: fixed
+spacers, GC-matched spacers, or regressing spacer features out of the
+predictions.
 """
 
 import torch
@@ -29,21 +20,21 @@ import warnings
 @dataclass
 class SFGSIResult:
     """Results from SF-GSI computation."""
-    # Original GSI
+    # plain GSI
     gsi: float
     gsi_se: float
 
-    # Spacer-factored components
-    sf_gsi: float  # Grammar-only sensitivity
+    # spacer-factored parts
+    sf_gsi: float  # grammar only
     sf_gsi_se: float
-    spacer_contribution: float  # Fraction of variance from spacers
+    spacer_contribution: float  # fraction of variance from spacers
 
-    # Decomposition
+    # decomposition
     total_variance: float
     grammar_variance: float
     spacer_variance: float
 
-    # Statistical tests
+    # stats
     grammar_pvalue: float
     n_shuffles: int
     n_sequences: int
@@ -64,18 +55,18 @@ def extract_spacers(sequence: str, motifs: List[Dict]) -> List[str]:
     sorted_motifs = sorted(motifs, key=lambda m: m['start'])
     spacers = []
 
-    # Before first motif
+        # before first motif
     if sorted_motifs[0]['start'] > 0:
         spacers.append(sequence[:sorted_motifs[0]['start']])
 
-    # Between motifs
+        # between motifs
     for i in range(len(sorted_motifs) - 1):
         start = sorted_motifs[i]['end']
         end = sorted_motifs[i + 1]['start']
         if end > start:
             spacers.append(sequence[start:end])
 
-    # After last motif
+        # after last motif
     if sorted_motifs[-1]['end'] < len(sequence):
         spacers.append(sequence[sorted_motifs[-1]['end']:])
 
@@ -83,34 +74,23 @@ def extract_spacers(sequence: str, motifs: List[Dict]) -> List[str]:
 
 
 def compute_spacer_features(sequence: str, motifs: List[Dict]) -> np.ndarray:
-    """
-    Compute spacer composition features for regression.
-
-    Features:
-    - Total spacer GC content
-    - Mean spacer length
-    - GC variance across spacers
-    - Dinucleotide frequencies in spacers
-    """
+    """Spacer composition features used by the regression variant."""
     spacers = extract_spacers(sequence, motifs)
 
     if not spacers or sum(len(s) for s in spacers) == 0:
-        return np.zeros(20)  # 20 features
+        return np.zeros(20)
 
     features = []
 
-    # GC content
     total_spacer = ''.join(spacers)
     features.append(compute_gc_content(total_spacer))
 
-    # Mean spacer length (normalized)
-    features.append(np.mean([len(s) for s in spacers]) / 50)  # Normalize by 50bp
+    features.append(np.mean([len(s) for s in spacers]) / 50)  # scale by 50bp
 
-    # GC variance
     gc_values = [compute_gc_content(s) for s in spacers if len(s) > 0]
     features.append(np.var(gc_values) if len(gc_values) > 1 else 0)
 
-    # Dinucleotide frequencies (16 features)
+    # 16 dinucleotide freqs
     dinucs = ['AA', 'AC', 'AG', 'AT', 'CA', 'CC', 'CG', 'CT',
               'GA', 'GC', 'GG', 'GT', 'TA', 'TC', 'TG', 'TT']
     total_dinucs = len(total_spacer) - 1
@@ -118,7 +98,7 @@ def compute_spacer_features(sequence: str, motifs: List[Dict]) -> np.ndarray:
         count = total_spacer.upper().count(dinuc)
         features.append(count / total_dinucs if total_dinucs > 0 else 0)
 
-    # Pad to 20 features
+    # pad to 20
     while len(features) < 20:
         features.append(0)
 
@@ -131,15 +111,10 @@ def motif_only_shuffle(
     n_shuffles: int = 100,
     fixed_spacer: str = 'N'
 ) -> List[Tuple[str, List[Dict]]]:
-    """
-    Shuffle motif positions while replacing spacers with fixed sequence.
-
-    This isolates the grammar effect by removing spacer composition variation.
-    """
+    """Shuffle motif order and replace every spacer with one fixed filler."""
     if not motifs or len(motifs) < 2:
         return [(sequence, motifs)]
 
-    # Extract motif sequences
     motif_seqs = []
     for m in sorted(motifs, key=lambda x: x['start']):
         motif_seqs.append({
@@ -153,28 +128,24 @@ def motif_only_shuffle(
     rng = np.random.default_rng(42)
 
     for _ in range(n_shuffles):
-        # Shuffle motif order
         order = rng.permutation(len(motif_seqs))
 
-        # Reconstruct sequence with fixed spacers
         new_seq = []
         new_motifs = []
         pos = 0
 
-        # Fixed spacer length (average of original spacers)
+            # fixed spacer length = mean of the originals
         original_spacers = extract_spacers(sequence, motifs)
         avg_spacer_len = int(np.mean([len(s) for s in original_spacers])) if original_spacers else 10
 
         for idx in order:
             m = motif_seqs[idx]
 
-            # Add spacer
             if pos > 0:
                 spacer = fixed_spacer * avg_spacer_len
                 new_seq.append(spacer)
                 pos += avg_spacer_len
 
-            # Add motif
             new_motifs.append({
                 'start': pos,
                 'end': pos + m['length'],
@@ -195,18 +166,13 @@ def matched_spacer_shuffle(
     n_shuffles: int = 100,
     gc_tolerance: float = 0.05
 ) -> List[Tuple[str, List[Dict]]]:
-    """
-    Shuffle motifs while matching spacer GC content.
-
-    This controls for spacer composition while varying motif arrangement.
-    """
+    """Shuffle motif order while keeping spacer GC inside a tolerance."""
     if not motifs or len(motifs) < 2:
         return [(sequence, motifs)]
 
     original_spacers = extract_spacers(sequence, motifs)
     original_gc = compute_gc_content(''.join(original_spacers))
 
-    # Extract motif info
     sorted_motifs = sorted(motifs, key=lambda x: x['start'])
     motif_seqs = [sequence[m['start']:m['end']] for m in sorted_motifs]
 
@@ -218,16 +184,14 @@ def matched_spacer_shuffle(
     while len(shuffled) < n_shuffles and attempts < max_attempts:
         attempts += 1
 
-        # Shuffle motif order
         order = rng.permutation(len(motif_seqs))
 
-        # Reconstruct with original spacers in new positions
         new_seq_parts = []
         new_motifs = []
         pos = 0
 
         for i, idx in enumerate(order):
-            # Add spacer (use original spacers cyclically)
+            # reuse the original spacers cyclically
             if i < len(original_spacers):
                 spacer = original_spacers[i]
             else:
@@ -237,7 +201,6 @@ def matched_spacer_shuffle(
                 new_seq_parts.append(spacer)
                 pos += len(spacer)
 
-            # Add motif
             m = sorted_motifs[idx]
             new_motifs.append({
                 'start': pos,
@@ -252,7 +215,6 @@ def matched_spacer_shuffle(
         new_spacers = extract_spacers(new_seq, new_motifs)
         new_gc = compute_gc_content(''.join(new_spacers))
 
-        # Check GC tolerance
         if abs(new_gc - original_gc) <= gc_tolerance:
             shuffled.append((new_seq, new_motifs))
 
@@ -265,40 +227,30 @@ def matched_spacer_shuffle(
 def compute_sf_gsi(
     sequences: List[str],
     motif_annotations: List[List[Dict]],
-    predict_fn,  # Function: (sequences, motifs) -> predictions
+    predict_fn,  # (sequences, motifs) -> predictions
     n_shuffles: int = 100,
     method: str = 'matched',  # 'motif_only', 'matched', 'regression'
     device: str = 'cuda'
 ) -> SFGSIResult:
     """
-    Compute Spacer-Factored Grammar Sensitivity Index.
+    Spacer-factored GSI over a set of sequences.
 
-    Args:
-        sequences: List of DNA sequences
-        motif_annotations: List of motif annotation lists
-        predict_fn: Function that takes (sequences, motifs) and returns predictions
-        n_shuffles: Number of shuffles per sequence
-        method: 'motif_only', 'matched', or 'regression'
-        device: Device for computation
-
-    Returns:
-        SFGSIResult with decomposed sensitivity metrics
+    predict_fn takes (sequences, motif_annotations) and returns predictions.
+    method is one of 'motif_only', 'matched', 'regression'.
     """
     n_seqs = len(sequences)
 
-    # Get original predictions
     with torch.no_grad():
         original_preds = predict_fn(sequences, motif_annotations)
         if isinstance(original_preds, torch.Tensor):
             original_preds = original_preds.cpu().numpy()
 
-    # Compute standard GSI (full shuffles)
+    # plain GSI from the full shuffles
     all_shuffle_preds = []
     for seq, motifs in zip(sequences, motif_annotations):
         if len(motifs) < 2:
             continue
 
-        # Standard vocab-preserving shuffle
         shuffled = matched_spacer_shuffle(seq, motifs, n_shuffles, gc_tolerance=1.0)
 
         shuffle_seqs = [s[0] for s in shuffled]
@@ -318,16 +270,14 @@ def compute_sf_gsi(
             grammar_pvalue=1.0, n_shuffles=0, n_sequences=0
         )
 
-    # Standard GSI
     all_preds_flat = np.concatenate(all_shuffle_preds)
     total_variance = np.var(all_preds_flat)
     mean_pred = np.mean(all_preds_flat)
     gsi = np.std(all_preds_flat) / abs(mean_pred) if abs(mean_pred) > 1e-8 else 0.0
     gsi_se = gsi / np.sqrt(2 * len(all_preds_flat))
 
-    # Compute SF-GSI based on method
     if method == 'motif_only':
-        # Use fixed spacers to isolate grammar effect
+        # fixed spacers isolate arrangement
         grammar_preds = []
         for seq, motifs in zip(sequences, motif_annotations):
             if len(motifs) < 2:
@@ -351,7 +301,6 @@ def compute_sf_gsi(
             sf_gsi = 0.0
 
     elif method == 'matched':
-        # Use GC-matched shuffles
         grammar_preds = []
         for seq, motifs in zip(sequences, motif_annotations):
             if len(motifs) < 2:
@@ -375,16 +324,13 @@ def compute_sf_gsi(
             sf_gsi = 0.0
 
     elif method == 'regression':
-        # Regress out spacer effects
         spacer_features = []
         for seq, motifs in zip(sequences, motif_annotations):
             spacer_features.append(compute_spacer_features(seq, motifs))
         spacer_features = np.array(spacer_features)
 
-        # Fit regression on shuffled predictions
         from sklearn.linear_model import Ridge
 
-        # Collect all shuffle predictions with spacer features
         X_all = []
         y_all = []
         for i, (seq, motifs) in enumerate(zip(sequences, motif_annotations)):
@@ -407,11 +353,10 @@ def compute_sf_gsi(
             X_all = np.array(X_all)
             y_all = np.array(y_all)
 
-            # Fit spacer regression
             reg = Ridge(alpha=1.0)
             reg.fit(X_all, y_all)
 
-            # Residual variance = grammar variance
+            # residual variance is what we call grammar
             residuals = y_all - reg.predict(X_all)
             grammar_variance = np.var(residuals)
             sf_gsi = np.std(residuals) / abs(mean_pred) if abs(mean_pred) > 1e-8 else 0.0
@@ -421,15 +366,13 @@ def compute_sf_gsi(
     else:
         raise ValueError(f"Unknown method: {method}")
 
-    # Compute spacer contribution
     spacer_variance = total_variance - grammar_variance
     spacer_contribution = spacer_variance / total_variance if total_variance > 1e-8 else 0.0
-    spacer_contribution = max(0, min(1, spacer_contribution))  # Clamp to [0, 1]
+    spacer_contribution = max(0, min(1, spacer_contribution))  # clamp to [0, 1]
 
-    # Statistical test: is grammar variance significant?
-    # Use permutation test
+    # is the grammar variance significant?
     if grammar_variance > 0:
-        # F-test approximation
+        # f-test approximation
         f_stat = grammar_variance / (total_variance / n_shuffles) if total_variance > 0 else 0
         grammar_pvalue = 1 - stats.f.cdf(f_stat, n_shuffles - 1, n_shuffles * n_seqs - 1)
     else:
@@ -458,15 +401,9 @@ def compute_sf_gsi_with_sfgn(
     motif_annotations: List[List[Dict]],
     n_shuffles: int = 100,
 ) -> Dict:
-    """
-    Compute SF-GSI using SFGN's built-in decomposition.
-
-    SFGN provides α (grammar weight) and β (composition weight) directly,
-    allowing us to compute grammar-specific sensitivity.
-    """
+    """SF-GSI read straight off SFGN's alpha/beta split."""
     model.eval()
 
-    # Get original decomposition
     with torch.no_grad():
         output = model(sequences, motif_annotations)
         original_grammar = output.grammar_vector.cpu().numpy()
@@ -474,7 +411,6 @@ def compute_sf_gsi_with_sfgn(
         original_alpha = output.alpha.cpu().numpy()
         original_pred = output.prediction.cpu().numpy()
 
-    # Shuffle and track grammar vs composition contributions
     grammar_preds = []
     comp_preds = []
     total_preds = []
@@ -489,7 +425,7 @@ def compute_sf_gsi_with_sfgn(
             with torch.no_grad():
                 output = model([shuf_seq], [shuf_motifs])
 
-                # Grammar-only prediction (α * grammar_transformed)
+                # grammar-only branch
                 g_vec = output.grammar_vector
                 alpha = output.alpha
 
@@ -505,16 +441,14 @@ def compute_sf_gsi_with_sfgn(
             'n_samples': 0
         }
 
-    # Compute metrics
     total_preds = np.array(total_preds)
     grammar_preds = np.array(grammar_preds)
 
     gsi = np.std(total_preds) / abs(np.mean(total_preds)) if abs(np.mean(total_preds)) > 1e-8 else 0.0
 
-    # SF-GSI from SFGN: variance explained by grammar pathway
-    # Approximate by α * total_variance
+    # approximate the grammar-pathway variance as alpha * total
     mean_alpha = np.mean(grammar_preds)
-    sf_gsi = gsi * mean_alpha  # Grammar's contribution to sensitivity
+    sf_gsi = gsi * mean_alpha  # grammar's share of sensitivity
 
     return {
         'sf_gsi': sf_gsi,

@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.16819417476654053,
+    "test_r": 0.22509485483169556,
+    "test_rho": 0.18432594842987207,
+    "test_r2": 0.02837204933166504,
+    "n_params": 3073,
+    "perm_invariant": true,
+    "model": "nt",
+    "dataset": "inoue"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.21735838055610657,
+    "test_r": 0.27940261363983154,
+    "test_rho": 0.24897824653922215,
+    "test_r2": -0.0032979249954223633,
+    "n_params": 297473,
+    "perm_invariant": true,
+    "model": "nt",
+    "dataset": "inoue"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.15579187870025635,
+    "test_r": 0.19087153673171997,
+    "test_rho": 0.18723476923370877,
+    "test_r2": 0.028095781803131104,
+    "n_params": 330754,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "inoue"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.20080804824829102,
+    "test_r": 0.21980775892734528,
+    "test_rho": 0.23629899783134142,
+    "test_r2": 0.030024349689483643,
+    "n_params": 827649,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "inoue"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.15839387476444244,
+    "test_r": 0.22122272849082947,
+    "test_rho": 0.15955977186093834,
+    "test_r2": -0.19600427150726318,
+    "n_params": 793281,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "inoue"
+  }
+]

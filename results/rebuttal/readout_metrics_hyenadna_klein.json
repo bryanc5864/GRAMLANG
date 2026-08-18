@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.37161481380462646,
+    "test_r": 0.22265654802322388,
+    "test_rho": 0.23085386850319306,
+    "test_r2": 0.03725743293762207,
+    "n_params": 769,
+    "perm_invariant": true,
+    "model": "hyenadna",
+    "dataset": "klein"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.3588213324546814,
+    "test_r": 0.20809020102024078,
+    "test_rho": 0.22718753335113184,
+    "test_r2": 0.03326457738876343,
+    "n_params": 99329,
+    "perm_invariant": true,
+    "model": "hyenadna",
+    "dataset": "klein"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.38079461455345154,
+    "test_r": 0.2584537863731384,
+    "test_rho": 0.24143978689932794,
+    "test_r2": 0.056326091289520264,
+    "n_params": 132610,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "klein"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.3955443501472473,
+    "test_r": 0.31560003757476807,
+    "test_rho": 0.3009006242887574,
+    "test_r2": -0.16782712936401367,
+    "n_params": 678657,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "klein"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.38881537318229675,
+    "test_r": 0.24213209748268127,
+    "test_rho": 0.23071002300915283,
+    "test_r2": 0.048767685890197754,
+    "n_params": 644289,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "klein"
+  }
+]

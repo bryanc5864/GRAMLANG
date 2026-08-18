@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.570902943611145,
+    "test_r": 0.5674512386322021,
+    "test_rho": 0.5788738775748618,
+    "test_r2": 0.3098083734512329,
+    "n_params": 2305,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "jores"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.5815744400024414,
+    "test_r": 0.5887888073921204,
+    "test_rho": 0.6039294677197143,
+    "test_r2": 0.3211585283279419,
+    "n_params": 231425,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "jores"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.6038461923599243,
+    "test_r": 0.5806039571762085,
+    "test_rho": 0.595129466047178,
+    "test_r2": 0.29328012466430664,
+    "n_params": 264706,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "jores"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.6101948618888855,
+    "test_r": 0.599102795124054,
+    "test_rho": 0.6120289952381498,
+    "test_r2": 0.330672025680542,
+    "n_params": 777985,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "jores"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.6095772981643677,
+    "test_r": 0.582210898399353,
+    "test_rho": 0.5860118673565463,
+    "test_r2": 0.30540817975997925,
+    "n_params": 743617,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "jores"
+  }
+]

@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 """
-GRAMLANG Full Pipeline Runner
-
-Orchestrates all 6 modules sequentially, managing GPU memory by
-loading one model at a time. Documents all results.
+Run the six analysis modules in order, one model in memory at a time.
 
 Usage:
     python scripts/run_full_pipeline.py [--module N] [--models model1,model2]
@@ -55,18 +52,17 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(PROJECT_DIR, 'data')
 RESULTS_DIR = os.path.join(PROJECT_DIR, 'results')
 
-# Models to run (ordered by memory requirement, smallest first)
+# smallest memory footprint first
 ALL_MODELS = ['dnabert2', 'caduceus', 'nt', 'hyenadna', 'enformer']
-# 'gpn', 'borzoi', 'sei', 'evo' added when verified working
+# gpn, borzoi, sei and evo go in once they are verified working
 
-# Datasets
 ALL_DATASETS = {
     'agarwal': {'species': 'human', 'cell_type': 'K562'},
     'kircher': {'species': 'human', 'cell_type': 'K562'},
     'inoue': {'species': 'human', 'cell_type': None},
     'vaishnav': {'species': 'yeast', 'cell_type': None},
     'jores': {'species': 'plant', 'cell_type': None},
-    'klein': {'species': 'human', 'cell_type': 'HepG2'},  # Klein 2020 is human HepG2
+    'klein': {'species': 'human', 'cell_type': 'HepG2'},
 }
 
 SPECIES_MAP = {
@@ -104,7 +100,7 @@ def get_available_datasets():
 def run_module1(models, datasets, args):
     """Module 1: Grammar Existence & Complexity Classification."""
     log_msg("=" * 60)
-    log_msg("MODULE 1: Grammar Existence & Complexity Classification")
+    log_msg("module 1: grammar existence and complexity classification")
     log_msg("=" * 60)
 
     os.makedirs(os.path.join(RESULTS_DIR, 'module1'), exist_ok=True)
@@ -147,7 +143,6 @@ def run_module1(models, datasets, args):
         combined = pd.concat(all_gsi_results, ignore_index=True)
         combined.to_parquet(os.path.join(RESULTS_DIR, 'module1', 'all_gsi_results.parquet'))
 
-        # Summary
         summary = {}
         for ds in combined['dataset'].unique():
             ds_data = combined[combined['dataset'] == ds]
@@ -159,7 +154,6 @@ def run_module1(models, datasets, args):
             }
         save_json(summary, os.path.join(RESULTS_DIR, 'module1', 'gsi_summary.json'))
 
-        # Grammar information
         info_results = []
         for _, row in combined.iterrows():
             if 'shuffle_mean' in row and pd.notna(row.get('shuffle_std', None)):
@@ -178,7 +172,6 @@ def run_module1(models, datasets, args):
                 os.path.join(RESULTS_DIR, 'module1', 'grammar_information.parquet')
             )
 
-        # Plot
         viz.plot_gsi_distribution(
             combined,
             os.path.join(RESULTS_DIR, 'module1', 'fig1_gsi_distribution.pdf')
@@ -192,13 +185,13 @@ def run_module1(models, datasets, args):
 def run_module2(models, datasets, gsi_results, args):
     """Module 2: Cross-Architecture Grammar Rule Extraction."""
     log_msg("=" * 60)
-    log_msg("MODULE 2: Cross-Architecture Grammar Rule Extraction")
+    log_msg("module 2: cross-architecture grammar rule extraction")
     log_msg("=" * 60)
 
     os.makedirs(os.path.join(RESULTS_DIR, 'module2'), exist_ok=True)
     all_rules = []
 
-    # Select grammar-sensitive enhancers
+    # only the grammar-sensitive ones
     if len(gsi_results) > 0:
         sensitive = gsi_results[gsi_results['gsi'] > 0.05]['seq_id'].unique()
         log_msg(f"  {len(sensitive)} grammar-sensitive enhancers (GSI > 0.05)")
@@ -217,7 +210,6 @@ def run_module2(models, datasets, gsi_results, args):
                 continue
             motif_hits = pd.read_parquet(mh_path)
 
-            # Filter to sensitive enhancers
             if len(sensitive) > 0:
                 df_filtered = df[df['seq_id'].isin(sensitive)]
             else:
@@ -226,7 +218,6 @@ def run_module2(models, datasets, gsi_results, args):
             if len(df_filtered) == 0:
                 continue
 
-            # Sample
             sample = df_filtered.sample(
                 n=min(args.max_enhancers_rules, len(df_filtered)),
                 random_state=42
@@ -269,7 +260,6 @@ def run_module2(models, datasets, gsi_results, args):
         rules_df = pd.DataFrame(all_rules)
         rules_df.to_parquet(os.path.join(RESULTS_DIR, 'module2', 'grammar_rules_database.parquet'))
 
-        # Consensus
         consensus = compute_grammar_consensus(rules_df)
         consensus.to_parquet(os.path.join(RESULTS_DIR, 'module2', 'consensus_scores.parquet'))
 
@@ -285,13 +275,13 @@ def run_module2(models, datasets, gsi_results, args):
 def run_module3(models, datasets, rules_df, args):
     """Module 3: Compositionality Testing."""
     log_msg("=" * 60)
-    log_msg("MODULE 3: Compositionality Testing")
+    log_msg("module 3: compositionality testing")
     log_msg("=" * 60)
 
     os.makedirs(os.path.join(RESULTS_DIR, 'module3'), exist_ok=True)
     all_comp = []
 
-    for model_name in models[:3]:  # Use top 3 models for speed
+    for model_name in models[:3]:  # top 3 only, for speed
         model = load_model(model_name, device='cuda')
 
         for ds_name, ds_info in datasets.items():
@@ -317,7 +307,6 @@ def run_module3(models, datasets, rules_df, args):
         comp_df = pd.concat(all_comp, ignore_index=True)
         comp_df.to_parquet(os.path.join(RESULTS_DIR, 'module3', 'compositionality_results.parquet'))
 
-        # Complexity classification
         gap_by_k = comp_df.groupby('n_motifs')['compositionality_gap'].agg(['mean', 'std']).reset_index()
         classification = classify_grammar_complexity(
             gap_by_k['n_motifs'].values,
@@ -338,12 +327,11 @@ def run_module3(models, datasets, rules_df, args):
 def run_module4(models, datasets, rules_df, args):
     """Module 4: Cross-Species Grammar Transfer."""
     log_msg("=" * 60)
-    log_msg("MODULE 4: Cross-Species Grammar Transfer")
+    log_msg("module 4: cross-species grammar transfer")
     log_msg("=" * 60)
 
     os.makedirs(os.path.join(RESULTS_DIR, 'module4'), exist_ok=True)
 
-    # Organize rules by species
     species_rules = {}
     species_datasets = {}
     species_motif_hits = {}
@@ -353,7 +341,7 @@ def run_module4(models, datasets, rules_df, args):
             path = os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed.parquet')
             mh_path = os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed_motif_hits.parquet')
             if os.path.exists(path) and os.path.exists(mh_path):
-                # Only use this dataset if it has rules OR we haven't found one yet
+                # take this dataset if it has rules, or if we have nothing yet
                 ds_rules = rules_df[rules_df['dataset'] == ds_name] if len(rules_df) > 0 else pd.DataFrame()
                 if len(ds_rules) > 0 or species not in species_datasets:
                     species_datasets[species] = load_processed(path)
@@ -361,7 +349,7 @@ def run_module4(models, datasets, rules_df, args):
                     if len(ds_rules) > 0:
                         species_rules[species] = ds_rules
                         log_msg(f"  {species}: using {ds_name} ({len(ds_rules)} rules)")
-                        break  # Found dataset with rules for this species
+                        break  # got rules for this species
 
     available_species = [s for s in species_datasets if s in species_rules and len(species_rules[s]) > 0]
 
@@ -376,7 +364,6 @@ def run_module4(models, datasets, rules_df, args):
     )
     transfer_df.to_parquet(os.path.join(RESULTS_DIR, 'module4', 'transfer_matrix.parquet'))
 
-    # Phylogeny
     phylo = build_grammar_phylogeny(transfer_df, available_species)
     save_json(phylo, os.path.join(RESULTS_DIR, 'module4', 'grammar_phylogeny.json'))
 
@@ -393,18 +380,17 @@ def run_module4(models, datasets, rules_df, args):
 def run_module5(gsi_results, rules_df, datasets, args):
     """Module 5: Causal Determinants of Grammar."""
     log_msg("=" * 60)
-    log_msg("MODULE 5: Causal Determinants of Grammar")
+    log_msg("module 5: causal determinants of grammar")
     log_msg("=" * 60)
 
     os.makedirs(os.path.join(RESULTS_DIR, 'module5'), exist_ok=True)
 
-    # 5.1 Biophysics residual
+    # biophysics residual
     for ds_name in datasets:
         df = load_processed(os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed.parquet'))
         ds_gsi = gsi_results[gsi_results['dataset'] == ds_name] if len(gsi_results) > 0 else pd.DataFrame()
 
         if len(ds_gsi) > 0:
-            # Merge GSI into dataset
             gsi_per_seq = ds_gsi.groupby('seq_id')['gsi'].mean()
             merged = df[df['seq_id'].isin(gsi_per_seq.index)]
 
@@ -414,7 +400,7 @@ def run_module5(gsi_results, rules_df, datasets, args):
                 save_json(bio_result, os.path.join(RESULTS_DIR, 'module5', f'{ds_name}_biophysics.json'))
                 log_msg(f"  {ds_name} biophysics R2: {bio_result.get('biophysics_r2', 0):.3f}")
 
-    # 5.2 TF structure mapping
+    # TF structure mapping
     if len(rules_df) > 0:
         structure_map = build_structure_grammar_map(rules_df)
         structure_map.to_parquet(os.path.join(RESULTS_DIR, 'module5', 'structure_grammar_map.parquet'))
@@ -422,7 +408,7 @@ def run_module5(gsi_results, rules_df, datasets, args):
         structure_test = test_structure_predicts_grammar(rules_df)
         save_json(structure_test, os.path.join(RESULTS_DIR, 'module5', 'structure_predicts_grammar.json'))
 
-        # 5.3 Strength tradeoff
+        # strength tradeoff
         for ds_name in datasets:
             mh_path = os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed_motif_hits.parquet')
             if os.path.exists(mh_path):
@@ -432,7 +418,7 @@ def run_module5(gsi_results, rules_df, datasets, args):
                     tradeoff = compute_grammar_strength_tradeoff(ds_rules, motif_hits)
                     save_json(tradeoff, os.path.join(RESULTS_DIR, 'module5', f'{ds_name}_strength_tradeoff.json'))
 
-    # 5.4 Phase diagram
+    # phase diagram
     if len(gsi_results) > 0:
         for ds_name in datasets:
             df = load_processed(os.path.join(DATA_DIR, 'processed', f'{ds_name}_processed.parquet'))
@@ -453,7 +439,7 @@ def run_module5(gsi_results, rules_df, datasets, args):
 def run_module6(models, datasets, rules_df, args):
     """Module 6: Grammar-Optimized Design & Completeness."""
     log_msg("=" * 60)
-    log_msg("MODULE 6: Grammar-Optimized Design & Completeness")
+    log_msg("module 6: grammar-optimized design and completeness")
     log_msg("=" * 60)
 
     os.makedirs(os.path.join(RESULTS_DIR, 'module6'), exist_ok=True)
@@ -466,7 +452,6 @@ def run_module6(models, datasets, rules_df, args):
             continue
         motif_hits = pd.read_parquet(mh_path)
 
-        # Grammar features from rules
         rules_path = os.path.join(RESULTS_DIR, 'module2', 'grammar_rules_database.parquet')
         if os.path.exists(rules_path):
             grammar_features = pd.read_parquet(rules_path)
@@ -474,7 +459,6 @@ def run_module6(models, datasets, rules_df, args):
         else:
             grammar_features = pd.DataFrame()
 
-        # Completeness test
         completeness = compute_grammar_completeness(
             df, motif_hits, grammar_features, model,
             cell_type=ds_info['cell_type']
@@ -523,7 +507,6 @@ def main():
     log_msg(f"Datasets: {list(datasets.keys())}")
     check_disk()
 
-    # Run modules
     gsi_results = pd.DataFrame()
     rules_df = pd.DataFrame()
 

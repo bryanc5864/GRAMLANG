@@ -1,9 +1,7 @@
-"""
-Expression prediction probes for foundation models.
+"""Expression probes for the foundation models.
 
-Foundation models (NT, DNABERT-2, HyenaDNA, Evo, Caduceus, GPN) don't have
-built-in expression heads. We train lightweight linear probes on top of their
-frozen embeddings to predict MPRA expression.
+NT, DNABERT-2, HyenaDNA, Evo, Caduceus and GPN have no expression head, so we
+train small probes on their frozen embeddings to predict MPRA expression.
 """
 
 import os
@@ -18,7 +16,7 @@ from tqdm import tqdm
 
 
 class ExpressionProbe(nn.Module):
-    """Linear probe on frozen foundation model embeddings."""
+    """Probe head on frozen foundation model embeddings."""
 
     def __init__(self, input_dim: int, hidden_dim: int = 256, dropout: float = 0.1):
         super().__init__()
@@ -30,12 +28,7 @@ class ExpressionProbe(nn.Module):
         )
 
     def forward(self, embeddings: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            embeddings: (batch, hidden_dim) pooled embeddings
-        Returns:
-            (batch,) predicted expression
-        """
+        """(batch, hidden_dim) pooled embeddings -> (batch,) expression."""
         return self.head(embeddings).squeeze(-1)
 
 
@@ -52,29 +45,12 @@ def train_expression_probe(
     device: str = 'cuda',
     seed: int = 42,
 ) -> Tuple[ExpressionProbe, dict]:
-    """
-    Train an expression probe on pre-extracted embeddings.
+    """Train a probe on pre-extracted embeddings, 80/10/10 split.
 
-    Args:
-        embeddings: (n_samples, hidden_dim) array
-        expressions: (n_samples,) array of expression values
-        input_dim: Hidden dimension of embeddings
-        hidden_dim: Probe hidden dimension
-        lr: Learning rate
-        weight_decay: L2 regularization
-        batch_size: Training batch size
-        max_epochs: Maximum epochs
-        patience: Early stopping patience
-        device: CUDA device
-        seed: Random seed
-
-    Returns:
-        (trained_probe, metrics_dict)
-    """
+    returns (probe, metrics)."""
     torch.manual_seed(seed)
     np.random.seed(seed)
 
-    # Split data
     X_train, X_temp, y_train, y_temp = train_test_split(
         embeddings, expressions, test_size=0.2, random_state=seed
     )
@@ -82,7 +58,6 @@ def train_expression_probe(
         X_temp, y_temp, test_size=0.5, random_state=seed
     )
 
-    # Create data loaders
     train_ds = TensorDataset(
         torch.tensor(X_train, dtype=torch.float32),
         torch.tensor(y_train, dtype=torch.float32)
@@ -100,12 +75,10 @@ def train_expression_probe(
     val_loader = DataLoader(val_ds, batch_size=batch_size)
     test_loader = DataLoader(test_ds, batch_size=batch_size)
 
-    # Initialize probe
     probe = ExpressionProbe(input_dim, hidden_dim).to(device)
     optimizer = torch.optim.AdamW(probe.parameters(), lr=lr, weight_decay=weight_decay)
     criterion = nn.MSELoss()
 
-    # Training loop
     best_val_loss = float('inf')
     best_state = None
     epochs_no_improve = 0
@@ -113,7 +86,6 @@ def train_expression_probe(
     val_losses = []
 
     for epoch in range(max_epochs):
-        # Train
         probe.train()
         epoch_loss = 0
         n_batches = 0
@@ -128,7 +100,6 @@ def train_expression_probe(
             n_batches += 1
         train_losses.append(epoch_loss / n_batches)
 
-        # Validate
         probe.eval()
         val_loss = 0
         n_val = 0
@@ -149,15 +120,13 @@ def train_expression_probe(
             epochs_no_improve += 1
 
         if epochs_no_improve >= patience:
-            print(f"  Early stopping at epoch {epoch+1}")
+            print(f"  early stopping at epoch {epoch+1}")
             break
 
-    # Load best model
     probe.load_state_dict(best_state)
     probe.to(device)
     probe.eval()
 
-    # Evaluate on test set
     all_preds = []
     all_true = []
     with torch.no_grad():
@@ -170,7 +139,6 @@ def train_expression_probe(
     all_preds = np.array(all_preds)
     all_true = np.array(all_true)
 
-    # Compute metrics
     pearson_r, pearson_p = pearsonr(all_preds, all_true)
     spearman_r, spearman_p = spearmanr(all_preds, all_true)
     r_squared = pearson_r ** 2
@@ -202,24 +170,12 @@ def extract_and_cache_embeddings(
     batch_size: int = 32,
     layer: int = -1
 ) -> np.ndarray:
-    """
-    Extract embeddings and cache to disk.
-
-    Args:
-        model: GrammarModel instance
-        sequences: List of DNA sequences
-        cache_path: Path to save/load embeddings
-        batch_size: Processing batch size
-        layer: Layer to extract from
-
-    Returns:
-        (n_sequences, hidden_dim) array
-    """
+    """Embed sequences with a GrammarModel, reusing cache_path if it exists."""
     if os.path.exists(cache_path):
-        print(f"  Loading cached embeddings from {cache_path}")
+        print(f"  loading cached embeddings from {cache_path}")
         return np.load(cache_path)
 
-    print(f"  Extracting embeddings for {len(sequences)} sequences...")
+    print(f"  extracting embeddings for {len(sequences)} sequences...")
     all_embeddings = []
 
     for i in tqdm(range(0, len(sequences), batch_size)):
@@ -229,16 +185,15 @@ def extract_and_cache_embeddings(
 
     embeddings = np.concatenate(all_embeddings, axis=0)
 
-    # Save cache
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
     np.save(cache_path, embeddings)
-    print(f"  Saved embeddings to {cache_path} ({embeddings.nbytes / 1e6:.1f} MB)")
+    print(f"  saved embeddings to {cache_path} ({embeddings.nbytes / 1e6:.1f} MB)")
 
     return embeddings
 
 
 def save_probe(probe: ExpressionProbe, metrics: dict, save_dir: str, model_name: str):
-    """Save trained probe and metrics."""
+    """Write probe weights + metrics json."""
     os.makedirs(save_dir, exist_ok=True)
     torch.save(probe.state_dict(), os.path.join(save_dir, f'{model_name}_probe.pt'))
 
@@ -263,7 +218,7 @@ def save_probe(probe: ExpressionProbe, metrics: dict, save_dir: str, model_name:
 
 def load_probe(save_dir: str, model_name: str, input_dim: int,
                hidden_dim: int = 256, device: str = 'cuda') -> ExpressionProbe:
-    """Load a trained probe."""
+    """Load a saved probe."""
     probe = ExpressionProbe(input_dim, hidden_dim)
     state = torch.load(os.path.join(save_dir, f'{model_name}_probe.pt'),
                        map_location=device)

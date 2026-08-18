@@ -1,9 +1,8 @@
 """
-Experiment B: Synthetic Grammar Probes.
+Synthetic grammar probes.
 
-For each frequent motif pair, construct synthetic sequences with controlled
-spacing, orientation, and order to measure clean grammar effects uncontaminated
-by vocabulary variation.
+Build sequences with two motifs at controlled spacing, orientation and order
+so grammar effects can be measured without vocabulary varying underneath.
 """
 
 import numpy as np
@@ -24,15 +23,9 @@ def run_synthetic_grammar_probes(
     cell_type: str = None,
 ) -> pd.DataFrame:
     """
-    Run synthetic grammar probes for a set of motif pairs.
-
-    For each pair, measures:
-    1. Spacing ladder: expression across coarse spacing grid
-    2. Orientation panel: all 4 orientations at optimal spacing
-    3. Order swap: AB vs BA at optimal spacing
-    4. Helical scan: fine 1bp spacing from 5-25bp
-
-    Returns DataFrame with one row per (pair, condition) test.
+    Probe each motif pair four ways: a coarse spacing ladder, all four
+    orientations at the best spacing, AB vs BA, and a 1bp helical scan over
+    5-25bp. One row per (pair, condition).
     """
     if spacing_ladder is None:
         spacing_ladder = [2, 5, 8, 10, 12, 15, 20, 30, 50]
@@ -42,7 +35,7 @@ def run_synthetic_grammar_probes(
     for pair_idx, (name_a, seq_a, name_b, seq_b) in enumerate(motif_pairs):
         pair_name = f"{name_a}_{name_b}"
 
-        # 1. Spacing ladder
+        # spacing ladder
         spacing_seqs = []
         valid_spacings = []
         for sp in spacing_ladder:
@@ -69,11 +62,11 @@ def run_synthetic_grammar_probes(
                 'model': model.name,
             })
 
-        # Find optimal spacing from ladder
+        # best spacing from the ladder
         opt_sp_idx = np.argmax(spacing_exprs)
         opt_sp = valid_spacings[opt_sp_idx]
 
-        # 2. Orientation panel at optimal spacing
+        # orientation panel at the best spacing
         orientations = ['+/+', '+/-', '-/+', '-/-']
         orient_seqs = []
         for orient in orientations:
@@ -99,7 +92,7 @@ def run_synthetic_grammar_probes(
                     'model': model.name,
                 })
 
-        # 3. Order swap: AB vs BA
+        # AB vs BA
         ba_seq = _build_synthetic(seq_b, seq_a, opt_sp, target_length, gc_target)
         if ba_seq:
             ba_expr = model.predict_expression([ba_seq], cell_type=cell_type)
@@ -115,7 +108,7 @@ def run_synthetic_grammar_probes(
                 'model': model.name,
             })
 
-        # 4. Fine helical scan (1bp resolution, 5-25bp)
+        # fine helical scan, 1bp resolution over 5-25bp
         fine_spacings = list(range(fine_spacing_range[0], fine_spacing_range[1] + 1))
         fine_seqs = []
         valid_fine = []
@@ -150,7 +143,7 @@ def summarize_synthetic_probes(results_df: pd.DataFrame) -> Dict:
     for pair in results_df['pair'].unique():
         pair_data = results_df[results_df['pair'] == pair]
 
-        # Spacing effect
+        # spacing
         spacing_data = pair_data[pair_data['test_type'] == 'spacing_ladder']
         if len(spacing_data) > 1:
             spacing_range = float(spacing_data['expression'].max() - spacing_data['expression'].min())
@@ -159,7 +152,7 @@ def summarize_synthetic_probes(results_df: pd.DataFrame) -> Dict:
             spacing_range = 0
             spacing_fold = 1
 
-        # Orientation effect
+        # orientation
         orient_data = pair_data[pair_data['test_type'] == 'orientation']
         if len(orient_data) > 1:
             orient_range = float(orient_data['expression'].max() - orient_data['expression'].min())
@@ -168,22 +161,22 @@ def summarize_synthetic_probes(results_df: pd.DataFrame) -> Dict:
             orient_range = 0
             best_orient = '+/+'
 
-        # Order effect
+        # order
         ab_data = pair_data[(pair_data['test_type'] == 'spacing_ladder') & (pair_data['order'] == 'AB')]
         ba_data = pair_data[pair_data['test_type'] == 'order_swap']
         if len(ab_data) > 0 and len(ba_data) > 0:
-            # Compare at same spacing
+            # compare at the same spacing
             order_effect = float(ba_data['expression'].iloc[0]) - float(ab_data['expression'].max())
         else:
             order_effect = 0
 
-        # Helical periodicity
+        # helical periodicity
         helical_data = pair_data[pair_data['test_type'] == 'helical_scan'].sort_values('spacing')
         helical_score = 0
         if len(helical_data) >= 10:
             exprs = helical_data['expression'].values
             spacings = helical_data['spacing'].values
-            # Detrend and FFT
+            # detrend then FFT
             coeffs = np.polyfit(spacings, exprs, 1)
             detrended = exprs - np.polyval(coeffs, spacings)
             fft_vals = np.fft.rfft(detrended)
@@ -211,20 +204,18 @@ def summarize_synthetic_probes(results_df: pd.DataFrame) -> Dict:
 def get_top_motif_pairs(rules_df: pd.DataFrame, motif_hits: pd.DataFrame,
                         dataset: pd.DataFrame, n_pairs: int = 20) -> List[Tuple]:
     """Get the top N most frequent motif pairs with their consensus sequences."""
-    # Count pair frequencies
     pair_counts = rules_df.groupby(['motif_a', 'motif_b']).size().sort_values(ascending=False)
     top_pairs = pair_counts.head(n_pairs)
 
     result = []
     for (name_a, name_b), count in top_pairs.items():
-        # Get representative sequences for each motif from motif_hits
         hits_a = motif_hits[motif_hits['motif_name'] == name_a]
         hits_b = motif_hits[motif_hits['motif_name'] == name_b]
 
         if len(hits_a) == 0 or len(hits_b) == 0:
             continue
 
-        # Get the most common sequence for each motif
+        # most common sequence per motif
         seq_a = _get_consensus_sequence(hits_a, dataset)
         seq_b = _get_consensus_sequence(hits_b, dataset)
 
@@ -239,7 +230,6 @@ def _get_consensus_sequence(hits_df, dataset):
     if len(hits_df) == 0:
         return None
 
-    # Try to extract actual sequences from the dataset
     seqs = []
     for _, hit in hits_df.head(50).iterrows():
         seq_id = hit.get('seq_id')
@@ -255,7 +245,7 @@ def _get_consensus_sequence(hits_df, dataset):
     if not seqs:
         return None
 
-    # Return the most common length sequence (or first one)
+    # most common length wins, else just take the first
     from collections import Counter
     lengths = Counter(len(s) for s in seqs)
     target_len = lengths.most_common(1)[0][0]

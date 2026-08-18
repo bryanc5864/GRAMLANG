@@ -1,10 +1,9 @@
 """
-Redesigned Cross-Species Transfer: Distributional Comparison.
+Cross-species transfer as a distributional comparison.
 
-Instead of testing whether specific rules transfer (which fails because
-species don't share TFs), tests whether abstract grammar *properties*
-are conserved: spacing distributions, orientation preferences, helical
-phasing rates, grammar type distributions.
+Testing whether specific rules transfer fails because species do not share TFs,
+so compare abstract grammar properties instead: spacing distributions,
+orientation preferences, helical phasing rate, grammar type mix.
 """
 
 import numpy as np
@@ -20,24 +19,15 @@ def compute_distributional_transfer(
     species_map: Dict[str, List[str]],
 ) -> Dict:
     """
-    Compare grammar property distributions across species.
-
-    Tests grammar *universals* rather than specific rule transfer:
-    - Spacing sensitivity distributions
-    - Orientation effect distributions
-    - Helical phasing rate
-    - Grammar type proportions
-    - GSI distributions
-
-    Returns dict with pairwise species comparisons.
+    Pairwise species comparison of grammar property distributions: spacing
+    sensitivity, orientation effects, helical phasing rate, grammar type
+    proportions and GSI.
     """
-    # Map datasets to species
     dataset_to_species = {}
     for species, datasets in species_map.items():
         for ds in datasets:
             dataset_to_species[ds] = species
 
-    # Add species column
     rules_with_species = rules_df.copy()
     rules_with_species['species'] = rules_with_species['dataset'].map(dataset_to_species)
     rules_with_species = rules_with_species.dropna(subset=['species'])
@@ -47,7 +37,6 @@ def compute_distributional_transfer(
     if len(species_list) < 2:
         return {'error': 'Need at least 2 species for distributional transfer'}
 
-    # Extract per-species distributions
     species_distributions = {}
     for species in species_list:
         sp_rules = rules_with_species[rules_with_species['species'] == species]
@@ -65,11 +54,10 @@ def compute_distributional_transfer(
             'n_gsi': len(sp_gsi),
         }
 
-        # Grammar type proportions
+        # grammar type proportions
         types = _classify_rule_types(sp_rules)
         species_distributions[species]['grammar_types'] = types
 
-    # Pairwise comparisons
     comparisons = {}
     for i, sp1 in enumerate(species_list):
         for j, sp2 in enumerate(species_list):
@@ -82,7 +70,6 @@ def compute_distributional_transfer(
 
             comparison = {}
 
-            # Compare each distribution
             for prop in ['spacing_sensitivity', 'orientation_sensitivity',
                         'helical_phase_score', 'fold_change', 'gsi']:
                 v1 = d1[prop]
@@ -90,13 +77,13 @@ def compute_distributional_transfer(
                 if len(v1) < 5 or len(v2) < 5:
                     continue
 
-                # Wasserstein distance (Earth Mover's Distance)
+                # wasserstein / earth mover distance
                 emd = wasserstein_distance(v1, v2)
 
                 # KS test
                 ks_stat, ks_pval = ks_2samp(v1, v2)
 
-                # Effect size: difference in means / pooled std
+                # effect size = mean difference over pooled std
                 pooled_std = np.sqrt(
                     (np.var(v1) * len(v1) + np.var(v2) * len(v2)) /
                     (len(v1) + len(v2))
@@ -114,7 +101,7 @@ def compute_distributional_transfer(
                     'cohens_d': float(cohens_d),
                 }
 
-            # Compare grammar type proportions (Jensen-Shannon divergence)
+            # grammar type proportions, compared by Jensen-Shannon
             types1 = d1['grammar_types']
             types2 = d2['grammar_types']
             all_types = sorted(set(list(types1.keys()) + list(types2.keys())))
@@ -133,7 +120,6 @@ def compute_distributional_transfer(
 
             comparisons[pair_key] = comparison
 
-    # Overall summary
     summary = {
         'species': species_list,
         'n_species': len(species_list),
@@ -152,8 +138,7 @@ def compute_distributional_transfer(
         'pairwise_comparisons': comparisons,
     }
 
-    # Compute overall conservation score
-    # Average KS p-value across all property comparisons
+    # conservation score = mean KS p-value over all property comparisons
     all_pvals = []
     all_cohens_d = []
     for pair_comp in comparisons.values():
@@ -198,7 +183,7 @@ def _classify_rule_types(rules: pd.DataFrame) -> Dict[str, float]:
         else:
             types['insensitive'] += 1
 
-    # Normalize
+    # normalize
     total = sum(types.values())
     if total > 0:
         types = {k: v / total for k, v in types.items()}

@@ -1,7 +1,5 @@
 """
-Grammar representation geometry analysis.
-
-Finds the geometric structure of grammar in model embedding spaces.
+Geometry of grammar in model embedding spaces.
 """
 
 import numpy as np
@@ -19,26 +17,17 @@ def compute_grammar_direction(
     layer: int = -1
 ) -> dict:
     """
-    Find the "grammar direction" in embedding space.
-
-    Args:
-        model: GrammarModel instance
-        correct_sequences: Natural arrangement, high expression
-        shuffled_sequences: Vocabulary-matched shuffled versions
-        layer: Which layer
-
-    Returns:
-        Dict with grammar direction, linearity metrics
+    Grammar direction in embedding space: mean difference between natural and
+    vocabulary-matched shuffled sequences, plus how linearly separable they are.
     """
     correct_embeds = model.get_embeddings(correct_sequences, layer=layer)
     shuffled_embeds = model.get_embeddings(shuffled_sequences, layer=layer)
 
-    # Grammar direction: mean difference
     grammar_dir = correct_embeds.mean(axis=0) - shuffled_embeds.mean(axis=0)
     norm = np.linalg.norm(grammar_dir)
     grammar_dir_norm = grammar_dir / max(norm, 1e-10)
 
-    # Test linearity: linear probe to distinguish correct vs shuffled
+    # linear probe: how separable are correct and shuffled?
     X = np.concatenate([correct_embeds, shuffled_embeds], axis=0)
     y = np.array([1] * len(correct_embeds) + [0] * len(shuffled_embeds))
 
@@ -102,11 +91,10 @@ def compute_cross_model_alignment(
         dir1 = grammar_directions[m1]['grammar_direction']
         dir2 = grammar_directions[m2]['grammar_direction']
 
-        # If dimensions match, compute cosine similarity directly
         if len(dir1) == len(dir2):
             cos_sim = 1 - cosine(dir1, dir2)
         else:
-            # Random projection to shared space
+            # dims differ, project both into a shared space
             target_dim = min(len(dir1), len(dir2), 128)
             rng = np.random.default_rng(42)
             proj1 = rng.standard_normal((len(dir1), target_dim)) / np.sqrt(target_dim)

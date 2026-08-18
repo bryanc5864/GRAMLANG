@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-GPU-dependent validation analysiss.
-Run after resolve_validations.py for CPU-based analyses.
+The GPU-dependent validation analyses. Run resolve_validations.py first for the
+CPU-only ones.
 """
 
 import os
@@ -13,7 +13,6 @@ from pathlib import Path
 from scipy import stats
 from collections import defaultdict
 
-# Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
@@ -31,22 +30,19 @@ def compute_cohens_d(diffs):
 
 
 def analysis_1_positive_control_all_models():
-    """
-    validation 1: Run all 3 models on Georgakopoulos-Soares positive control.
-    """
+    """Run all 3 models on the Georgakopoulos-Soares positive control."""
     print("\n" + "="*60)
-    print("analysis 1: Positive Control - All Models")
+    print("positive control - all models")
     print("="*60)
 
     from src.models.model_loader import load_model
 
-    # Load the Georgakopoulos-Soares library
     library_path = Path('data/raw/georgakopoulos_soares/Library_MPRA_TFBSs.txt')
     if not library_path.exists():
-        print(f"  ERROR: Library not found at {library_path}")
+        print(f"  error: library not found at {library_path}")
         return None
 
-    # Parse library - FASTA-like format with >header\nsequence
+    # FASTA-ish: >header then sequence on the next line
     sequences = []
     current_header = None
     with open(library_path, 'r') as f:
@@ -55,7 +51,7 @@ def analysis_1_positive_control_all_models():
             if not line:
                 continue
             if line.startswith('>'):
-                current_header = line[1:]  # Remove '>'
+                current_header = line[1:]
             elif current_header is not None:
                 sequences.append({'header': current_header, 'sequence': line})
                 current_header = None
@@ -63,21 +59,19 @@ def analysis_1_positive_control_all_models():
     print(f"  Loaded {len(sequences)} sequences from library")
 
     if len(sequences) == 0:
-        # Try reading differently
         with open(library_path, 'r') as f:
             content = f.read()
             print(f"  File size: {len(content)} bytes")
             print(f"  First 200 chars: {content[:200]}")
         return None
 
-    # Create pairs (consecutive sequences as orientation variants)
+    # consecutive sequences stand in as orientation variants
     pairs = []
     for i in range(0, min(1000, len(sequences)-1), 2):
         pairs.append((sequences[i], sequences[i+1]))
     pairs = pairs[:500]
     print(f"  Using {len(pairs)} sequence pairs")
 
-    # Test all 3 models
     models_to_test = ['dnabert2', 'nt', 'hyenadna']
     results = {}
 
@@ -85,11 +79,10 @@ def analysis_1_positive_control_all_models():
         print(f"\n  Testing {model_name}...")
 
         try:
-            # Load model with agarwal probe (K562 cell type matches G-S data)
+            # agarwal probe: K562 matches the G-S data
             model = load_model(model_name, dataset_name='agarwal')
             print(f"    Model loaded with agarwal probe")
 
-            # Predict expression for each pair
             diffs = []
             for pair in pairs:
                 seq1 = pair[0]['sequence']
@@ -98,7 +91,7 @@ def analysis_1_positive_control_all_models():
                 try:
                     pred1 = model.predict_expression(seq1)
                     pred2 = model.predict_expression(seq2)
-                    # Handle case where prediction returns array
+                    # predictions sometimes come back as arrays
                     if hasattr(pred1, '__len__'):
                         pred1 = float(pred1[0]) if len(pred1) > 0 else float(pred1)
                     if hasattr(pred2, '__len__'):
@@ -111,19 +104,16 @@ def analysis_1_positive_control_all_models():
             diffs = np.array(diffs).flatten()
 
             if len(diffs) < 10:
-                print(f"    ERROR: Only {len(diffs)} valid predictions")
+                print(f"    error: only {len(diffs)} valid predictions")
                 results[model_name] = {'error': 'insufficient_predictions'}
                 continue
 
-            # Compute statistics
             mean_diff = np.mean(diffs)
             median_diff = np.median(diffs)
             std_diff = np.std(diffs)
 
-            # Cohen's d
             cohens_d = compute_cohens_d(diffs)
 
-            # t-test against zero
             t_stat, p_value = stats.ttest_1samp(diffs, 0)
 
             results[model_name] = {
@@ -143,7 +133,7 @@ def analysis_1_positive_control_all_models():
             print(f"    Cohen's d: {cohens_d:.3f}")
             print(f"    p-value: {p_value:.2e}")
 
-            # Clean up GPU memory
+            # free GPU memory before the next model
             del model
             import torch
             if torch.cuda.is_available():
@@ -151,11 +141,10 @@ def analysis_1_positive_control_all_models():
 
         except Exception as e:
             import traceback
-            print(f"    ERROR: {e}")
+            print(f"    error: {e}")
             traceback.print_exc()
             results[model_name] = {'error': str(e)}
 
-    # Save results
     output_path = RESULTS_DIR / 'positive_control_all_models.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
@@ -165,11 +154,9 @@ def analysis_1_positive_control_all_models():
 
 
 def analysis_5_gc_all_datasets():
-    """
-    validation 7: Run GC correlation analysis for ALL 5 datasets.
-    """
+    """GC correlation for all 5 datasets."""
     print("\n" + "="*60)
-    print("analysis 5: GC Correlation - All 5 Datasets")
+    print("GC correlation - all 5 datasets")
     print("="*60)
 
     from src.models.model_loader import load_model
@@ -183,31 +170,27 @@ def analysis_5_gc_all_datasets():
     for dataset in datasets:
         print(f"\n  Dataset: {dataset}")
 
-        # Load data
         data_path = Path(f'data/processed/{dataset}_processed.parquet')
         if not data_path.exists():
-            print(f"    ERROR: Data not found")
+            print(f"    error: data not found")
             results[dataset] = {'error': 'data_not_found'}
             continue
 
         df = pd.read_parquet(data_path)
 
-        # Load model with dataset-specific probe
         print(f"  Loading {model_name} with {dataset} probe...")
         try:
             model = load_model(model_name, dataset_name=dataset)
         except Exception as e:
-            print(f"    ERROR loading model: {e}")
+            print(f"    error loading model: {e}")
             results[dataset] = {'error': str(e)}
             continue
 
-        # Sample sequences
         if len(df) > n_samples:
             df_sample = df.sample(n=n_samples, random_state=42)
         else:
             df_sample = df
 
-        # Compute GC content and predictions
         gc_contents = []
         predictions = []
 
@@ -218,7 +201,6 @@ def analysis_5_gc_all_datasets():
 
             try:
                 pred = model.predict_expression(seq)
-                # Handle array predictions
                 if hasattr(pred, '__len__'):
                     pred = float(pred[0]) if len(pred) > 0 else float(pred)
                 predictions.append(float(pred))
@@ -228,12 +210,10 @@ def analysis_5_gc_all_datasets():
         gc_contents = np.array(gc_contents).flatten()
         predictions = np.array(predictions).flatten()
 
-        # Remove NaN
         valid_mask = ~np.isnan(predictions)
         gc_valid = gc_contents[valid_mask]
         pred_valid = predictions[valid_mask]
 
-        # Compute correlation
         if len(gc_valid) > 10:
             r, p = stats.pearsonr(gc_valid, pred_valid)
             results[dataset] = {
@@ -248,14 +228,12 @@ def analysis_5_gc_all_datasets():
         else:
             results[dataset] = {'error': 'insufficient_data', 'n_valid': int(len(gc_valid))}
 
-    # Clean up
     del model
     import torch
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
 
-    # Summary
-    print("\n  Summary of GC-Expression Correlations:")
+    print("\n  GC-expression correlations:")
     print("  " + "-"*50)
     for dataset in datasets:
         data = results.get(dataset, {})
@@ -263,7 +241,6 @@ def analysis_5_gc_all_datasets():
             direction = "+" if data['r'] > 0 else ""
             print(f"    {dataset}: r = {direction}{data['r']:.3f}")
 
-    # Save results
     output_path = RESULTS_DIR / 'gc_correlation_all_datasets.json'
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
@@ -273,32 +250,29 @@ def analysis_5_gc_all_datasets():
 
 
 def main():
-    """Run GPU-dependent validation analysiss."""
+    """Run the GPU-dependent validation analyses."""
     print("="*60)
-    print("GRAMLANG: GPU-Dependent validation analysiss")
+    print("GRAMLANG: GPU-dependent validation analyses")
     print("="*60)
 
     all_results = {}
 
-    # analysis 5: GC correlation all datasets
-    print("\n[1/2] GC Correlation All Datasets...")
+    print("\n[1/2] GC correlation, all datasets...")
     try:
         all_results['gc_correlation'] = analysis_5_gc_all_datasets()
     except Exception as e:
         import traceback
-        print(f"  ERROR: {e}")
+        print(f"  error: {e}")
         traceback.print_exc()
 
-    # analysis 1: Positive control all models
-    print("\n[2/2] Positive Control All Models...")
+    print("\n[2/2] positive control, all models...")
     try:
         all_results['positive_control'] = analysis_1_positive_control_all_models()
     except Exception as e:
         import traceback
-        print(f"  ERROR: {e}")
+        print(f"  error: {e}")
         traceback.print_exc()
 
-    # Update master results
     master_path = RESULTS_DIR / 'all_validation_analysiss.json'
     if master_path.exists():
         with open(master_path) as f:
@@ -312,7 +286,7 @@ def main():
         json.dump(master, f, indent=2, default=str)
 
     print("\n" + "="*60)
-    print("GPU analysisS COMPLETE")
+    print("GPU analyses complete")
     print("="*60)
 
 

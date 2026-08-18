@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 """
-Train expression probes for foundation models on MPRA data.
+Train expression probes for the foundation models on MPRA data.
 
-For each (model, dataset) pair:
-1. Extract embeddings (cached to disk)
-2. Train 2-layer MLP probe
-3. Evaluate with Pearson r, Spearman rho, R^2
-4. Save probe if viable (r > 0.3)
+Per (model, dataset) pair: extract embeddings (cached to disk), fit a 2-layer
+MLP probe, score it with Pearson r / Spearman rho / R2, and keep the probe if
+r > 0.3.
 """
 
 import os
@@ -46,7 +44,7 @@ def train_probe_for_model(model_name, dataset_name, max_sequences=10000, device=
     print(f"Training probe: {model_name} on {dataset_name}")
     print(f"{'='*60}")
 
-    # Load processed data
+    # processed data
     data_path = os.path.join(PROCESSED_DIR, f'{dataset_name}.parquet')
     if not os.path.exists(data_path):
         data_path = os.path.join(PROCESSED_DIR, f'{dataset_name}.csv.gz')
@@ -59,7 +57,6 @@ def train_probe_for_model(model_name, dataset_name, max_sequences=10000, device=
     else:
         df = pd.read_csv(data_path)
 
-    # Subsample if needed
     if len(df) > max_sequences:
         print(f"  Subsampling {len(df)} -> {max_sequences} sequences")
         df = df.sample(max_sequences, random_state=42).reset_index(drop=True)
@@ -70,7 +67,7 @@ def train_probe_for_model(model_name, dataset_name, max_sequences=10000, device=
     print(f"  Dataset: {len(sequences)} sequences")
     print(f"  Expression range: [{expressions.min():.3f}, {expressions.max():.3f}]")
 
-    # Check for cached embeddings
+    # cached embeddings?
     cache_file = os.path.join(CACHE_DIR, f'{model_name}_{dataset_name}_embeddings.npz')
 
     if os.path.exists(cache_file):
@@ -78,7 +75,7 @@ def train_probe_for_model(model_name, dataset_name, max_sequences=10000, device=
         data = np.load(cache_file)
         embeddings = data['embeddings']
     else:
-        # Load model and extract embeddings
+
         print(f"  Loading model {model_name}...")
         model = load_model(model_name, device=device)
 
@@ -90,14 +87,13 @@ def train_probe_for_model(model_name, dataset_name, max_sequences=10000, device=
         embeddings = model.get_embeddings(sequences)
         print(f"  Embeddings shape: {embeddings.shape}")
 
-        # Cache embeddings
+
         np.savez_compressed(cache_file, embeddings=embeddings, expressions=expressions)
         print(f"  Cached embeddings to {cache_file}")
 
-        # Unload model to free GPU memory
+        # unload to free GPU memory
         model.unload()
 
-    # Train probe
     print(f"  Training expression probe...")
     input_dim = embeddings.shape[1]
 
@@ -111,7 +107,6 @@ def train_probe_for_model(model_name, dataset_name, max_sequences=10000, device=
         patience=10,
     )
 
-    # Results
     result = {
         'model': model_name,
         'dataset': dataset_name,
@@ -130,13 +125,13 @@ def train_probe_for_model(model_name, dataset_name, max_sequences=10000, device=
     print(f"    R^2:          {metrics['r_squared']:.4f}")
     print(f"    Viable:       {result['viable']}")
 
-    # Save probe if viable
+    # only keep viable probes
     if result['viable']:
         save_probe(probe, metrics, PROBES_DIR, f'{model_name}_{dataset_name}')
         result['probe_path'] = os.path.join(PROBES_DIR, f'{model_name}_{dataset_name}_probe.pt')
         print(f"  Probe saved to {PROBES_DIR}")
     else:
-        print(f"  Probe NOT saved (r < 0.3)")
+        print(f"  probe not saved, r < 0.3")
 
     return result
 
@@ -167,7 +162,7 @@ def main():
                 if result:
                     all_results.append(result)
             except Exception as e:
-                print(f"  ERROR: {e}")
+                print(f"  error: {e}")
                 import traceback
                 traceback.print_exc()
                 all_results.append({
@@ -176,18 +171,16 @@ def main():
                     'error': str(e),
                 })
 
-            # Clean up GPU memory between runs
+            # free GPU memory between runs
             gc.collect()
             torch.cuda.empty_cache()
 
-    # Save all results
     results_path = os.path.join(RESULTS_DIR, 'probe_training_results.json')
     with open(results_path, 'w') as f:
         json.dump(all_results, f, indent=2, default=str)
 
-    # Summary
     print(f"\n\n{'='*60}")
-    print("PROBE TRAINING SUMMARY")
+    print("probe training summary")
     print(f"{'='*60}")
     for r in all_results:
         if 'error' in r:

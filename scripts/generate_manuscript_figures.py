@@ -1,6 +1,6 @@
-"""
-Generate compact manuscript-ready figures for the GRAMLANG paper.
-Sized for NeurIPS format (5.5in text width). No suptitles — captions in LaTeX.
+"""Compact manuscript figures for the GRAMLANG paper.
+
+sized for 5.5in text width. no suptitles, captions live in the LaTeX.
 """
 
 import json
@@ -18,8 +18,7 @@ RESULTS_DIR = os.path.join(PROJECT_DIR, 'results')
 FIGURES_DIR = os.path.join(RESULTS_DIR, 'manuscript_figures')
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
-# --- Unified color palette ---
-# Dataset colors (consistent across all figures)
+# dataset colors, kept consistent across every figure
 DS_PALETTE = {
     'agarwal': '#c0392b',   # red
     'de_almeida': '#2980b9',# blue
@@ -48,30 +47,30 @@ DS_SHORT_LABELS = {
     'vaishnav': 'Vaish.',
 }
 
-# Model colors (consistent across all figures)
+# model colors
 MODEL_PALETTE = {
     'dnabert2':  '#2980b9',  # blue
     'nt':        '#c0392b',  # red
     'hyenadna':  '#27ae60',  # green
 }
 
-# Semantic colors
+# semantic colors
 C_POS    = '#27ae60'  # positive / good / within
 C_NEG    = '#c0392b'  # negative / bad / cross
 C_WARN   = '#e67e22'  # warning / moderate
 C_ACCENT = '#2980b9'  # accent / neutral emphasis
 
-# Component colors for factorial decomposition
+# component colors for factorial decomposition
 COMP_COLORS = {
     'position':    '#2980b9',  # blue
     'orientation': '#e67e22',  # orange
     'spacer':      '#c0392b',  # red
 }
 
-# Correction cascade
+# correction cascade
 CASCADE_COLORS = ['#c0392b', '#e67e22', '#27ae60']  # red, orange, green
 
-# ISMB / Bioinformatics style: Times New Roman
+# ISMB style wants Times New Roman
 plt.rcParams.update({
     'font.size': 10,
     'font.family': 'serif',
@@ -105,7 +104,7 @@ def load_json(path):
 
 
 def _legend(ax, **kwargs):
-    """Compact legend with consistent spacing."""
+    """Legend with our usual spacing."""
     defaults = dict(
         fontsize=8, frameon=False, handlelength=1.2,
         handletextpad=0.4, columnspacing=0.8, labelspacing=0.3,
@@ -116,14 +115,14 @@ def _legend(ax, **kwargs):
 
 
 def fig1_spacer_confound():
-    """Figure 1: Spacer Confound (1x4, compact)."""
+    """Spacer confound, 1x4."""
     fig, axes = plt.subplots(1, 4, figsize=(11, 2.6))
     plt.subplots_adjust(wspace=0.45)
 
     datasets = ['agarwal', 'jores', 'inoue']
     ds_labels = [DS_LABELS[d] for d in datasets]
 
-    # (A) Factorial decomposition
+    # (A) factorial decomposition
     ax = axes[0]
     components = ['position', 'orientation', 'spacer']
     comp_labels = ['Position', 'Orientation', 'Spacer']
@@ -143,7 +142,7 @@ def fig1_spacer_confound():
     _legend(ax, loc='upper right', bbox_to_anchor=(1.0, -0.15), ncol=3)
     ax.axhline(y=50, color='gray', linestyle=':', alpha=0.3, linewidth=0.5)
 
-    # (B) Spacer ablation
+    # (B) spacer ablation
     ax = axes[1]
     ablation_data = load_json('v3/spacer_ablation/spacer_ablation_summary.json')
     effects = ['motif_only', 'dinuc_shuffle', 'gc_shift', 'random_replace']
@@ -158,7 +157,7 @@ def fig1_spacer_confound():
     ax.set_title('(B) Spacer Ablation')
     _legend(ax, loc='upper left')
 
-    # (C) Feature decomposition R^2
+    # (C) feature decomposition R^2
     ax = axes[2]
     feat_data = load_json('v3/feature_decomposition/feature_decomposition_summary.json')
     fcs = ['gc_only', 'dinuc_only', 'shape_only', 'trinuc_only', 'all_features']
@@ -194,18 +193,18 @@ def fig1_spacer_confound():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig1_spacer_confound.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig1_spacer_confound.png'))
     plt.close()
-    print("  Fig 1 done")
+    print("  fig 1 done")
 
 
 def fig2_positive_control():
-    """Figure 2: Positive Control (1x2, compact)."""
+    """Positive control, 1x2."""
     fig, axes = plt.subplots(1, 2, figsize=(5.5, 2.0))
     plt.subplots_adjust(wspace=0.4)
 
     pc_data = load_json('v3/positive_control/dnabert2_positive_control.json')
     orient = pc_data['orientation']
 
-    # (A) Supported summary statistics from DNABERT-2 positive control
+    # (A) DNABERT-2 positive control stats
     ax = axes[0]
     stats = ['Median $|\\Delta|$', 'Mean $|\\Delta|$', 'Frac $>0.1$']
     vals = [
@@ -231,13 +230,13 @@ def fig2_positive_control():
             bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
                       alpha=0.8, linewidth=0.3))
 
-    # (B) Method comparison (computed from v2 data)
+    # (B) method comparison, computed from v2 data
     ax = axes[1]
     methods = ['VP Shuffle\n(confounded)', 'Controlled\nDesign']
-    # VP shuffle rate from v2 z-score correction; controlled = positive control detection (p < 0.05)
+    # VP rate comes from the v2 z-score correction
     _v2_corr = load_json('v2/module1/p_value_correction_summary.json')
     _vp_rate = 100.0 * sum(v['n_sig'] for v in _v2_corr.values()) / (500 * len(_v2_corr))
-    # Positive control: all models detect orientation (p << 0.05), so 100% detection
+    # every model detects orientation, so controlled rate is 100%
     _pc_all = load_json('v3/validation_analyses/positive_control_all_models.json')
     _pc_detected = sum(1 for v in _pc_all.values() if v['p_value'] < 0.05)
     _ctrl_rate = 100.0 * _pc_detected / len(_pc_all)
@@ -255,11 +254,11 @@ def fig2_positive_control():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig2_positive_control.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig2_positive_control.png'))
     plt.close()
-    print("  Fig 2 done")
+    print("  fig 2 done")
 
 
 def fig3_gsi_census():
-    """Figure 3: GSI census redesign with cleaner statistical storytelling."""
+    """GSI census."""
     gsi_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module1', 'all_gsi_results.parquet'))
     fig, axes = plt.subplots(1, 4, figsize=(11, 2.3))
     plt.subplots_adjust(wspace=0.45, top=0.82)
@@ -272,7 +271,7 @@ def fig3_gsi_census():
     dsets = ['agarwal', 'de_almeida', 'jores', 'klein', 'vaishnav']
     dset_labels = [DS_SHORT_LABELS[d] for d in dsets]
 
-    # (A) Distribution by model: violins + median points
+    # (A) violins plus median points
     ax = axes[0]
     sns.violinplot(
         data=gsi_df,
@@ -296,7 +295,7 @@ def fig3_gsi_census():
     ax.set_title('(A) Model-Wise GSI Distribution')
     ax.set_ylim(0.02, 0.12)
 
-    # (B) Dataset medians with connected model profiles
+    # (B) dataset medians per model
     ax = axes[1]
     xpos = np.arange(len(dsets))
     for model in models:
@@ -310,7 +309,7 @@ def fig3_gsi_census():
     ax.set_ylim(0.035, 0.108)
     _legend(ax, loc='upper left')
 
-    # (C) Correction cascade as connected log-scale line (computed from v2 data)
+    # (C) correction cascade on a log axis, from v2 data
     ax = axes[2]
     stages = ['v1 (F-test)', 'v2 (z-score)', 'v2 (FDR)']
     v2_gsi = pd.read_parquet(os.path.join(RESULTS_DIR, 'v2', 'module1', 'all_gsi_results.parquet'))
@@ -337,7 +336,7 @@ def fig3_gsi_census():
     ax.set_ylim(0.05, 300)
     ax.tick_params(axis='x', labelsize=9)
 
-    # (D) Pairwise correlations by dataset, computed from data
+    # (D) pairwise correlations by dataset
     ax = axes[3]
     pair_labels = ['B2 vs NT', 'B2 vs Hyena', 'NT vs Hyena']
     pair_colors = ['#1f4e79', '#6c8ebf', '#9fbad6']
@@ -376,11 +375,11 @@ def fig3_gsi_census():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig3_gsi_census.png'))
     plt.close()
-    print("  Fig 3 done")
+    print("  fig 3 done")
 
 
 def fig4_compositionality():
-    """Figure 4: Compositionality (single panel + inset text)."""
+    """Compositionality gap, one panel."""
     comp_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module3', 'compositionality_results.parquet'))
     fig, ax = plt.subplots(1, 1, figsize=(3.2, 2.2))
 
@@ -405,18 +404,18 @@ def fig4_compositionality():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig4_compositionality.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig4_compositionality.png'))
     plt.close()
-    print("  Fig 4 done")
+    print("  fig 4 done")
 
 
 def fig5_transfer():
-    """Figure 5: Transfer heatmap + variance decomposition lollipop."""
+    """Transfer heatmap plus variance decomposition lollipop."""
     transfer_df = pd.read_parquet(os.path.join(RESULTS_DIR, 'module4', 'transfer_matrix.parquet'))
 
     fig, axes = plt.subplots(1, 2, figsize=(5.5, 2.2),
                              gridspec_kw={'width_ratios': [1, 1.4]})
     plt.subplots_adjust(wspace=0.5)
 
-    # ── Panel A: Transfer R² heatmap (restyled) ──
+    # (A) transfer R² heatmap
     ax = axes[0]
     species = sorted(transfer_df['source'].unique())
     n = len(species)
@@ -432,7 +431,7 @@ def fig5_transfer():
                 linewidths=1.0, linecolor='white',
                 cbar_kws={'label': '$R^2$', 'shrink': 0.75, 'aspect': 12})
 
-    # Custom annotations: bold diagonal, gray off-diagonal
+    # bold on the diagonal, gray off it
     for i in range(n):
         for j in range(n):
             val = matrix[i, j]
@@ -440,7 +439,6 @@ def fig5_transfer():
                 ax.text(j + 0.5, i + 0.5, f'{val:.3f}',
                         ha='center', va='center', fontsize=10,
                         fontweight='bold', color='white' if val > 0.12 else 'black')
-                # Highlight diagonal with border
                 ax.add_patch(plt.Rectangle((j, i), 1, 1, fill=False,
                              edgecolor='black', linewidth=1.5))
             else:
@@ -452,7 +450,7 @@ def fig5_transfer():
     ax.set_title('(A) Cross-Species Transfer $R^2$', fontsize=11)
     ax.tick_params(labelsize=9)
 
-    # ── Panel B: Variance decomposition lollipop ──
+    # (B) variance decomposition lollipop
     ax = axes[1]
     ds_order = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
     ds_labels = [DS_SHORT_LABELS[d] for d in ds_order]
@@ -472,21 +470,19 @@ def fig5_transfer():
 
     y_pos = np.arange(len(ds_order))
 
-    # Draw connecting lines and gap shading per dataset
     for yi, ds in enumerate(ds_order):
         d = cdata[ds]
         vocab = d['vocabulary_r2']
         repl = d['replicate_r2']
         model = d['full_model_r2']
 
-        # Gray shaded gap: full model → replicate
+        # shade the full-model to replicate gap
         ax.fill_betweenx([yi - 0.15, yi + 0.15], model, repl,
                          color='#e0e0e0', alpha=0.5, zorder=0)
-        # Connecting line
         ax.plot([vocab, repl], [yi, yi], color='#aaaaaa', linewidth=0.8,
                 zorder=1, solid_capstyle='round')
 
-    # Plot markers per level (so legend groups correctly)
+    # one scatter per level so the legend groups properly
     for key, label, color, marker, ms in levels:
         vals = [cdata[ds][key] for ds in ds_order]
         ax.scatter(vals, y_pos, color=color, marker=marker, s=ms**2,
@@ -499,7 +495,7 @@ def fig5_transfer():
     ax.set_xlim(-0.02, 0.95)
     ax.invert_yaxis()
 
-    # Replicate ceiling line
+    # replicate ceiling
     ax.axvline(x=0.85, color=C_ACCENT, linewidth=0.6, linestyle=':', alpha=0.5)
 
     _legend(ax, loc='upper center', bbox_to_anchor=(0.5, -0.12),
@@ -508,11 +504,11 @@ def fig5_transfer():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_transfer.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig5_transfer.png'))
     plt.close()
-    print("  Fig 5 done")
+    print("  fig 5 done")
 
 
 def fig6_completeness():
-    """Figure 6: Completeness (1x2, compact)."""
+    """Completeness, 1x2."""
     datasets = ['agarwal', 'inoue', 'vaishnav', 'jores', 'klein']
     labels = [DS_SHORT_LABELS[d] for d in datasets]
     cdata = {}
@@ -525,7 +521,7 @@ def fig6_completeness():
     fig, axes = plt.subplots(1, 2, figsize=(5.5, 2.2))
     plt.subplots_adjust(wspace=0.4)
 
-    # (A) Hierarchical R^2
+    # (A) hierarchical R^2
     ax = axes[0]
     x = np.arange(len(datasets))
     w = 0.18
@@ -544,7 +540,7 @@ def fig6_completeness():
     _legend(ax, loc='upper center', bbox_to_anchor=(0.5, 1.01), fontsize=8, ncol=2)
     ax.set_ylim(0, 1.0)
 
-    # (B) Completeness %
+    # (B) completeness %
     ax = axes[1]
     pcts = [cdata[d]['grammar_completeness'] * 100 for d in datasets]
     colors_bar = [DS_PALETTE[d] for d in datasets]
@@ -562,11 +558,11 @@ def fig6_completeness():
     plt.savefig(os.path.join(FIGURES_DIR, 'fig6_completeness.pdf'))
     plt.savefig(os.path.join(FIGURES_DIR, 'fig6_completeness.png'))
     plt.close()
-    print("  Fig 6 done")
+    print("  fig 6 done")
 
 
 if __name__ == '__main__':
-    print("Generating compact manuscript figures...")
+    print("generating manuscript figures...")
     fig1_spacer_confound()
     fig2_positive_control()
     fig3_gsi_census()

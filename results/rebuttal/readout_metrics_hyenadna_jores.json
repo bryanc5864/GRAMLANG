@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.5298112034797668,
+    "test_r": 0.5226589441299438,
+    "test_rho": 0.5449309327108048,
+    "test_r2": 0.2713860273361206,
+    "n_params": 769,
+    "perm_invariant": true,
+    "model": "hyenadna",
+    "dataset": "jores"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.5328114032745361,
+    "test_r": 0.5326621532440186,
+    "test_rho": 0.5539912015201082,
+    "test_r2": 0.2814371585845947,
+    "n_params": 99329,
+    "perm_invariant": true,
+    "model": "hyenadna",
+    "dataset": "jores"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.602423906326294,
+    "test_r": 0.5946530103683472,
+    "test_rho": 0.6076319028515794,
+    "test_r2": 0.3439639210700989,
+    "n_params": 132610,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "jores"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.6654582023620605,
+    "test_r": 0.64166659116745,
+    "test_rho": 0.6408666366586719,
+    "test_r2": 0.2738504409790039,
+    "n_params": 678657,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "jores"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.6150771379470825,
+    "test_r": 0.6119555830955505,
+    "test_rho": 0.6273696807246145,
+    "test_r2": 0.3308687210083008,
+    "n_params": 644289,
+    "perm_invariant": false,
+    "model": "hyenadna",
+    "dataset": "jores"
+  }
+]

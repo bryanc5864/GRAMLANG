@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""
-Run factorial decomposition for NT v2-500M and HyenaDNA models.
-Completes validation 3: Factorial Decomposition All Models.
-"""
+"""Factorial decomposition for NT v2-500M and HyenaDNA."""
 
 import os
 import sys
@@ -11,7 +8,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-# Add project root to path
+# project root on the path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.models.model_loader import load_model
@@ -28,7 +25,7 @@ from src.utils.io import load_processed, save_json
 RESULTS_DIR = Path('results/v3/factorial_decomposition')
 PROBES_DIR = Path('data/probes')
 DATASETS = ['agarwal', 'jores', 'inoue']
-MODELS = ['nt', 'hyenadna']  # Skip dnabert2, already done
+MODELS = ['nt', 'hyenadna']  # dnabert2 already done
 
 
 def swap_probe(model, model_name, ds_name, device='cuda'):
@@ -42,19 +39,17 @@ def swap_probe(model, model_name, ds_name, device='cuda'):
             model.set_probe(probe)
             print(f"  Loaded probe: {probe_name}")
             return
-    print(f"  WARNING: No probe found for {model_name}/{ds_name}")
+    print(f"  no probe found for {model_name}/{ds_name}")
 
 
 def load_data_and_model(dataset_name, model_name):
     """Load dataset, motif hits, and model with appropriate probe."""
-    # Load dataset
     data_path = Path(f'data/processed/{dataset_name}_processed.parquet')
     motif_path = Path(f'data/processed/{dataset_name}_processed_motif_hits.parquet')
 
     dataset = pd.read_parquet(data_path)
     motif_hits = pd.read_parquet(motif_path) if motif_path.exists() else None
 
-    # Load model
     print(f"  Loading {model_name}...")
     model = load_model(model_name, dataset_name=dataset_name)
 
@@ -66,7 +61,6 @@ def get_enhancer_sample(dataset, motif_hits, n=200):
     if motif_hits is None:
         return dataset.sample(n=min(n, len(dataset)), random_state=42)
 
-    # Count motifs per sequence
     motif_counts = motif_hits.groupby('seq_id').size()
     valid_ids = motif_counts[motif_counts >= 2].index
 
@@ -96,9 +90,7 @@ def get_annotation(seq, seq_id, motif_hits):
 
 
 def run_factorial_decomposition(dataset_name, model_name, n_enhancers=200, n_shuffles=100):
-    """
-    Run 4 types of shuffles to decompose grammar sensitivity.
-    """
+    """Four shuffle types, to decompose grammar sensitivity."""
     print(f"\n{'='*60}")
     print(f"FACTORIAL DECOMPOSITION: {dataset_name} / {model_name}")
     print(f"{'='*60}")
@@ -129,7 +121,7 @@ def run_factorial_decomposition(dataset_name, model_name, n_enhancers=200, n_shu
         if annotation['motif_count'] < 2:
             continue
 
-        # Original expression - pass as list for batch processing
+        # pass a list so it batches
         try:
             orig_pred = model.predict_expression([seq])
             original_expr = float(orig_pred[0])
@@ -149,7 +141,7 @@ def run_factorial_decomposition(dataset_name, model_name, n_enhancers=200, n_shu
                     seq, annotation, n_shuffles=n_shuffles, seed=42 + idx
                 )
 
-                # Get predictions - batch process all shuffles at once
+                # batch all shuffles in one pass
                 try:
                     exprs = model.predict_expression(shuffles)
                     exprs = np.array(exprs).flatten()
@@ -184,7 +176,6 @@ def run_factorial_decomposition(dataset_name, model_name, n_enhancers=200, n_shu
 
     df = pd.DataFrame(all_results)
 
-    # Compute summary
     summary = {
         'dataset': dataset_name,
         'model': model_name,
@@ -211,7 +202,7 @@ def run_factorial_decomposition(dataset_name, model_name, n_enhancers=200, n_shu
             }
             print(f"  {stype:12s}: median variance={median_var:.6f}")
 
-    # Fraction of full variance explained
+    # fraction of the full variance explained
     full_var = df['full_variance'].values
     for stype in ['position', 'orientation', 'spacer']:
         var_col = f'{stype}_variance'
@@ -225,13 +216,12 @@ def run_factorial_decomposition(dataset_name, model_name, n_enhancers=200, n_shu
             }
             print(f"  {stype:12s} / full: {median_frac:.1%}")
 
-    # Save
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     df.to_parquet(RESULTS_DIR / f'{dataset_name}_{model_name}_factorial.parquet')
     save_json(summary, RESULTS_DIR / f'{dataset_name}_{model_name}_factorial_summary.json')
     print(f"  Saved to {RESULTS_DIR}/")
 
-    # Clean up GPU memory
+    # free GPU memory
     del model
     import torch
     if torch.cuda.is_available():
@@ -242,14 +232,14 @@ def run_factorial_decomposition(dataset_name, model_name, n_enhancers=200, n_shu
 
 def main():
     print("="*60)
-    print("validation 3 RESOLUTION: Factorial Decomposition - All Models")
+    print("factorial decomposition, all models")
     print("="*60)
 
     all_summaries = {}
 
     for model_name in MODELS:
         for dataset_name in DATASETS:
-            # Check if already done
+            # already done?
             summary_path = RESULTS_DIR / f'{dataset_name}_{model_name}_factorial_summary.json'
             if summary_path.exists():
                 print(f"\n  Skipping {dataset_name}/{model_name} - already done")
@@ -265,13 +255,12 @@ def main():
                 all_summaries[f'{dataset_name}_{model_name}'] = summary
             except Exception as e:
                 import traceback
-                print(f"  ERROR: {e}")
+                print(f"  error: {e}")
                 traceback.print_exc()
                 all_summaries[f'{dataset_name}_{model_name}'] = {'error': str(e)}
 
-    # Print summary table
     print("\n" + "="*60)
-    print("SUMMARY TABLE")
+    print("summary")
     print("="*60)
     print(f"{'Dataset':<15} {'Model':<12} {'n':<5} {'Spacer %':<10} {'Position %':<12} {'Orientation %'}")
     print("-"*60)
@@ -287,7 +276,6 @@ def main():
         orient_pct = summary['effect_sizes'].get('orientation', {}).get('median_fraction_of_full', 0)
         print(f"{dataset:<15} {model:<12} {n:<5} {spacer_pct*100:>8.1f}% {pos_pct*100:>10.1f}% {orient_pct*100:>12.1f}%")
 
-    # Save combined results
     combined_path = RESULTS_DIR / 'factorial_all_models_summary.json'
     save_json(all_summaries, combined_path)
     print(f"\n  Saved combined summary to {combined_path}")

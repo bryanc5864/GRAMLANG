@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.45149385929107666,
+    "test_r": 0.31111371517181396,
+    "test_rho": 0.28215118639052517,
+    "test_r2": 0.05958080291748047,
+    "n_params": 2305,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "agarwal"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.47478434443473816,
+    "test_r": 0.3497426509857178,
+    "test_rho": 0.28642233332270556,
+    "test_r2": 0.07514995336532593,
+    "n_params": 231425,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "agarwal"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.3918621242046356,
+    "test_r": 0.31435251235961914,
+    "test_rho": 0.29297638222071465,
+    "test_r2": -0.023355484008789062,
+    "n_params": 264706,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "agarwal"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.4794980585575104,
+    "test_r": 0.3401234745979309,
+    "test_rho": 0.3089469537262473,
+    "test_r2": 0.09863591194152832,
+    "n_params": 777985,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "agarwal"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.39250442385673523,
+    "test_r": 0.22210505604743958,
+    "test_rho": 0.19023374749534158,
+    "test_r2": -0.13698959350585938,
+    "n_params": 743617,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "agarwal"
+  }
+]

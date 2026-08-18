@@ -9,14 +9,8 @@ from typing import Any, Optional
 
 def load_raw_mpra(dataset_name: str, raw_path: str) -> pd.DataFrame:
     """
-    Load raw MPRA data from various formats.
-
-    Args:
-        dataset_name: One of 'agarwal', 'kircher', 'inoue', 'vaishnav', 'jores', 'klein'
-        raw_path: Path to the raw data directory
-
-    Returns:
-        DataFrame with at minimum columns: 'sequence', 'expression'
+    Read raw MPRA data for one of agarwal, kircher, inoue, vaishnav, jores,
+    klein. Returns at least 'sequence' and 'expression' columns.
     """
     if dataset_name == 'agarwal':
         return _load_agarwal(raw_path)
@@ -36,7 +30,7 @@ def load_raw_mpra(dataset_name: str, raw_path: str) -> pd.DataFrame:
 
 def _load_agarwal(raw_path: str) -> pd.DataFrame:
     """Load Agarwal et al. MPRA data."""
-    # Try common file patterns
+    # try the common file patterns
     for ext in ['.tsv', '.tsv.gz', '.csv', '.csv.gz', '.txt', '.txt.gz']:
         for prefix in ['agarwal', 'mpra', 'data', 'sequences']:
             fpath = os.path.join(raw_path, prefix + ext)
@@ -46,7 +40,7 @@ def _load_agarwal(raw_path: str) -> pd.DataFrame:
                 df = pd.read_csv(fpath, sep=sep, compression=compression)
                 return _standardize_columns(df)
 
-    # Try loading any file in the directory
+    # otherwise take whatever is in the directory
     files = os.listdir(raw_path) if os.path.isdir(raw_path) else []
     for f in sorted(files):
         fpath = os.path.join(raw_path, f)
@@ -62,7 +56,7 @@ def _load_agarwal(raw_path: str) -> pd.DataFrame:
     raise FileNotFoundError(f"No data files found in {raw_path}")
 
 
-# Generic loaders for other datasets (same pattern)
+# the other datasets follow the same pattern
 _load_kircher = _load_agarwal
 _load_inoue = _load_agarwal
 _load_vaishnav = _load_agarwal
@@ -75,14 +69,14 @@ def _standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
     col_map = {}
     lower_cols = {c.lower(): c for c in df.columns}
 
-    # Sequence column
+    # sequence column
     for name in ['sequence', 'seq', 'dna', 'dna_sequence', 'enhancer_seq',
                  'oligo', 'oligo_sequence', 'promoter_seq']:
         if name in lower_cols:
             col_map[lower_cols[name]] = 'sequence'
             break
 
-    # Expression column
+    # expression column
     for name in ['expression', 'log2_ratio', 'log2fc', 'activity', 'expr',
                  'log2_expression', 'mean_expression', 'score', 'value',
                  'log2_rna_dna', 'rna_dna_log2']:
@@ -90,7 +84,7 @@ def _standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
             col_map[lower_cols[name]] = 'expression'
             break
 
-    # Cell type column
+    # cell type column
     for name in ['cell_type', 'celltype', 'cell', 'tissue', 'condition']:
         if name in lower_cols:
             col_map[lower_cols[name]] = 'cell_type'
@@ -98,9 +92,8 @@ def _standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.rename(columns=col_map)
 
-    # Ensure sequence column exists
     if 'sequence' not in df.columns:
-        # Try to find the column with DNA-like content
+        # look for a column that holds DNA-like content
         for col in df.columns:
             sample = str(df[col].iloc[0]).upper()
             if len(sample) > 10 and all(c in 'ACGTN' for c in sample):

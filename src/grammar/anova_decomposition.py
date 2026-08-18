@@ -1,13 +1,9 @@
 """
-ANOVA-Based Variance Decomposition.
+ANOVA-style variance decomposition.
 
-Unified framework that decomposes expression variance into:
-- Vocabulary (motif presence/absence)
-- Pairwise grammar (motif pair interactions)
-- Higher-order grammar (k >= 3 interactions)
-- Residual (noise)
-
-Replaces ad-hoc metrics with a single interpretable framework.
+Splits expression variance into vocabulary (motif presence), pairwise grammar,
+higher-order grammar (k >= 3) and residual, so the ad-hoc metrics can be
+replaced by one number per level.
 """
 
 import numpy as np
@@ -28,20 +24,12 @@ def compute_anova_decomposition(
     seed: int = 42,
 ) -> Dict:
     """
-    ANOVA-like variance decomposition of expression.
-
-    Fits models of increasing complexity and measures the variance
-    explained at each level:
-    1. Vocabulary only (motif presence/absence)
-    2. + Pairwise grammar (motif pair features)
-    3. + Higher-order grammar (triplet features)
-    4. Full model predictions (upper bound)
-
-    Returns eta-squared for each level.
+    Fit models of increasing complexity and report eta-squared per level:
+    vocabulary, + pairwise, + higher-order, and the full model predictions as
+    an upper bound.
     """
     rng = np.random.default_rng(seed)
 
-    # Build feature matrices
     seq_ids, y, X_vocab, X_pairwise, X_higher = _build_feature_hierarchy(
         dataset, motif_hits, max_sequences, rng
     )
@@ -51,22 +39,22 @@ def compute_anova_decomposition(
 
     scaler = StandardScaler()
 
-    # Level 1: Vocabulary only
+    # vocabulary only
     X1 = scaler.fit_transform(X_vocab)
     r2_vocab = _robust_cv_r2(X1, y, seed)
 
-    # Level 2: Vocabulary + Pairwise
+    # + pairwise
     X2 = scaler.fit_transform(np.hstack([X_vocab, X_pairwise]))
     r2_pairwise = _robust_cv_r2(X2, y, seed)
 
-    # Level 3: Vocabulary + Pairwise + Higher
+    # + higher order
     if X_higher.shape[1] > 0:
         X3 = scaler.fit_transform(np.hstack([X_vocab, X_pairwise, X_higher]))
         r2_higher = _robust_cv_r2(X3, y, seed)
     else:
         r2_higher = r2_pairwise
 
-    # Level 4: Full model predictions (if model provided)
+    # full model predictions, if we were given a model
     r2_model = 0
     if model is not None:
         try:
@@ -79,7 +67,7 @@ def compute_anova_decomposition(
         except Exception:
             r2_model = 0
 
-    # Compute eta-squared (variance fraction at each level)
+    # eta-squared = variance fraction at each level
     ss_total = np.sum((y - y.mean()) ** 2)
 
     eta2_vocab = max(r2_vocab, 0)
@@ -112,31 +100,25 @@ def compute_power_analysis(
     n_samples: int,
     alpha: float = 0.05,
 ) -> Dict:
-    """
-    Compute statistical power for detecting a given effect size.
-
-    Uses the approximation for F-test power.
-    """
+    """Power for an F-test at a given effect size (approximation)."""
     from scipy.stats import f as f_dist, ncf
 
-    # For regression R²: F = (R²/k) / ((1-R²)/(n-k-1))
-    k = 1  # Number of predictors (simplified)
+    # for regression R2: F = (R2/k) / ((1-R2)/(n-k-1))
+    k = 1  # simplified: one predictor
     df1 = k
     df2 = n_samples - k - 1
 
     if df2 <= 0:
         return {'power': 0, 'mde': 0}
 
-    # Non-centrality parameter
+    # non-centrality
     lambda_nc = n_samples * effect_size / (1 - effect_size)
 
-    # Critical F value
     f_crit = f_dist.ppf(1 - alpha, df1, df2)
 
-    # Power = P(F > f_crit | H1)
     power = 1 - ncf.cdf(f_crit, df1, df2, lambda_nc)
 
-    # Minimum detectable effect at 80% power
+    # minimum detectable effect at 80% power
     from scipy.optimize import brentq
     try:
         def power_fn(r2):
@@ -163,7 +145,6 @@ def _build_feature_hierarchy(
     rng: np.random.Generator,
 ) -> Tuple[List, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Build hierarchical feature matrices for ANOVA decomposition."""
-    # Get unique motif names
     motif_names = sorted(motif_hits['motif_name'].unique())
     motif_to_idx = {m: i for i, m in enumerate(motif_names)}
     n_motifs = len(motif_names)
@@ -187,7 +168,7 @@ def _build_feature_hierarchy(
         seq_ids.append(seq_id)
         expressions.append(expr)
 
-        # Vocabulary features: presence + count
+        # vocabulary: presence + count
         presence = np.zeros(n_motifs)
         counts = np.zeros(n_motifs)
         for _, hit in hits.iterrows():
@@ -197,7 +178,7 @@ def _build_feature_hierarchy(
                 counts[idx] += 1
         vocab_features.append(np.concatenate([presence, counts]))
 
-        # Pairwise features: spacing + co-occurrence
+        # pairwise: spacing + co-occurrence
         hits_sorted = hits.sort_values('start')
         pair_spacing = []
         pair_cooccur = []
@@ -218,10 +199,9 @@ def _build_feature_hierarchy(
         ]
         pairwise_features.append(pairwise_feat)
 
-        # Higher-order: cluster/motif arrangement features
+        # higher order: cluster/arrangement features
         positions = sorted(hits_sorted['start'].values)
         if len(positions) >= 3:
-            # Triplet statistics
             diffs = np.diff(positions)
             higher_feat = [
                 float(np.std(diffs)) if len(diffs) > 1 else 0,
@@ -236,7 +216,6 @@ def _build_feature_hierarchy(
     if not seq_ids:
         return [], np.array([]), np.zeros((0, 0)), np.zeros((0, 0)), np.zeros((0, 0))
 
-    # Subsample if needed
     y = np.array(expressions)
     X_v = np.array(vocab_features)
     X_p = np.array(pairwise_features)

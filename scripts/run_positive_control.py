@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 """
-GRAMLANG v3: Positive Control Experiment
+Positive control on the Georgakopoulos-Soares MPRA library.
 
-Uses the Georgakopoulos-Soares MPRA dataset (209,440 synthetic sequences)
-where spacer DNA is held CONSTANT by design. Tests if our models can detect
-the experimentally-measured orientation and order effects.
+209,440 synthetic sequences with spacer DNA held constant by design, so their
+measured orientation and order effects are uncontaminated. If the models pick
+those up, grammar effects are real and the models can see them once the spacer
+confound is gone.
 
-If models detect these effects, it proves:
-(a) Grammar effects are real
-(b) Models CAN detect them when the spacer confound is removed
-
-Reference: Georgakopoulos-Soares et al. Nature Communications 2023
-"Transcription factor binding site orientation and order are major drivers
-of gene regulatory activity"
+Georgakopoulos-Soares et al., Nat Commun 2023, "Transcription factor binding
+site orientation and order are major drivers of gene regulatory activity".
 """
 
 import os
@@ -50,7 +46,7 @@ def parse_library_file(filepath):
         for line in f:
             line = line.strip()
             if line.startswith('>'):
-                current_header = line[1:]  # Remove '>'
+                current_header = line[1:]  # drop '>'
             else:
                 sequences.append({
                     'header': current_header,
@@ -63,39 +59,35 @@ def parse_library_file(filepath):
 def parse_header(header):
     """Parse construct header to extract TFs, orientations, positions, construct variant."""
     info = {
-        'construct_type': None,  # Single, Pair, Triplet
-        'construct_variant': None,  # 1 or 2 (different backgrounds)
+        'construct_type': None,  # single, pair or triplet
+        'construct_variant': None,  # 1 or 2, different backgrounds
         'tfs': [],
-        'orientations': [],  # Template (-) / Non-template (+)
+        'orientations': [],  # template (-) / non-template (+)
         'positions': [],
-        'full_orient_string': '',  # Full orientation description
+        'full_orient_string': '',  # full orientation description
     }
 
-    # Extract construct variant (Construct1 or Construct2)
+    # Construct1 or Construct2
     match = re.match(r'Construct(\d+)', header)
     if match:
         info['construct_variant'] = int(match.group(1))
 
-    # Determine construct type
     if 'Single Motif' in header:
         info['construct_type'] = 'single'
     elif 'Triplet' in header:
         info['construct_type'] = 'triplet'
     else:
-        # Count TF mentions to determine pair vs triplet
+        # TF mentions tell pair from triplet
         tf_mentions = len(re.findall(r'[A-Z][A-Z0-9]+,', header))
         info['construct_type'] = 'pair' if tf_mentions <= 2 else 'triplet'
 
-    # Extract TF names
     tf_matches = re.findall(r'\b([A-Z][A-Z0-9]+)\b,', header)
     info['tfs'] = tf_matches
 
-    # Extract full orientation string for comparison
-    # Format: "Template:XXX" or "Non-template:XXX"
+    # orientation string, formatted "Template:XXX" or "Non-template:XXX"
     orient_parts = re.findall(r'(Template|Non-template):[A-Z]+', header)
     info['full_orient_string'] = '|'.join(orient_parts)
 
-    # Count orientations
     info['orientations'] = []
     for part in orient_parts:
         if part.startswith('Non-template'):
@@ -103,7 +95,6 @@ def parse_header(header):
         else:
             info['orientations'].append('-')
 
-    # Extract positions
     pos_matches = re.findall(r'At Pos:(\d+)', header)
     info['positions'] = [int(p) for p in pos_matches]
 
@@ -112,12 +103,12 @@ def parse_header(header):
 
 def find_orientation_pairs_from_library(sequences, max_pairs=1000):
     """
-    Find sequence pairs from the SAME construct variant that differ ONLY in orientation.
+    Pairs from the same construct variant differing only in orientation.
 
-    Key insight: Construct1 and Construct2 have different background sequences.
-    We compare within the same construct variant to control for background.
+    Construct1 and Construct2 have different backgrounds, so comparisons stay
+    inside one variant.
     """
-    # Group by: construct_variant, TFs (sorted), positions
+    # group by construct_variant, sorted TFs, positions
     groups = defaultdict(list)
 
     for idx, item in enumerate(sequences):
@@ -130,7 +121,7 @@ def find_orientation_pairs_from_library(sequences, max_pairs=1000):
         if len(parsed['tfs']) < 2:
             continue
 
-        # Key: same background, same TFs, same positions, different orientations
+        # same background, TFs and positions; orientation is what differs
         key = (
             parsed['construct_variant'],
             tuple(sorted(parsed['tfs'])),
@@ -145,13 +136,11 @@ def find_orientation_pairs_from_library(sequences, max_pairs=1000):
             'orient_string': parsed['full_orient_string'],
         })
 
-    # Find groups with multiple orientation variants
     orientation_pairs = []
     for key, variants in groups.items():
         if len(variants) < 2:
             continue
 
-        # Find pairs with different orientations
         for i, v1 in enumerate(variants):
             for v2 in variants[i+1:]:
                 if v1['orient_string'] != v2['orient_string']:
@@ -174,10 +163,7 @@ def find_orientation_pairs_from_library(sequences, max_pairs=1000):
 
 
 def find_order_pairs_from_library(sequences, max_pairs=1000):
-    """
-    Find sequence pairs from the SAME construct variant that differ ONLY in order/position.
-    Same TFs, same orientations, but different positions.
-    """
+    """Pairs from one construct variant, same TFs and orientations, different positions."""
     groups = defaultdict(list)
 
     for idx, item in enumerate(sequences):
@@ -190,7 +176,7 @@ def find_order_pairs_from_library(sequences, max_pairs=1000):
         if len(parsed['tfs']) < 2:
             continue
 
-        # Key: same background, same TFs, same orientations, different positions
+        # same background, TFs and orientations; position is what differs
         key = (
             parsed['construct_variant'],
             tuple(sorted(parsed['tfs'])),
@@ -243,37 +229,27 @@ def swap_probe(model, model_name, device='cuda'):
 
 
 def test_model_sensitivity(pairs, pair_type, model, batch_size=32):
-    """
-    Test if model predictions differ for controlled pairs.
-
-    Since spacer DNA is constant, any prediction difference must be
-    due to the orientation/order difference.
-    """
+    """Spacer DNA is constant, so any prediction difference is orientation or order."""
     print(f"\n  Testing {len(pairs)} {pair_type} pairs...")
 
     seqs1 = [p['seq1'] for p in pairs]
     seqs2 = [p['seq2'] for p in pairs]
 
-    # Predict in batches
     preds1 = model.predict_expression(seqs1)
     preds2 = model.predict_expression(seqs2)
 
-    # Calculate prediction differences
     pred_diffs = preds1 - preds2
     abs_diffs = np.abs(pred_diffs)
 
-    # Statistics
     mean_diff = float(np.mean(abs_diffs))
     median_diff = float(np.median(abs_diffs))
     max_diff = float(np.max(abs_diffs))
     std_diff = float(np.std(pred_diffs))
 
-    # Fraction with non-trivial differences
     frac_diff_gt_01 = float(np.mean(abs_diffs > 0.1))
     frac_diff_gt_05 = float(np.mean(abs_diffs > 0.5))
 
-    # Effect size: are differences larger than model noise?
-    # If model is truly sensitive, differences should be systematic
+    # are the differences bigger than model noise, and systematic?
     tstat, pval = stats.ttest_1samp(abs_diffs, 0)
 
     return {
@@ -296,18 +272,16 @@ def run_positive_control(model_name='dnabert2'):
     print(f"{'='*60}")
     print("Testing if models detect grammar when spacers are controlled")
 
-    # Load library
     print("\nLoading Georgakopoulos-Soares MPRA library...")
     library_file = DATA_DIR / 'Library_MPRA_TFBSs.txt'
 
     if not library_file.exists():
-        print(f"  ERROR: Library file not found at {library_file}")
+        print(f"  library file not found at {library_file}")
         return None
 
     sequences = parse_library_file(library_file)
     print(f"  Loaded {len(sequences)} sequences from library")
 
-    # Find controlled pairs
     print("\nFinding controlled pair comparisons...")
     orientation_pairs = find_orientation_pairs_from_library(sequences, max_pairs=500)
     order_pairs = find_order_pairs_from_library(sequences, max_pairs=500)
@@ -316,10 +290,9 @@ def run_positive_control(model_name='dnabert2'):
     print(f"  Found {len(order_pairs)} order-variant pairs")
 
     if not orientation_pairs and not order_pairs:
-        print("  ERROR: No controlled pairs found!")
+        print("  no controlled pairs found")
         return None
 
-    # Load model
     print(f"\nLoading model {model_name}...")
     model = load_model(model_name, dataset_name='__dummy__')
     swap_probe(model, model_name)
@@ -331,7 +304,6 @@ def run_positive_control(model_name='dnabert2'):
         'n_order_pairs': len(order_pairs),
     }
 
-    # Test orientation sensitivity
     if orientation_pairs:
         orient_results = test_model_sensitivity(
             orientation_pairs, 'orientation', model
@@ -342,7 +314,6 @@ def run_positive_control(model_name='dnabert2'):
         print(f"    Frac |Δpred| > 0.1: {orient_results['frac_diff_gt_0.1']*100:.1f}%")
         print(f"    t-test vs 0: t={orient_results['t_statistic']:.2f}, p={orient_results['p_value']:.2e}")
 
-    # Test order sensitivity
     if order_pairs:
         order_results = test_model_sensitivity(
             order_pairs, 'order', model
@@ -353,7 +324,6 @@ def run_positive_control(model_name='dnabert2'):
         print(f"    Frac |Δpred| > 0.1: {order_results['frac_diff_gt_0.1']*100:.1f}%")
         print(f"    t-test vs 0: t={order_results['t_statistic']:.2f}, p={order_results['p_value']:.2e}")
 
-    # Interpretation
     print(f"\n  Interpretation:")
     orient_mean = results.get('orientation', {}).get('mean_abs_diff', 0)
     order_mean = results.get('order', {}).get('mean_abs_diff', 0)
@@ -369,7 +339,6 @@ def run_positive_control(model_name='dnabert2'):
         print(f"    → Need to verify with more pairs or different models")
         results['conclusion'] = 'model_insensitive'
 
-    # Save
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     save_json(results, RESULTS_DIR / f'{model_name}_positive_control.json')
     print(f"\n  Saved to {RESULTS_DIR}/")
@@ -386,7 +355,7 @@ def main():
     results = run_positive_control(model_name=args.model)
 
     print(f"\n{'='*60}")
-    print("POSITIVE CONTROL COMPLETE")
+    print("positive control done")
     print(f"{'='*60}")
 
 

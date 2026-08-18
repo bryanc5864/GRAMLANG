@@ -1,4 +1,4 @@
-# Spacer-Factored Grammar Networks (SFGN)
+# spacer-factored grammar networks
 from .architecture import SFGN, SFGNConfig
 from .grammar_module import GrammarModule
 from .composition_module import CompositionModule

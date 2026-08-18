@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """
-Run ablation studies for SFGN.
-
-Ablations:
-1. Orthogonality weight: 0, 0.01, 0.1 (default), 0.5
-2. With/without composition module
+SFGN ablations: orthogonality weight (0, 0.01, 0.1 default, 0.5) and with or
+without the composition module.
 """
 
 import os
@@ -56,7 +53,6 @@ def quick_train(config, sequences, expressions, motifs, device, epochs=5):
     """Quick training for ablation."""
     model = SFGN(config, device=device)
 
-    # Split
     indices = list(range(len(sequences)))
     train_idx, val_idx = train_test_split(indices, test_size=0.2, random_state=42)
 
@@ -99,7 +95,6 @@ def quick_train(config, sequences, expressions, motifs, device, epochs=5):
             total_loss += loss.item()
             n_batches += 1
 
-    # Evaluate
     model.eval()
     with torch.no_grad():
         all_preds = []
@@ -111,20 +106,19 @@ def quick_train(config, sequences, expressions, motifs, device, epochs=5):
                 output = model(batch_seqs, batch_motifs)
                 preds = output.prediction.cpu().numpy()
                 alphas = output.alpha.cpu().numpy()
-                # Replace NaN/Inf with 0
+                # NaN/Inf -> 0
                 preds = np.nan_to_num(preds, nan=0.0, posinf=0.0, neginf=0.0)
                 alphas = np.nan_to_num(alphas, nan=0.5, posinf=0.5, neginf=0.5)
                 all_preds.extend(preds)
                 all_alphas.extend(alphas)
             except Exception as e:
-                # Skip problematic batches
+                # skip the bad batches
                 continue
 
     all_preds = np.array(all_preds)
     all_alphas = np.array(all_alphas)
     val_targets = val_expr.cpu().numpy()
 
-    # Handle NaN values
     valid_mask = ~np.isnan(all_preds) & ~np.isinf(all_preds)
     if valid_mask.sum() < 10:
         return {
@@ -167,11 +161,9 @@ def main():
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load data
     print(f"Loading {args.dataset}...")
     df, motif_annotations = load_dataset(args.dataset)
 
-    # Subsample
     if len(df) > args.max_samples:
         indices = np.random.choice(len(df), args.max_samples, replace=False)
         df = df.iloc[indices].reset_index(drop=True)
@@ -183,8 +175,8 @@ def main():
 
     results = []
 
-    # Ablation 1: Orthogonality weight
-    print("\n=== Ablation 1: Orthogonality Weight ===")
+    # orthogonality weight sweep
+    print("\nablation: orthogonality weight")
     orth_weights = [0.0, 0.01, 0.1, 0.5, 1.0]
 
     for orth_w in orth_weights:
@@ -197,7 +189,6 @@ def main():
         results.append(result)
         print(f"    α={result['mean_alpha']:.3f}, R²={result['r2']:.4f}")
 
-    # Save results
     output_path = output_dir / f'{args.dataset}_ablations.json'
     with open(output_path, 'w') as f:
         json.dump({
@@ -207,7 +198,7 @@ def main():
             'results': results
         }, f, indent=2)
 
-    print(f"\n=== Summary ===")
+    print(f"\nsummary")
     print(f"{'Orth Weight':<12} {'α':<8} {'R²':<10}")
     print("-" * 30)
     for r in results:

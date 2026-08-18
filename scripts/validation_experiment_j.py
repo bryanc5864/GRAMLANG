@@ -1,19 +1,12 @@
 """
-Validation Experiment J: Evolutionary Conservation of Grammar Properties
-========================================================================
-Tests whether regulatory grammar properties are conserved WITHIN species,
-complementing the finding that grammar is species-specific (cross-species
-transfer distance = 1.0, Experiment I).
+Are grammar properties conserved within a species? Experiment I found grammar is
+species-specific (cross-species transfer distance = 1.0); this is the other half.
 
-Four analyses:
-  J1. Within-species grammar consistency: Do grammar rules from one human
-      dataset predict arrangement effects in another human dataset?
-  J2. Helical phasing universality: Is the ~13.4% helical phasing rate
-      significantly different from chance (10.5bp periodicity)?
-  J3. Grammar-expression coupling conservation: Is the GSI-MPRA expression
-      correlation consistent across human datasets?
-  J4. Motif pair grammar conservation: For shared motif pairs across human
-      datasets, are grammar properties more similar than expected by chance?
+J1 asks whether grammar rules from one human dataset predict arrangement effects
+in another. J2 asks whether the ~13.4% helical phasing rate beats chance under
+10.5bp periodicity. J3 checks that the GSI-MPRA correlation is consistent across
+human datasets. J4 checks whether shared motif pairs have more similar grammar
+than chance.
 """
 
 import os
@@ -26,9 +19,6 @@ from itertools import combinations
 
 warnings.filterwarnings("ignore")
 
-# ======================================================================
-# Configuration
-# ======================================================================
 MODULE1_DIR = "/home/bcheng/grammar/results/v2/module1/"
 MODULE2_DIR = "/home/bcheng/grammar/results/v2/module2/"
 DIST_TRANSFER = "/home/bcheng/grammar/results/v2/distributional_transfer/distributional_transfer.json"
@@ -44,9 +34,6 @@ SPECIES_MAP = {
 
 np.random.seed(42)
 
-# ======================================================================
-# Helper functions
-# ======================================================================
 def cohens_d(x, y):
     """Compute Cohen's d (pooled SD)."""
     nx, ny = len(x), len(y)
@@ -88,14 +75,10 @@ def safe_float(x):
     return x
 
 
-# ======================================================================
-# Load data
-# ======================================================================
 print("=" * 72)
-print("VALIDATION EXPERIMENT J: Evolutionary Conservation of Grammar Properties")
+print("validation experiment J: evolutionary conservation of grammar properties")
 print("=" * 72)
 
-# Load GSI data
 gsi_data = {}
 for ds in ALL_DATASETS:
     for model in MODELS:
@@ -106,11 +89,9 @@ for ds in ALL_DATASETS:
 all_gsi = pd.read_parquet(os.path.join(MODULE1_DIR, "all_gsi_results.parquet"))
 print(f"  Loaded all_gsi_results: {len(all_gsi)} rows")
 
-# Load grammar rules
 rules = pd.read_parquet(os.path.join(MODULE2_DIR, "grammar_rules_database.parquet"))
 print(f"  Loaded grammar_rules_database: {len(rules)} rules")
 
-# Load distributional transfer
 with open(DIST_TRANSFER, "r") as f:
     dist_transfer = json.load(f)
 print(f"  Loaded distributional_transfer.json")
@@ -126,26 +107,21 @@ results = {
     "models": MODELS,
 }
 
-# ======================================================================
-# J1: Within-Species Grammar Consistency
-# ======================================================================
 print("\n" + "=" * 72)
-print("J1: WITHIN-SPECIES GRAMMAR CONSISTENCY")
+print("J1: within-species grammar consistency")
 print("=" * 72)
 print("  Testing whether grammar rules from one human dataset predict")
 print("  arrangement effects in another human dataset.")
 
 j1_results = {}
 
-# J1a: Motif pair overlap between human datasets
-print("\n  --- J1a: Motif Pair Overlap ---")
+print("\n  --- J1a: motif pair overlap ---")
 human_pairs = {}
 for ds in HUMAN_DATASETS:
     ds_rules = rules[rules["dataset"] == ds]
     human_pairs[ds] = set(ds_rules["pair"].unique())
     print(f"    {ds}: {len(human_pairs[ds])} unique motif pairs")
 
-# Non-human datasets for comparison
 nonhuman_pairs = {}
 for ds in ["vaishnav", "jores"]:
     ds_rules = rules[rules["dataset"] == ds]
@@ -153,7 +129,6 @@ for ds in ["vaishnav", "jores"]:
     print(f"    {ds}: {len(nonhuman_pairs[ds])} unique motif pairs")
 
 pair_overlap = {}
-# Within-human overlaps
 for ds1, ds2 in combinations(HUMAN_DATASETS, 2):
     shared = human_pairs[ds1] & human_pairs[ds2]
     union = human_pairs[ds1] | human_pairs[ds2]
@@ -170,7 +145,6 @@ for ds1, ds2 in combinations(HUMAN_DATASETS, 2):
     print(f"    {ds1} vs {ds2}: {len(shared)} shared ({jaccard:.3f} Jaccard, "
           f"{len(shared)/min(len(human_pairs[ds1]),len(human_pairs[ds2]))*100:.1f}% of smaller)")
 
-# Cross-species overlaps for comparison
 for hds in HUMAN_DATASETS:
     for nds in ["vaishnav", "jores"]:
         shared = human_pairs[hds] & nonhuman_pairs[nds]
@@ -184,13 +158,12 @@ for hds in HUMAN_DATASETS:
         }
         print(f"    {hds} vs {nds}: {len(shared)} shared ({jaccard:.3f} Jaccard) [cross-species]")
 
-# Significance test: is within-human Jaccard > cross-species Jaccard?
 within_jaccards = [v["jaccard_index"] for v in pair_overlap.values() if v["type"] == "within_human"]
 cross_jaccards = [v["jaccard_index"] for v in pair_overlap.values() if v["type"] == "cross_species"]
 if len(within_jaccards) > 1 and len(cross_jaccards) > 1:
     mw_stat, mw_p = stats.mannwhitneyu(within_jaccards, cross_jaccards, alternative="greater")
 else:
-    # Use permutation test if too few samples
+    # too few samples for mann-whitney
     observed_diff_j = np.mean(within_jaccards) - np.mean(cross_jaccards)
     all_j = within_jaccards + cross_jaccards
     n_w = len(within_jaccards)
@@ -218,16 +191,13 @@ print(f"    Permutation p-value: {mw_p:.6f}")
 
 j1_results["motif_pair_overlap"] = pair_overlap
 
-# J1b: Grammar rule property agreement for shared pairs
-print("\n  --- J1b: Grammar Rule Property Agreement (Shared Pairs) ---")
+print("\n  --- J1b: grammar rule property agreement (shared pairs) ---")
 
-# For each model, aggregate rules per (dataset, pair)
 rule_agreement = {}
 for model in MODELS:
     print(f"\n    Model: {model}")
     model_rules = rules[rules["model"] == model]
 
-    # Aggregate by dataset + pair: mean spacing_sensitivity, orientation_sensitivity
     agg_rules = {}
     for ds in HUMAN_DATASETS:
         ds_model = model_rules[model_rules["dataset"] == ds]
@@ -251,28 +221,22 @@ for model in MODELS:
         r1 = agg_rules[ds1].loc[shared]
         r2 = agg_rules[ds2].loc[shared]
 
-        # Spacing sensitivity correlation
         ss_corr, ss_p = stats.spearmanr(
             r1["spacing_sensitivity"].values, r2["spacing_sensitivity"].values
         )
-        # Orientation sensitivity correlation
         os_corr, os_p = stats.spearmanr(
             r1["orientation_sensitivity"].values, r2["orientation_sensitivity"].values
         )
-        # Helical phase score correlation
         hp_corr, hp_p = stats.spearmanr(
             r1["helical_phase_score"].values, r2["helical_phase_score"].values
         )
-        # Optimal spacing agreement
         spacing_agree = float(np.mean(
             r1["optimal_spacing"].values == r2["optimal_spacing"].values
         ))
-        # Optimal orientation agreement
         orient_agree = float(np.mean(
             r1["optimal_orientation"].values == r2["optimal_orientation"].values
         ))
 
-        # Effect size for spacing sensitivity
         ss_d = cohens_d(
             r1["spacing_sensitivity"].values, r2["spacing_sensitivity"].values
         )
@@ -299,14 +263,12 @@ for model in MODELS:
 
 j1_results["grammar_rule_agreement"] = rule_agreement
 
-# J1c: GSI distribution similarity within human datasets
-print("\n  --- J1c: GSI Distribution Similarity Within Human ---")
+print("\n  --- J1c: GSI distribution similarity within human ---")
 gsi_similarity = {}
 for model in MODELS:
     print(f"\n    Model: {model}")
     model_sim = {}
 
-    # Collect within-human and cross-species KS statistics
     within_ks = []
     cross_ks = []
 
@@ -333,11 +295,10 @@ for model in MODELS:
         else:
             cross_ks.append(ks_stat)
 
-    # Within-human should have LOWER KS stats (more similar)
+    # more similar means lower KS
     mean_within = np.mean(within_ks) if within_ks else float("nan")
     mean_cross = np.mean(cross_ks) if cross_ks else float("nan")
 
-    # Permutation test
     all_ks = within_ks + cross_ks
     n_within = len(within_ks)
     observed = mean_cross - mean_within
@@ -365,31 +326,25 @@ j1_results["gsi_distribution_similarity"] = gsi_similarity
 
 results["J1_within_species_grammar_consistency"] = j1_results
 
-# ======================================================================
-# J2: Helical Phasing Universality
-# ======================================================================
 print("\n" + "=" * 72)
-print("J2: HELICAL PHASING UNIVERSALITY")
+print("J2: helical phasing universality")
 print("=" * 72)
 print("  Testing whether ~13.4% helical phasing rate differs from chance")
 print("  (expected from 10.5bp periodicity in random spacing distributions).")
 
 j2_results = {}
 
-# Extract helical phasing rates from distributional transfer data
 species_phasing = {}
 for sp in ["human", "plant", "yeast"]:
     rate = dist_transfer["species_distributions"][sp]["helical_phasing_rate"]
     species_phasing[sp] = rate
     print(f"  {sp}: helical phasing rate = {rate:.4f} ({rate*100:.2f}%)")
 
-# Compute per-dataset helical phasing rates
 dataset_phasing = {}
 for ds in ALL_DATASETS:
     ds_rules = rules[rules["dataset"] == ds]
     n_total = len(ds_rules)
-    # Helical phasing: score > 1.5 is typically the threshold used
-    # But let's check the actual distribution to determine proper threshold
+    # 1.5 is the usual phased/not threshold
     scores = ds_rules["helical_phase_score"].values
     dataset_phasing[ds] = {
         "n_rules": n_total,
@@ -398,31 +353,25 @@ for ds in ALL_DATASETS:
         "std_score": float(np.std(scores)),
     }
 
-# J2a: Expected helical phasing rate under null hypothesis
-# If spacings are uniformly distributed over range [2, 50], what fraction
-# would show 10.5bp periodicity by chance?
-print("\n  --- J2a: Null Model for Helical Phasing ---")
+# what fraction of uniform spacings over [2,50] look 10.5bp-periodic by chance?
+print("\n  --- J2a: null model for helical phasing ---")
 print("  Null: random spacing distributions over [2,50]bp range.")
 print("  Under uniform random spacings, helical phase score ~ 1.0 (no periodicity).")
 print("  Test: are observed phasing rates significantly above chance?")
 
-# Simulate null distribution of helical phase scores
 n_simulations = 10000
-n_spacings_per_sim = 49  # spacings from 2 to 50
+n_spacings_per_sim = 49  # spacings 2..50
 null_helical_rates = []
 
 for _ in range(n_simulations):
-    # Generate random spacing profile (uniform noise)
     random_profile = np.random.randn(n_spacings_per_sim)
-    # Compute autocorrelation at 10.5bp lag (approximate: lags 10 and 11)
-    # Helical phase score: ratio of power at ~10.5bp period vs mean power
     fft = np.fft.rfft(random_profile)
     power = np.abs(fft) ** 2
     freqs = np.fft.rfftfreq(n_spacings_per_sim, d=1.0)
-    # 10.5bp period => frequency = 1/10.5 ~ 0.0952
+    # 10.5bp period -> freq ~ 0.0952
     target_freq = 1.0 / 10.5
     freq_idx = np.argmin(np.abs(freqs - target_freq))
-    # Helical phase score: power at target freq / mean power
+    # phase score = power at target freq / mean power
     mean_power = np.mean(power[1:])  # exclude DC
     if mean_power > 0:
         phase_score = float(power[freq_idx] / mean_power)
@@ -439,8 +388,6 @@ null_99th = np.percentile(null_arr, 99)
 print(f"  Null helical phase score: mean={null_mean:.4f}, std={null_std:.4f}")
 print(f"  95th percentile = {null_95th:.4f}, 99th = {null_99th:.4f}")
 
-# Fraction of null simulations exceeding threshold for "helical phased"
-# Using threshold of 1.5 (commonly used)
 null_frac_above_1_5 = np.mean(null_arr > 1.5)
 print(f"  Null fraction with score > 1.5: {null_frac_above_1_5:.4f} ({null_frac_above_1_5*100:.2f}%)")
 
@@ -454,31 +401,26 @@ j2_results["null_model"] = {
     "null_fraction_above_1_5": round(float(null_frac_above_1_5), 4),
 }
 
-# J2b: Compare observed vs null for each species
-print("\n  --- J2b: Observed vs Null Helical Phasing ---")
+print("\n  --- J2b: observed vs null helical phasing ---")
 observed_phasing = {}
 for sp in ["human", "plant", "yeast"]:
     obs_rate = species_phasing[sp]
-    # Binomial test: is observed rate > null rate?
     sp_rules = rules[rules["dataset"].map(SPECIES_MAP) == sp]
     n_total = len(sp_rules)
     scores = sp_rules["helical_phase_score"].values
 
-    # Count rules with helical phase score > 1.5 (threshold for "phased")
     n_phased = int(np.sum(scores > 1.5))
     obs_rate_actual = n_phased / n_total if n_total > 0 else 0
 
-    # Binomial test against null rate
     binom_p = stats.binom_test(n_phased, n_total, null_frac_above_1_5, alternative="greater")
 
-    # Z-test for proportion
     p0 = null_frac_above_1_5
     p_hat = obs_rate_actual
     se = np.sqrt(p0 * (1 - p0) / n_total) if n_total > 0 else 1
     z_score = (p_hat - p0) / se if se > 0 else 0
     z_p = 1 - stats.norm.cdf(z_score)
 
-    # Effect size: Cohen's h for proportions
+    # cohen's h for proportions
     h = 2 * (np.arcsin(np.sqrt(p_hat)) - np.arcsin(np.sqrt(p0)))
 
     observed_phasing[sp] = {
@@ -505,19 +447,16 @@ for sp in ["human", "plant", "yeast"]:
 
 j2_results["observed_vs_null"] = observed_phasing
 
-# J2c: Cross-species helical phasing comparison (is it truly universal?)
-print("\n  --- J2c: Cross-Species Helical Phase Score Comparison ---")
+print("\n  --- J2c: cross-species helical phase score comparison ---")
 species_scores = {}
 for sp in ["human", "plant", "yeast"]:
     sp_rules = rules[rules["dataset"].map(SPECIES_MAP) == sp]
     species_scores[sp] = sp_rules["helical_phase_score"].values
 
-# Kruskal-Wallis test
 kw_stat, kw_p = stats.kruskal(
     species_scores["human"], species_scores["plant"], species_scores["yeast"]
 )
 
-# Pairwise comparisons
 pairwise_phasing = {}
 for sp1, sp2 in combinations(["human", "plant", "yeast"], 2):
     ks_stat, ks_p = stats.ks_2samp(species_scores[sp1], species_scores[sp2])
@@ -531,7 +470,6 @@ for sp1, sp2 in combinations(["human", "plant", "yeast"], 2):
     }
     print(f"    {sp1} vs {sp2}: KS={ks_stat:.4f} (p={ks_p:.2e}), d={d:.4f}")
 
-# Coefficient of variation across species phasing rates
 rates = [species_phasing[sp] for sp in ["human", "plant", "yeast"]]
 cv = np.std(rates) / np.mean(rates)
 
@@ -554,8 +492,7 @@ print(f"\n    Helical phasing rates: {', '.join(f'{sp}={species_phasing[sp]:.4f}
 print(f"    CV = {cv:.4f}, range = {max(rates)-min(rates):.4f}")
 print(f"    KW H={kw_stat:.4f}, p={kw_p:.2e}")
 
-# J2d: Per-dataset helical phasing consistency within human
-print("\n  --- J2d: Within-Human Helical Phasing Consistency ---")
+print("\n  --- J2d: within-human helical phasing consistency ---")
 human_phasing_rates = {}
 for ds in HUMAN_DATASETS:
     ds_rules = rules[rules["dataset"] == ds]
@@ -570,7 +507,6 @@ for ds in HUMAN_DATASETS:
     }
     print(f"    {ds}: {n_phased}/{len(scores)} = {rate:.4f} ({rate*100:.2f}%)")
 
-# Chi-squared test for homogeneity of phasing rates across human datasets
 contingency = np.array([
     [human_phasing_rates[ds]["n_phased"],
      human_phasing_rates[ds]["n_rules"] - human_phasing_rates[ds]["n_phased"]]
@@ -595,19 +531,15 @@ print(f"    Chi-squared test for homogeneity: chi2={chi2:.4f}, p={chi_p:.2e}")
 
 results["J2_helical_phasing_universality"] = j2_results
 
-# ======================================================================
-# J3: Grammar-Expression Coupling Conservation
-# ======================================================================
 print("\n" + "=" * 72)
-print("J3: GRAMMAR-EXPRESSION COUPLING CONSERVATION")
+print("J3: grammar-expression coupling conservation")
 print("=" * 72)
 print("  Testing whether GSI-MPRA expression correlations are consistent")
 print("  across human datasets.")
 
 j3_results = {}
 
-# J3a: GSI-expression correlation per dataset and model
-print("\n  --- J3a: GSI-MPRA Correlation per Dataset/Model ---")
+print("\n  --- J3a: GSI-MPRA correlation per dataset/model ---")
 expr_correlations = {}
 for model in MODELS:
     print(f"\n    Model: {model}")
@@ -625,9 +557,8 @@ for model in MODELS:
         g = gsi_vals[mask]
         m = mpra_vals[mask]
 
-        # Spearman correlation (robust to outliers)
+        # spearman: robust to outliers
         sr, sp = stats.spearmanr(g, m)
-        # Pearson on log-transformed GSI
         log_g = np.log1p(np.abs(g))
         pr, pp = stats.pearsonr(log_g, m)
 
@@ -648,8 +579,7 @@ for model in MODELS:
 
 j3_results["gsi_expression_correlations"] = expr_correlations
 
-# J3b: Within-human consistency of GSI-expression correlation
-print("\n  --- J3b: Within-Human Consistency of GSI-Expression Coupling ---")
+print("\n  --- J3b: within-human consistency of GSI-expression coupling ---")
 consistency_test = {}
 
 for model in MODELS:
@@ -668,9 +598,7 @@ for model in MODELS:
             nonhuman_rs.append(expr_correlations[model][ds]["spearman_r"])
 
     if len(human_rs) >= 2:
-        # Fisher Z-transform to compare correlations
-        # Test if human correlations are more similar to each other
-        # than to non-human correlations
+        # fisher z to compare correlations
         human_z = [np.arctanh(min(max(r, -0.999), 0.999)) for r in human_rs]
         human_r_mean = np.mean(human_rs)
         human_r_std = np.std(human_rs)
@@ -679,8 +607,7 @@ for model in MODELS:
         all_rs = human_rs + nonhuman_rs
         all_r_std = np.std(all_rs) if len(all_rs) > 1 else float("nan")
 
-        # Cochran's Q-like test: compare correlations
-        # Pairwise z-test between human correlations
+        # pairwise z-test between human correlations
         pairwise_z_tests = {}
         for i, (ds1, r1) in enumerate(zip(human_data_pairs, human_rs)):
             for ds2, r2 in zip(human_data_pairs[i+1:], human_rs[i+1:]):
@@ -716,8 +643,7 @@ for model in MODELS:
 
 j3_results["within_human_consistency"] = consistency_test
 
-# J3c: Compare human vs non-human expression coupling strength
-print("\n  --- J3c: Human vs Non-Human Expression Coupling ---")
+print("\n  --- J3c: human vs non-human expression coupling ---")
 coupling_comparison = {}
 for model in MODELS:
     human_abs_rs = []
@@ -743,19 +669,15 @@ j3_results["human_vs_nonhuman_coupling"] = coupling_comparison
 
 results["J3_grammar_expression_coupling"] = j3_results
 
-# ======================================================================
-# J4: Motif Pair Grammar Conservation Within Species
-# ======================================================================
 print("\n" + "=" * 72)
-print("J4: MOTIF PAIR GRAMMAR CONSERVATION WITHIN SPECIES")
+print("J4: motif pair grammar conservation within species")
 print("=" * 72)
 print("  For motif pairs appearing in multiple human datasets, testing")
 print("  whether grammar properties are more similar than expected by chance.")
 
 j4_results = {}
 
-# J4a: Spacing profile correlation for shared pairs
-print("\n  --- J4a: Spacing Profile Correlation for Shared Pairs ---")
+print("\n  --- J4a: spacing profile correlation for shared pairs ---")
 profile_corrs = {}
 
 for model in MODELS:
@@ -771,7 +693,6 @@ for model in MODELS:
         if len(shared_pairs) < 5:
             continue
 
-        # For each shared pair, compute spacing profile correlation
         pair_corrs = []
         pair_spacing_diffs = []
         pair_orient_agrees = []
@@ -780,14 +701,13 @@ for model in MODELS:
             p1 = r1[r1["pair"] == pair]
             p2 = r2[r2["pair"] == pair]
 
-            # Get spacing profiles (arrays stored in the dataframe)
+            # profiles are arrays stored in the dataframe
             profiles_1 = p1["spacing_profile"].values
             profiles_2 = p2["spacing_profile"].values
 
             if len(profiles_1) == 0 or len(profiles_2) == 0:
                 continue
 
-            # Average the spacing profiles across sequences in each dataset
             try:
                 mean_profile_1 = np.mean(np.stack(profiles_1), axis=0)
                 mean_profile_2 = np.mean(np.stack(profiles_2), axis=0)
@@ -799,12 +719,10 @@ for model in MODELS:
             except Exception:
                 continue
 
-            # Compare optimal spacing
             mode_s1 = p1["optimal_spacing"].mode().iloc[0] if len(p1) > 0 else np.nan
             mode_s2 = p2["optimal_spacing"].mode().iloc[0] if len(p2) > 0 else np.nan
             pair_spacing_diffs.append(abs(mode_s1 - mode_s2))
 
-            # Compare optimal orientation
             mode_o1 = p1["optimal_orientation"].mode().iloc[0] if len(p1) > 0 else ""
             mode_o2 = p2["optimal_orientation"].mode().iloc[0] if len(p2) > 0 else ""
             pair_orient_agrees.append(1 if mode_o1 == mode_o2 else 0)
@@ -833,8 +751,7 @@ for model in MODELS:
 
 j4_results["spacing_profile_correlations"] = profile_corrs
 
-# J4b: Permutation test - are observed correlations higher than chance?
-print("\n  --- J4b: Permutation Test for Grammar Conservation ---")
+print("\n  --- J4b: permutation test for grammar conservation ---")
 permutation_results = {}
 
 for model in MODELS:
@@ -850,7 +767,6 @@ for model in MODELS:
         if len(shared_pairs) < 10:
             continue
 
-        # Observed: mean correlation of spacing sensitivity between matched pairs
         ss_1 = []
         ss_2 = []
         os_1 = []
@@ -868,11 +784,10 @@ for model in MODELS:
         os_1 = np.array(os_1)
         os_2 = np.array(os_2)
 
-        # Observed correlation
         obs_ss_r, obs_ss_p = stats.spearmanr(ss_1, ss_2)
         obs_os_r, obs_os_p = stats.spearmanr(os_1, os_2)
 
-        # Permutation: shuffle pair assignments and recompute
+        # shuffle pair assignments and recompute
         n_perm = 5000
         perm_ss_rs = []
         perm_os_rs = []
@@ -889,7 +804,7 @@ for model in MODELS:
         ss_perm_p = np.mean(perm_ss_rs >= obs_ss_r)
         os_perm_p = np.mean(perm_os_rs >= obs_os_r)
 
-        # Effect size: how many SDs above null mean
+        # how many SDs above the null mean
         ss_z = (obs_ss_r - np.mean(perm_ss_rs)) / np.std(perm_ss_rs) if np.std(perm_ss_rs) > 0 else 0
         os_z = (obs_os_r - np.mean(perm_os_rs)) / np.std(perm_os_rs) if np.std(perm_os_rs) > 0 else 0
 
@@ -925,8 +840,7 @@ for model in MODELS:
 
 j4_results["permutation_tests"] = permutation_results
 
-# J4c: Cross-species control for motif pair conservation
-print("\n  --- J4c: Cross-Species Control ---")
+print("\n  --- J4c: cross-species control ---")
 cross_species_control = {}
 
 for model in MODELS:
@@ -934,8 +848,7 @@ for model in MODELS:
     model_rules = rules[rules["model"] == model]
     model_control = {}
 
-    # Compare human datasets to non-human
-    for hds in ["agarwal"]:  # Use agarwal as representative human
+    for hds in ["agarwal"]:  # agarwal stands in for human
         for nds in ["jores", "vaishnav"]:
             r1 = model_rules[model_rules["dataset"] == hds]
             r2 = model_rules[model_rules["dataset"] == nds]
@@ -965,8 +878,7 @@ for model in MODELS:
 
 j4_results["cross_species_control"] = cross_species_control
 
-# J4d: Summary - aggregate evidence for motif pair conservation
-print("\n  --- J4d: Aggregate Evidence ---")
+print("\n  --- J4d: aggregate evidence ---")
 all_within_ss_rs = []
 all_within_os_rs = []
 all_within_ss_perm_ps = []
@@ -1006,16 +918,11 @@ print(f"      Significant: {np.sum(np.array(all_within_os_perm_ps) < 0.05)}/{len
 
 results["J4_motif_pair_conservation"] = j4_results
 
-# ======================================================================
-# GRAND SUMMARY
-# ======================================================================
 print("\n" + "=" * 72)
-print("GRAND SUMMARY: EXPERIMENT J")
+print("grand summary: experiment J")
 print("=" * 72)
 
-# Collect key findings
 j1_key = {}
-# Average Jaccard for within-human
 within_jaccards = [
     v["jaccard_index"] for k, v in pair_overlap.items()
     if isinstance(v, dict) and v.get("type") == "within_human"
@@ -1027,7 +934,6 @@ cross_jaccards = [
 j1_key["mean_within_human_jaccard"] = round(float(np.mean(within_jaccards)), 4)
 j1_key["mean_cross_species_jaccard"] = round(float(np.mean(cross_jaccards)), 4)
 
-# J1b aggregate
 j1b_all_ss_r = []
 j1b_all_os_r = []
 for model in MODELS:
@@ -1037,7 +943,6 @@ for model in MODELS:
 j1_key["mean_spacing_sens_agreement_r"] = round(float(np.mean(j1b_all_ss_r)), 4) if j1b_all_ss_r else None
 j1_key["mean_orient_sens_agreement_r"] = round(float(np.mean(j1b_all_os_r)), 4) if j1b_all_os_r else None
 
-# J2 key
 j2_key = {
     "phasing_rates": {sp: round(float(species_phasing[sp]), 4) for sp in ["human", "plant", "yeast"]},
     "rate_cv": round(float(cv), 4),
@@ -1045,7 +950,6 @@ j2_key = {
     "within_human_homogeneous": j2_results["within_human_consistency"]["rates_are_homogeneous"],
 }
 
-# J3 key
 j3_human_rs = []
 j3_nonhuman_rs = []
 for model in MODELS:
@@ -1062,10 +966,8 @@ j3_key = {
     "mean_nonhuman_gsi_expression_r": round(float(np.mean(j3_nonhuman_rs)), 4) if j3_nonhuman_rs else None,
 }
 
-# J4 key
 j4_key = j4_results["aggregate_summary"]
 
-# Overall conclusion
 summary = {
     "J1_within_species_consistency": {
         "finding": (
@@ -1108,10 +1010,8 @@ summary = {
     "overall_conclusion": "",
 }
 
-# Build conclusion
 conclusions = []
 
-# J1 conclusion
 if j1_key["mean_within_human_jaccard"] > j1_key["mean_cross_species_jaccard"]:
     conclusions.append(
         "Within-species grammar is partially conserved: human datasets share "
@@ -1120,7 +1020,6 @@ if j1_key["mean_within_human_jaccard"] > j1_key["mean_cross_species_jaccard"]:
 else:
     conclusions.append("Motif pair repertoire shows no within-species enrichment")
 
-# J2 conclusion
 if j2_key["rate_cv"] < 0.1:
     conclusions.append(
         "Helical phasing is a universal grammar property conserved across all species"
@@ -1131,7 +1030,6 @@ elif j2_key["rate_cv"] < 0.2:
         "it being a biophysical constraint rather than species-specific grammar"
     )
 
-# J3 conclusion
 if j3_key.get("std_human_gsi_expression_r") is not None:
     if j3_key["std_human_gsi_expression_r"] < 0.1:
         conclusions.append(
@@ -1142,7 +1040,6 @@ if j3_key.get("std_human_gsi_expression_r") is not None:
             "GSI-expression coupling shows moderate variation across human datasets"
         )
 
-# J4 conclusion
 n_sig_total = (j4_key["spacing_sensitivity"]["n_significant"] +
                j4_key["orientation_sensitivity"]["n_significant"])
 n_total = 2 * j4_key["n_comparisons"]
@@ -1172,17 +1069,13 @@ summary["overall_conclusion"] = (
 
 results["summary"] = summary
 
-# Print summary
 for key in ["J1_within_species_consistency", "J2_helical_phasing",
             "J3_expression_coupling", "J4_motif_pair_conservation"]:
     print(f"\n  {key}:")
     print(f"    {summary[key]['finding']}")
 
-print(f"\n  OVERALL: {summary['overall_conclusion']}")
+print(f"\n  overall: {summary['overall_conclusion']}")
 
-# ======================================================================
-# Save results
-# ======================================================================
 with open(OUTPUT_PATH, "w") as f:
     json.dump(results, f, indent=2, default=safe_float)
 

@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.14280804991722107,
+    "test_r": 0.19209489226341248,
+    "test_rho": 0.1744210541400361,
+    "test_r2": 0.03151226043701172,
+    "n_params": 2305,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "inoue"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.20195049047470093,
+    "test_r": 0.23449991643428802,
+    "test_rho": 0.2138734439635818,
+    "test_r2": 0.0015422701835632324,
+    "n_params": 231425,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "inoue"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.2532891631126404,
+    "test_r": 0.1602296084165573,
+    "test_rho": 0.12842901225722012,
+    "test_r2": -0.09977829456329346,
+    "n_params": 264706,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "inoue"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.25626328587532043,
+    "test_r": 0.2454400509595871,
+    "test_rho": 0.17348671577197558,
+    "test_r2": 0.034873127937316895,
+    "n_params": 777985,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "inoue"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.28646525740623474,
+    "test_r": 0.06551726907491684,
+    "test_rho": 0.08048541648753738,
+    "test_r2": -0.1740741729736328,
+    "n_params": 743617,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "inoue"
+  }
+]

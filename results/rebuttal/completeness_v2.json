@@ -1,0 +1,352 @@
+{
+  "agarwal": {
+    "n": 5000,
+    "n_vocab_feat": 62,
+    "n_grammar_feat": 72,
+    "n_comp_feat": 65,
+    "ridge": {
+      "r2_vocab": [
+        0.13989343820282324,
+        0.022050040025865636
+      ],
+      "r2_vocab_plus_grammar": [
+        0.1432201221615007,
+        0.02018241632366078
+      ],
+      "r2_vocab_plus_composition": [
+        0.17738480031127662,
+        0.023882136594155508
+      ],
+      "r2_grammar_only": [
+        0.10793522744190016,
+        0.014490759882272386
+      ],
+      "r2_composition_only": [
+        0.068469641485235,
+        0.020786975852277314
+      ],
+      "delta_r2_grammar": 0.003326683958677479,
+      "delta_r2_grammar_ci95": [
+        -0.003982812027518422,
+        0.01063617994487338
+      ],
+      "delta_r2_grammar_p": 0.4227885736529287,
+      "delta_r2_composition": 0.037491362108453385
+    },
+    "gb": {
+      "r2_vocab": [
+        0.10903730486771841,
+        0.010183000651221776
+      ],
+      "r2_vocab_plus_grammar": [
+        0.09199807213222788,
+        0.009547028233936973
+      ],
+      "r2_vocab_plus_composition": [
+        0.16885248668347608,
+        0.03173098033023205
+      ],
+      "r2_grammar_only": [
+        0.07585493075391199,
+        0.015086004523138843
+      ],
+      "r2_composition_only": [
+        0.08604856635090934,
+        0.03351987878191711
+      ],
+      "delta_r2_grammar": -0.017039232735490527,
+      "delta_r2_grammar_ci95": [
+        -0.031540932094959444,
+        -0.002537533376021613
+      ],
+      "delta_r2_grammar_p": 0.08266907670207928,
+      "delta_r2_composition": 0.059815181815757665
+    },
+    "replicate_ceiling_measured": null,
+    "replicate_ceiling_assumed_by_submission": 0.85,
+    "submitted_style_completeness_at_0.85": 0.10823302603791515,
+    "grammar_share_of_explained_r2": -0.185212932625373
+  },
+  "jores": {
+    "n": 5000,
+    "n_vocab_feat": 62,
+    "n_grammar_feat": 72,
+    "n_comp_feat": 65,
+    "ridge": {
+      "r2_vocab": [
+        0.11093156788159449,
+        0.019353123501471448
+      ],
+      "r2_vocab_plus_grammar": [
+        0.10892576388064383,
+        0.019338033016319766
+      ],
+      "r2_vocab_plus_composition": [
+        0.33945291099822744,
+        0.025323195218842347
+      ],
+      "r2_grammar_only": [
+        0.08404492538789028,
+        0.014466880018664452
+      ],
+      "r2_composition_only": [
+        0.3370824822778542,
+        0.026671735037166258
+      ],
+      "delta_r2_grammar": -0.0020058040009506505,
+      "delta_r2_grammar_ci95": [
+        -0.00828283534173705,
+        0.0042712273398357505
+      ],
+      "delta_r2_grammar_p": 0.5650772096448651,
+      "delta_r2_composition": 0.22852134311663294
+    },
+    "gb": {
+      "r2_vocab": [
+        0.10060219597757794,
+        0.016399591720823538
+      ],
+      "r2_vocab_plus_grammar": [
+        0.08670395854363588,
+        0.026202374759095915
+      ],
+      "r2_vocab_plus_composition": [
+        0.321620001076539,
+        0.012562341816208987
+      ],
+      "r2_grammar_only": [
+        0.07841116936740974,
+        0.02288669672144814
+      ],
+      "r2_composition_only": [
+        0.31355051207181556,
+        0.02190340170948216
+      ],
+      "delta_r2_grammar": -0.013898237433942051,
+      "delta_r2_grammar_ci95": [
+        -0.026470433877332736,
+        -0.001326040990551369
+      ],
+      "delta_r2_grammar_p": 0.09616155211627588,
+      "delta_r2_composition": 0.22101780509896107
+    },
+    "replicate_ceiling_measured": null,
+    "replicate_ceiling_assumed_by_submission": 0.85,
+    "submitted_style_completeness_at_0.85": 0.10200465711015987,
+    "grammar_share_of_explained_r2": -0.1602953044750249
+  },
+  "klein": {
+    "n": 2275,
+    "n_vocab_feat": 62,
+    "n_grammar_feat": 72,
+    "n_comp_feat": 65,
+    "ridge": {
+      "r2_vocab": [
+        0.18337575756854255,
+        0.04826330907533623
+      ],
+      "r2_vocab_plus_grammar": [
+        0.17896120023501247,
+        0.043925887304541354
+      ],
+      "r2_vocab_plus_composition": [
+        0.21833546562697662,
+        0.049728745777702914
+      ],
+      "r2_grammar_only": [
+        0.14796817225956554,
+        0.03139777658393724
+      ],
+      "r2_composition_only": [
+        0.11056098299682733,
+        0.036312192285497785
+      ],
+      "delta_r2_grammar": -0.004414557333530067,
+      "delta_r2_grammar_ci95": [
+        -0.014342679355383102,
+        0.0055135646883229675
+      ],
+      "delta_r2_grammar_p": 0.43265713976342784,
+      "delta_r2_composition": 0.03495970805843405
+    },
+    "gb": {
+      "r2_vocab": [
+        0.12073256442097621,
+        0.06091877330948428
+      ],
+      "r2_vocab_plus_grammar": [
+        0.11733009820812704,
+        0.05937384406219591
+      ],
+      "r2_vocab_plus_composition": [
+        0.15905218917429137,
+        0.04306754088511518
+      ],
+      "r2_grammar_only": [
+        0.11317551428362631,
+        0.06215278364990181
+      ],
+      "r2_composition_only": [
+        0.029964691437255886,
+        0.040267378899065856
+      ],
+      "delta_r2_grammar": -0.003402466212849187,
+      "delta_r2_grammar_ci95": [
+        -0.02232680564959235,
+        0.015521873223893978
+      ],
+      "delta_r2_grammar_p": 0.7423260431625152,
+      "delta_r2_composition": 0.03831962475331514
+    },
+    "replicate_ceiling_measured": null,
+    "replicate_ceiling_assumed_by_submission": 0.85,
+    "submitted_style_completeness_at_0.85": 0.13803540965662003,
+    "grammar_share_of_explained_r2": -0.028999091152328977
+  },
+  "vaishnav": {
+    "n": 5000,
+    "n_vocab_feat": 62,
+    "n_grammar_feat": 72,
+    "n_comp_feat": 65,
+    "ridge": {
+      "r2_vocab": [
+        0.09259725639242442,
+        0.012973200151468342
+      ],
+      "r2_vocab_plus_grammar": [
+        0.09235458062029422,
+        0.017255292474132353
+      ],
+      "r2_vocab_plus_composition": [
+        0.3522197935843153,
+        0.024439289995790967
+      ],
+      "r2_grammar_only": [
+        0.079375796804379,
+        0.01691635792960603
+      ],
+      "r2_composition_only": [
+        0.32952512731950445,
+        0.02159911574793308
+      ],
+      "delta_r2_grammar": -0.00024267577213019643,
+      "delta_r2_grammar_ci95": [
+        -0.005641662255057761,
+        0.005156310710797369
+      ],
+      "delta_r2_grammar_p": 0.9340324827033555,
+      "delta_r2_composition": 0.2596225371918909
+    },
+    "gb": {
+      "r2_vocab": [
+        0.07600593613470855,
+        0.01796146827511053
+      ],
+      "r2_vocab_plus_grammar": [
+        0.058325003521528404,
+        0.02911784339237032
+      ],
+      "r2_vocab_plus_composition": [
+        0.32630491819681123,
+        0.02263999030235667
+      ],
+      "r2_grammar_only": [
+        0.061383621479932524,
+        0.018504541156134393
+      ],
+      "r2_composition_only": [
+        0.2960898048105201,
+        0.026601265583566285
+      ],
+      "delta_r2_grammar": -0.017680932613180135,
+      "delta_r2_grammar_ci95": [
+        -0.029429172484023998,
+        -0.005932692742336274
+      ],
+      "delta_r2_grammar_p": 0.041978881243030085,
+      "delta_r2_composition": 0.25029898206210266
+    },
+    "replicate_ceiling_measured": null,
+    "replicate_ceiling_assumed_by_submission": 0.85,
+    "submitted_style_completeness_at_0.85": 0.06861765120179812,
+    "grammar_share_of_explained_r2": -0.3031449900668057
+  },
+  "inoue": {
+    "n": 2453,
+    "n_vocab_feat": 62,
+    "n_grammar_feat": 72,
+    "n_comp_feat": 65,
+    "ridge": {
+      "r2_vocab": [
+        0.13319543707709539,
+        0.016201930362990807
+      ],
+      "r2_vocab_plus_grammar": [
+        0.12724162803234784,
+        0.023849678536195056
+      ],
+      "r2_vocab_plus_composition": [
+        0.14533955959839942,
+        0.011288213524336196
+      ],
+      "r2_grammar_only": [
+        0.09758155685809697,
+        0.015911074953543228
+      ],
+      "r2_composition_only": [
+        0.04074914167102108,
+        0.0129076220014296
+      ],
+      "delta_r2_grammar": -0.005953809044747538,
+      "delta_r2_grammar_ci95": [
+        -0.014287607989990809,
+        0.0023799899004957326
+      ],
+      "delta_r2_grammar_p": 0.23402933213459293,
+      "delta_r2_composition": 0.012144122521304035
+    },
+    "gb": {
+      "r2_vocab": [
+        0.0798366854682262,
+        0.04380786179008404
+      ],
+      "r2_vocab_plus_grammar": [
+        0.04589067779218128,
+        0.059265199587622205
+      ],
+      "r2_vocab_plus_composition": [
+        0.09770738689706007,
+        0.03629697579780906
+      ],
+      "r2_grammar_only": [
+        0.038231924987654396,
+        0.07726804604692517
+      ],
+      "r2_composition_only": [
+        -0.020258359874854914,
+        0.031014684471475387
+      ],
+      "delta_r2_grammar": -0.03394600767604492,
+      "delta_r2_grammar_ci95": [
+        -0.07103039346346951,
+        0.0031383781113796597
+      ],
+      "delta_r2_grammar_p": 0.14724104733857982,
+      "delta_r2_composition": 0.017870701428833867
+    },
+    "replicate_ceiling_measured": 0.97898024488517,
+    "replicate_ceiling_assumed_by_submission": 0.85,
+    "submitted_style_completeness_at_0.85": 0.053989032696683856,
+    "completeness_at_measured_ceiling": 0.046875999829357175,
+    "grammar_share_of_explained_r2": -0.7397146721120895
+  },
+  "_summary": {
+    "delta_r2_grammar_range": [
+      -0.03394600767604492,
+      -0.003402466212849187
+    ],
+    "n_datasets_positive": 0,
+    "n_datasets_significant_positive": 0,
+    "note": "The submitted 'grammar completeness' (7-17%) is R2(vocab+grammar) divided by an assumed 0.85 replicate ceiling: a LEVEL dominated by the vocabulary term, not a measure of grammar. The increment delta-R2 is the quantity that speaks to grammar."
+  }
+}

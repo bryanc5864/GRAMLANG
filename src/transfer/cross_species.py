@@ -1,8 +1,6 @@
 """
-Cross-species grammar transfer experiments.
-
-Tests whether grammar rules from one species predict arrangement
-effects in another species.
+Cross-species grammar transfer: do rules from one species predict arrangement
+effects in another?
 """
 
 import numpy as np
@@ -23,14 +21,7 @@ class GrammarPredictor:
     """Predict expression from grammar rules alone."""
 
     def __init__(self, rules_df: pd.DataFrame):
-        """
-        Build lookup tables from extracted pairwise rules.
-
-        For each motif pair, store:
-        - Optimal spacing
-        - Spacing sensitivity profile
-        - Optimal orientation
-        """
+        """Lookup tables of optimal spacing, spacing profile and orientation per pair."""
         self.pair_rules = {}
 
         for _, row in rules_df.iterrows():
@@ -44,15 +35,7 @@ class GrammarPredictor:
                 }
 
     def predict_arrangement_score(self, motif_positions: list) -> float:
-        """
-        Predict a grammar score for a given motif arrangement.
-
-        Args:
-            motif_positions: List of dicts with 'name', 'start', 'end', 'orient'
-
-        Returns:
-            Predicted grammar quality score
-        """
+        """Grammar score for one arrangement. motif_positions dicts need name/start/end/orient."""
         from itertools import combinations
         score = 0.0
 
@@ -64,12 +47,12 @@ class GrammarPredictor:
             if rule is None:
                 continue
 
-            # Spacing score
+            # spacing
             actual_spacing = abs(p1['start'] - p2['start'])
             optimal = rule['optimal_spacing']
             spacing_penalty = -abs(actual_spacing - optimal) * rule['spacing_sensitivity']
 
-            # Orientation score
+            # orientation
             actual_orient = f"{p1.get('orient', '+')}/{p2.get('orient', '+')}"
             if actual_orient == rule['optimal_orientation']:
                 orient_bonus = rule['fold_change'] * 0.1
@@ -91,26 +74,10 @@ def compute_grammar_transfer(
     n_arrangements: int = 200,
     seed: int = 42,
 ) -> dict:
-    """
-    Test grammar rule transfer from source to target species.
-
-    Args:
-        source_rules: Grammar rules from source species
-        target_dataset: MPRA data from target species
-        target_motif_hits: Motif annotations for target
-        model: Model for ground-truth predictions
-        cell_type: Cell type
-        n_test_enhancers: Max enhancers to test
-        n_arrangements: Arrangements per enhancer
-        seed: Random seed
-
-    Returns:
-        Dict with transfer R^2 and correlation
-    """
+    """Transfer source-species rules onto a target dataset; returns R2 and correlation."""
     rng = np.random.default_rng(seed)
     predictor = build_grammar_predictor(source_rules)
 
-    # Select target enhancers with enough motifs
     eligible = target_dataset[target_dataset['n_motifs'] >= 3]
     if len(eligible) > n_test_enhancers:
         eligible = eligible.sample(n=n_test_enhancers, random_state=seed)
@@ -130,7 +97,6 @@ def compute_grammar_transfer(
         if len(motifs) < 3:
             continue
 
-        # Extract motif sequences
         motif_seqs = []
         for m in motifs[:8]:
             mseq = seq[m['start']:m['end']]
@@ -147,7 +113,6 @@ def compute_grammar_transfer(
         total_motif_len = sum(m['length'] for m in motif_seqs)
         total_spacer = max(seq_len - total_motif_len, len(motif_seqs) + 1)
 
-        # Generate random arrangements
         arr_seqs = []
         arr_positions = []
 
@@ -181,10 +146,10 @@ def compute_grammar_transfer(
             arr_seqs.append(new_seq)
             arr_positions.append(positions)
 
-        # Model predictions (ground truth)
+        # model predictions are the ground truth
         actual = model.predict_expression(arr_seqs, cell_type=cell_type)
 
-        # Source grammar predictions
+        # what the source grammar predicts
         predicted = np.array([predictor.predict_arrangement_score(pos) for pos in arr_positions])
 
         all_actual.extend(actual)

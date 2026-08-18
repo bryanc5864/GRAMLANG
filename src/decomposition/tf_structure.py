@@ -1,8 +1,8 @@
 """
-TF structural class as grammar predictor.
+TF structural class as a grammar predictor.
 
-Maps motifs to TF structural families and tests whether
-structural class predicts grammar type.
+Map motifs onto TF structural families and ask whether the family predicts the
+grammar type.
 """
 
 import numpy as np
@@ -44,7 +44,7 @@ def build_structure_grammar_map(rules_df: pd.DataFrame) -> pd.DataFrame:
     rules['class_a'] = rules['motif_a'].apply(assign_structural_class)
     rules['class_b'] = rules['motif_b'].apply(assign_structural_class)
 
-    # Canonical pair name
+    # canonical pair name
     rules['class_pair'] = rules.apply(
         lambda r: '_'.join(sorted([r['class_a'], r['class_b']])), axis=1
     )
@@ -65,13 +65,12 @@ def test_structure_predicts_grammar(rules_df: pd.DataFrame) -> dict:
     rules['class_a'] = rules['motif_a'].apply(assign_structural_class)
     rules['class_b'] = rules['motif_b'].apply(assign_structural_class)
 
-    # Remove unknown
+    # drop unknowns
     rules = rules[(rules['class_a'] != 'Unknown') & (rules['class_b'] != 'Unknown')]
 
     if len(rules) < 50:
         return {'error': 'Too few rules with known classes', 'n_rules': len(rules)}
 
-    # Classify grammar type
     sp_med = rules['spacing_sensitivity'].median()
     or_med = rules['orientation_sensitivity'].median()
     sp_q25 = rules['spacing_sensitivity'].quantile(0.25)
@@ -91,7 +90,6 @@ def test_structure_predicts_grammar(rules_df: pd.DataFrame) -> dict:
 
     rules['grammar_type'] = rules.apply(classify, axis=1)
 
-    # Encode features
     le_a = LabelEncoder().fit(rules['class_a'])
     le_b = LabelEncoder().fit(rules['class_b'])
     X = np.column_stack([le_a.transform(rules['class_a']),
@@ -100,7 +98,7 @@ def test_structure_predicts_grammar(rules_df: pd.DataFrame) -> dict:
     le_g = LabelEncoder().fit(rules['grammar_type'])
     y = le_g.transform(rules['grammar_type'])
 
-    # Random forest
+    # random forest
     clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=42)
     scores = cross_val_score(clf, X, y, cv=5, scoring='accuracy')
 

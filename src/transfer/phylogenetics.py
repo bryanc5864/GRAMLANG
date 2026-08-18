@@ -7,16 +7,7 @@ from scipy.spatial.distance import squareform
 
 
 def build_grammar_phylogeny(transfer_df: pd.DataFrame, species_list: list) -> dict:
-    """
-    Build a grammar similarity tree from the transfer matrix.
-
-    Args:
-        transfer_df: Transfer matrix from compute_transfer_matrix
-        species_list: List of species names
-
-    Returns:
-        Dict with distance matrix, linkage matrix
-    """
+    """Grammar similarity tree from a transfer matrix. Returns distances and linkage."""
     n = len(species_list)
     dist_matrix = np.zeros((n, n))
 
@@ -40,14 +31,14 @@ def build_grammar_phylogeny(transfer_df: pd.DataFrame, species_list: list) -> di
 
                 dist_matrix[i, j] = 1 - mean_transfer
 
-    # Symmetrize
+    # symmetrize
     dist_matrix = (dist_matrix + dist_matrix.T) / 2
     np.fill_diagonal(dist_matrix, 0)
 
-    # Ensure valid distance matrix
+    # keep it a valid distance matrix
     dist_matrix = np.clip(dist_matrix, 0, 2)
 
-    # UPGMA clustering
+    # UPGMA
     condensed = squareform(dist_matrix)
     linkage_matrix = linkage(condensed, method='average')
 

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Generate comprehensive figures for Billboard Model confirmation.
-"""
+"""Figures for the billboard-model confirmation runs."""
 
 import os
 import sys
@@ -33,15 +31,15 @@ DATASET_LABELS = {
 }
 
 COLORS = {
-    'billboard': '#2ecc71',  # Green
-    'soft': '#f1c40f',       # Yellow
-    'moderate': '#e67e22',   # Orange
-    'strong': '#e74c3c'      # Red
+    'billboard': '#2ecc71',
+    'soft': '#f1c40f',
+    'moderate': '#e67e22',
+    'strong': '#e74c3c'
 }
 
 
 def load_classification_results():
-    """Load per-enhancer classification results."""
+    """Per-enhancer classification results."""
     results = {}
     for dataset in DATASETS:
         path = Path(f'results/confirmatory/{dataset}_enhancer_classification.json')
@@ -52,7 +50,7 @@ def load_classification_results():
 
 
 def load_pair_analysis_results():
-    """Load motif pair analysis results."""
+    """Motif pair analysis results."""
     results = {}
     for dataset in DATASETS:
         path = Path(f'results/confirmatory/{dataset}_motif_pair_analysis.json')
@@ -63,17 +61,17 @@ def load_pair_analysis_results():
 
 
 def load_v3_results():
-    """Load existing v3 experiment results."""
+    """Whatever v3 left on disk."""
     results = {}
 
-    # Factorial decomposition
+    # factorial decomposition
     factorial_path = Path('results/v3/factorial_decomposition')
     if factorial_path.exists():
         for f in factorial_path.glob('*.json'):
             with open(f) as file:
                 results[f'factorial_{f.stem}'] = json.load(file)
 
-    # Spacer ablation
+    # spacer ablation
     spacer_path = Path('results/v3/spacer_ablation/spacer_ablation_summary.json')
     if spacer_path.exists():
         with open(spacer_path) as f:
@@ -90,7 +88,7 @@ def load_v3_results():
 
 
 def fig1_enhancer_classification_pie(classification_results):
-    """Pie chart showing enhancer classification distribution."""
+    """Pie of enhancer classes per dataset."""
     fig, axes = plt.subplots(1, len(classification_results), figsize=(4*len(classification_results), 4))
 
     if len(classification_results) == 1:
@@ -124,7 +122,7 @@ def fig1_enhancer_classification_pie(classification_results):
 
 
 def fig2_classification_stacked_bar(classification_results):
-    """Stacked bar chart comparing classification across datasets."""
+    """Classification stacked across datasets."""
     fig, ax = plt.subplots(figsize=(10, 6))
 
     datasets = list(classification_results.keys())
@@ -132,14 +130,12 @@ def fig2_classification_stacked_bar(classification_results):
 
     categories = ['billboard', 'soft', 'moderate', 'strong']
 
-    # Prepare data
     data = {cat: [] for cat in categories}
     for dataset in datasets:
         pcts = classification_results[dataset].get('percentages', {})
         for cat in categories:
             data[cat].append(pcts.get(cat, 0))
 
-    # Plot stacked bar
     x = np.arange(n_datasets)
     bottom = np.zeros(n_datasets)
 
@@ -156,7 +152,6 @@ def fig2_classification_stacked_bar(classification_results):
     ax.legend(loc='upper right')
     ax.set_ylim(0, 105)
 
-    # Add billboard percentage annotation
     for i, dataset in enumerate(datasets):
         bb_pct = classification_results[dataset].get('percentages', {}).get('billboard', 0)
         ax.annotate(f'{bb_pct:.0f}%', xy=(i, bb_pct/2), ha='center', va='center',
@@ -170,7 +165,7 @@ def fig2_classification_stacked_bar(classification_results):
 
 
 def fig3_gsi_distribution(classification_results):
-    """Histogram of GSI values showing most are low."""
+    """GSI histograms."""
     fig, axes = plt.subplots(1, len(classification_results), figsize=(4*len(classification_results), 4))
 
     if len(classification_results) == 1:
@@ -199,14 +194,13 @@ def fig3_gsi_distribution(classification_results):
 
 
 def fig4_motif_pair_hotspots(pair_results):
-    """Show hotspot vs inert motif pairs."""
+    """Hotspot vs inert motif pairs."""
     if not pair_results:
         print("No pair results available")
         return
 
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-    # Combine all datasets
     all_hotspots = []
     all_inert = []
 
@@ -224,7 +218,7 @@ def fig4_motif_pair_hotspots(pair_results):
                 'dataset': dataset
             })
 
-    # Left: Hotspot pairs
+    # left: hotspots
     ax = axes[0]
     if all_hotspots:
         hotspot_df = pd.DataFrame(all_hotspots).sort_values('mean_gsi', ascending=False).head(15)
@@ -236,7 +230,7 @@ def fig4_motif_pair_hotspots(pair_results):
         ax.set_title('Grammar Hotspot Pairs (Top 5%)')
         ax.invert_yaxis()
 
-    # Right: Inert pairs
+    # right: inert pairs
     ax = axes[1]
     if all_inert:
         inert_df = pd.DataFrame(all_inert).sort_values('mean_gsi', ascending=True).head(15)
@@ -257,13 +251,12 @@ def fig4_motif_pair_hotspots(pair_results):
 
 
 def fig5_evidence_summary(classification_results, v3_results):
-    """Summary figure showing all evidence for billboard model."""
+    """Everything-on-one-page summary panel."""
     fig = plt.figure(figsize=(14, 10))
 
-    # Create grid
     gs = fig.add_gridspec(2, 3, hspace=0.3, wspace=0.3)
 
-    # Panel A: Classification summary
+    # panel A: classification
     ax1 = fig.add_subplot(gs[0, 0])
     if classification_results:
         datasets = list(classification_results.keys())
@@ -277,14 +270,13 @@ def fig5_evidence_summary(classification_results, v3_results):
         ax1.axhline(y=80, color='gray', linestyle='--', alpha=0.5)
         ax1.set_ylim(0, 100)
 
-    # Panel B: Spacer vs Grammar effect (from v3)
+    # panel B: perturbation effects, from v3
     ax2 = fig.add_subplot(gs[0, 1])
     spacer_data = v3_results.get('spacer_ablation', {})
     if spacer_data:
         perturbations = ['motif_only', 'dinuc_shuffle', 'gc_shift', 'random_replace']
         effects = []
         for p in perturbations:
-            # Get mean effect across datasets
             vals = []
             for dataset_results in spacer_data.get('per_dataset', {}).values():
                 if p in dataset_results:
@@ -298,7 +290,7 @@ def fig5_evidence_summary(classification_results, v3_results):
         ax2.set_ylabel('Mean Effect Size')
         ax2.set_title('B. Perturbation Effects')
 
-    # Panel C: Key numbers
+    # panel C: key numbers
     ax3 = fig.add_subplot(gs[0, 2])
     ax3.axis('off')
 
@@ -316,7 +308,7 @@ def fig5_evidence_summary(classification_results, v3_results):
 
     ax3.set_title('C. Key Metrics')
 
-    # Panel D: Conceptual summary
+    # panel D: text summary
     ax4 = fig.add_subplot(gs[1, :])
     ax4.axis('off')
 

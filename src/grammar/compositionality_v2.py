@@ -1,9 +1,8 @@
 """
-Redesigned Compositionality Test (enhancer-specific ANOVA).
+Enhancer-specific compositionality test.
 
-Instead of applying averaged rules across enhancers, this tests
-compositionality within each enhancer: do pairwise perturbation effects
-predict combined perturbation effects for that specific enhancer?
+Instead of applying averaged rules across enhancers, ask inside each one
+whether pairwise perturbation effects predict the combined effect.
 """
 
 import numpy as np
@@ -25,20 +24,13 @@ def run_enhancer_specific_compositionality(
     seed: int = 42,
 ) -> pd.DataFrame:
     """
-    Enhancer-specific compositionality test.
-
-    For each enhancer with k >= 3 motifs:
-    1. Measure effect of perturbing each motif pair individually
-    2. Measure effect of perturbing pairs simultaneously
-    3. Interaction term = combined - sum of individual effects
-    4. Compositionality = how well sum predicts combined
-
-    This is a factorial design testing additivity of grammar effects.
+    For each enhancer with k >= 3 motifs: perturb every pair alone, then
+    perturb them together, and see whether the sum of the singles predicts the
+    combination. Interaction = combined - sum of individual effects.
     """
     rng = np.random.default_rng(seed)
     results = []
 
-    # Filter to sequences with enough motifs
     seq_counts = motif_hits.groupby('seq_id').size()
     eligible = seq_counts[seq_counts >= min_motifs].index
     eligible_df = dataset[dataset['seq_id'].isin(eligible)]
@@ -56,23 +48,21 @@ def run_enhancer_specific_compositionality(
         if len(hits) < 3:
             continue
 
-        # Get original prediction
         orig_pred = model.predict_expression([seq], cell_type=cell_type)[0]
 
-        # Select motif pairs to test (up to 5 pairs)
+        # up to 5 pairs
         motif_indices = list(range(min(len(hits), 8)))
         pair_indices = list(combinations(motif_indices, 2))
         if len(pair_indices) > 10:
             selected = rng.choice(len(pair_indices), 10, replace=False)
             pair_indices = [pair_indices[i] for i in selected]
 
-        # For each pair, measure individual perturbation effect
         pair_effects = {}
         for i, j in pair_indices:
             motif_i = hits.iloc[i]
             motif_j = hits.iloc[j]
 
-            # Perturb pair (i,j): swap their relative arrangement
+            # swap the pair's relative arrangement
             perturbed_seqs = []
             for _ in range(n_perturbations):
                 perturbed = _perturb_pair(seq, motif_i, motif_j, rng, seq_gc)
@@ -89,7 +79,7 @@ def run_enhancer_specific_compositionality(
                 'effect': float(preds.mean() - orig_pred),
             }
 
-        # Now test higher-order: perturb triplets simultaneously
+        # higher order: perturb triplets at once
         if len(pair_effects) < 3:
             continue
 
@@ -99,7 +89,6 @@ def run_enhancer_specific_compositionality(
             triplet_indices = [triplet_indices[i] for i in selected]
 
         for i, j, k in triplet_indices:
-            # Combined perturbation of all three
             combined_seqs = []
             for _ in range(n_perturbations):
                 perturbed = _perturb_triplet(
@@ -114,7 +103,6 @@ def run_enhancer_specific_compositionality(
             combined_preds = model.predict_expression(combined_seqs, cell_type=cell_type)
             combined_effect = float(combined_preds.mean() - orig_pred)
 
-            # Sum of pairwise effects
             pairwise_sum = 0
             n_pairs_found = 0
             for pi, pj in [(i, j), (i, k), (j, k)]:
@@ -126,10 +114,9 @@ def run_enhancer_specific_compositionality(
             if n_pairs_found < 2:
                 continue
 
-            # Interaction term
             interaction = combined_effect - pairwise_sum
 
-            # Compositionality score: 1 - |interaction| / max(|combined|, epsilon)
+            # compositionality = 1 - |interaction| / max(|combined|, eps)
             compositionality = 1 - abs(interaction) / max(abs(combined_effect), 1e-6)
             compositionality = max(min(compositionality, 1.0), 0.0)
 
@@ -184,20 +171,17 @@ def _perturb_pair(seq, motif_a, motif_b, rng, gc):
         if not seq_a or not seq_b:
             return None
 
-        # Random perturbation: change spacing by ±1-10bp, possibly flip orientation
+        # jitter spacing by 1-10bp, maybe flip an orientation
         new_spacing = max(2, abs(start_b - end_a) + rng.integers(-10, 11))
 
-        # Possibly flip one motif
         if rng.random() < 0.5:
             seq_a = reverse_complement(seq_a)
         if rng.random() < 0.5:
             seq_b = reverse_complement(seq_b)
 
-        # Rebuild the region
         if start_a < start_b:
             spacer = generate_neutral_spacer(new_spacing, gc=gc, rng=rng)
             new_region = seq_a + spacer + seq_b
-            # Replace the region in the original sequence
             result = seq[:start_a] + new_region
             remainder_len = len(seq) - len(result)
             if remainder_len > 0:
@@ -206,7 +190,7 @@ def _perturb_pair(seq, motif_a, motif_b, rng, gc):
                 result = result[:len(seq)]
             return result
         else:
-            return None  # Skip reversed pairs
+            return None  # skip reversed pairs
     except Exception:
         return None
 
@@ -227,19 +211,15 @@ def _perturb_triplet(seq, motif_a, motif_b, motif_c, rng, gc):
         if any(not s for s in seqs):
             return None
 
-        # Shuffle the order
         order = list(range(3))
         rng.shuffle(order)
 
-        # Random spacings
         spacings = [max(2, rng.integers(2, 30)) for _ in range(2)]
 
-        # Possibly flip orientations
         for i in range(3):
             if rng.random() < 0.5:
                 seqs[order[i]] = reverse_complement(seqs[order[i]])
 
-        # Build new arrangement
         start_pos = int(motifs[0][0]['start'])
         spacer1 = generate_neutral_spacer(spacings[0], gc=gc, rng=rng)
         spacer2 = generate_neutral_spacer(spacings[1], gc=gc, rng=rng)

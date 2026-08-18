@@ -1,13 +1,21 @@
-# Large data files
+# raw / re-downloadable data
 data/raw/
+data/mpra/
+data/genome/
 data/processed/
 data/embeddings_cache/
-data/mpra/
 
-# Tools (MEME Suite binary)
+# tools: MEME suite install and the nested PARM checkout
 tools/
 
-# Python
+# model checkpoints and cached embeddings
+results/sfgn/*.pt
+results/rebuttal/heads/
+results/rebuttal/token_embeddings/
+*.ckpt
+*.pth
+
+# python
 __pycache__/
 *.pyc
 *.pyo
@@ -15,9 +23,16 @@ __pycache__/
 .eggs/
 dist/
 build/
+.pylibs/
 
-# Jupyter
+# node
+node_modules/
+
+# jupyter
 .ipynb_checkpoints/
+
+# logs
+*.log
 
 # OS
 .DS_Store
@@ -36,8 +51,13 @@ paper/*.log
 paper/*.fls
 paper/*.fdb_latexmk
 paper/*.synctex.gz
+manuscript/**/*.aux
+manuscript/**/*.bbl
+manuscript/**/*.blg
+manuscript/**/*.out
+manuscript/**/*.fls
+manuscript/**/*.fdb_latexmk
+manuscript/**/*.synctex.gz
 
-# Temp
+# temp
 *.tmp
-*.log
-results/sfgn/*.pt

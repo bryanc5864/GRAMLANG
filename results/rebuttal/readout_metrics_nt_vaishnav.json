@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.5035724639892578,
+    "test_r": 0.5242694616317749,
+    "test_rho": 0.5649718013579348,
+    "test_r2": 0.27412575483322144,
+    "n_params": 3073,
+    "perm_invariant": true,
+    "model": "nt",
+    "dataset": "vaishnav"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.5358102321624756,
+    "test_r": 0.5556237697601318,
+    "test_rho": 0.5720680925013922,
+    "test_r2": 0.3070392608642578,
+    "n_params": 297473,
+    "perm_invariant": true,
+    "model": "nt",
+    "dataset": "vaishnav"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.5248826742172241,
+    "test_r": 0.536096453666687,
+    "test_rho": 0.5643039305562393,
+    "test_r2": 0.2799863815307617,
+    "n_params": 330754,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "vaishnav"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.5507876873016357,
+    "test_r": 0.5331039428710938,
+    "test_rho": 0.5621972333730637,
+    "test_r2": -0.27313387393951416,
+    "n_params": 827649,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "vaishnav"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.5446740388870239,
+    "test_r": 0.5274393558502197,
+    "test_rho": 0.552735763599133,
+    "test_r2": 0.26347124576568604,
+    "n_params": 793281,
+    "perm_invariant": false,
+    "model": "nt",
+    "dataset": "vaishnav"
+  }
+]

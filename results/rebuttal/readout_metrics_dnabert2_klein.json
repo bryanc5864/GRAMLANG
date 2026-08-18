@@ -1,0 +1,57 @@
+[
+  {
+    "head": "mean_linear",
+    "val_r": 0.3356144428253174,
+    "test_r": 0.2536822557449341,
+    "test_rho": 0.2318886860875351,
+    "test_r2": 0.02359992265701294,
+    "n_params": 2305,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "klein"
+  },
+  {
+    "head": "mean_mlp",
+    "val_r": 0.3510580062866211,
+    "test_r": 0.2712738513946533,
+    "test_rho": 0.2590589849779958,
+    "test_r2": 0.040063321590423584,
+    "n_params": 231425,
+    "perm_invariant": true,
+    "model": "dnabert2",
+    "dataset": "klein"
+  },
+  {
+    "head": "attn_pos",
+    "val_r": 0.33716896176338196,
+    "test_r": 0.23275485634803772,
+    "test_rho": 0.21517275971388353,
+    "test_r2": 0.028283357620239258,
+    "n_params": 264706,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "klein"
+  },
+  {
+    "head": "cnn1d",
+    "val_r": 0.3810281753540039,
+    "test_r": 0.2634018063545227,
+    "test_rho": 0.23740071342329364,
+    "test_r2": -0.0692521333694458,
+    "n_params": 777985,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "klein"
+  },
+  {
+    "head": "transformer",
+    "val_r": 0.3506583571434021,
+    "test_r": 0.29353588819503784,
+    "test_rho": 0.29168611293330077,
+    "test_r2": -0.006801128387451172,
+    "n_params": 743617,
+    "perm_invariant": false,
+    "model": "dnabert2",
+    "dataset": "klein"
+  }
+]

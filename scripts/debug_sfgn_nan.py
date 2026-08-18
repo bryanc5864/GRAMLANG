@@ -74,10 +74,9 @@ def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f"Using device: {device}")
 
-    # Load data
     df, motif_annotations = load_dataset('agarwal')
 
-    # Sample a small batch
+    # small batch is enough
     indices = [0, 1, 2, 3]
     sequences = [df.iloc[i]['sequence'] for i in indices]
     expressions = torch.tensor([df.iloc[i]['expression'] for i in indices], dtype=torch.float32).to(device)
@@ -87,13 +86,12 @@ def main():
     for i, (seq, m) in enumerate(zip(sequences, motifs)):
         print(f"  Seq {i}: len={len(seq)}, n_motifs={len(m)}")
 
-    # Create model
     config = SFGNConfig()
     model = SFGN(config, device=device)
 
     print(f"\n--- Forward pass ---")
 
-    # Manual forward with debug
+    # step through the forward pass by hand
     print("\n1. Motif encoding...")
     batch_size = len(sequences)
     motif_data = []
@@ -139,7 +137,7 @@ def main():
     if problem:
         print("\n  [!] Grammar module output has issues. Debugging internals...")
 
-        # Debug grammar module internals
+        # inside the grammar module
         x = model.grammar_module.input_proj(padded_embeddings)
         check_tensor("  after input_proj", x)
 
@@ -197,7 +195,6 @@ def main():
     print(f"\n9. Backward pass...")
     loss.backward()
 
-    # Check gradients
     print("\n10. Gradient check...")
     for name, param in model.named_parameters():
         if param.grad is not None:
@@ -225,7 +222,7 @@ def main():
 
     loss2.backward()
 
-    # Check gradients again
+    # gradients again
     for name, param in model.named_parameters():
         if param.grad is not None:
             has_nan = torch.isnan(param.grad).any().item()

@@ -1,0 +1,111 @@
+{
+  "n_triples": 7650,
+  "reproduction": {
+    "stored_p_matches_normal_two_sided": true,
+    "n_nominal_p_lt_0.05": 635,
+    "frac_nominal": 0.08300653594771241,
+    "n_survive_bh_q0.05": 9,
+    "frac_survive_pct": 0.1176470588235294,
+    "storey_pi0": {
+      "0.3": 0.927544351073763,
+      "0.4": 0.9176470588235294,
+      "0.5": 0.9056209150326797,
+      "0.6": 0.8944444444444444,
+      "0.7": 0.9167755991285402
+    },
+    "pi0_lambda0.5_ci95": [
+      0.8831372549019608,
+      0.9270653594771241
+    ]
+  },
+  "survivors": {
+    "n": 9,
+    "n_with_p_exactly_zero": 1,
+    "min_abs_z": 4.048430665697358,
+    "max_abs_z": 8.37741007694698,
+    "by_pair": "{('agarwal', 'dnabert2'): 3, ('agarwal', 'enformer'): 1, ('agarwal', 'hyenadna'): 1, ('jores', 'dnabert2'): 1, ('klein', 'enformer'): 2, ('klein', 'hyenadna'): 1}",
+    "bh_p_threshold": 5.882352941176471e-05,
+    "bh_z_threshold": 4.017481188885623,
+    "min_empirical_p_at_n100": 0.01,
+    "parametric_tail_required": true
+  },
+  "probe_viability_stratification": {
+    "probe_r_gt_0.0": {
+      "n": 7650,
+      "n_pairs": 18,
+      "n_survive": 9,
+      "frac_survive_pct": 0.1176470588235294,
+      "pi0": 0.9056209150326797,
+      "median_gsi": 0.1300918236374855,
+      "median_z": 0.749798546888909
+    },
+    "probe_r_gt_0.3": {
+      "n": 4500,
+      "n_pairs": 9,
+      "n_survive": 3,
+      "frac_survive_pct": 0.06666666666666667,
+      "pi0": 0.9004444444444445,
+      "median_gsi": 0.12029443681240082,
+      "median_z": 0.7576279841693838
+    },
+    "probe_r_gt_0.4": {
+      "n": 3000,
+      "n_pairs": 6,
+      "n_survive": 0,
+      "frac_survive_pct": 0.0,
+      "pi0": 0.9033333333333333,
+      "median_gsi": 0.09049499407410622,
+      "median_z": 0.7501813284856409
+    }
+  },
+  "sensitivity_vs_probe_quality": {
+    "spearman_probe_r_vs_median_z": [
+      0.09090909090909093,
+      0.7787253962454419
+    ],
+    "spearman_probe_r_vs_frac_nominal": [
+      0.13684294763538826,
+      0.6715058784279897
+    ],
+    "n_pairs": 12
+  },
+  "dataset_labels": {
+    "labels_in_census": [
+      "agarwal",
+      "de_almeida",
+      "jores",
+      "klein",
+      "vaishnav"
+    ],
+    "file_stems": [
+      "agarwal",
+      "inoue",
+      "jores",
+      "klein",
+      "vaishnav"
+    ],
+    "de_almeida_rows_matching_inoue_ids": 500,
+    "de_almeida_n_rows": 1550
+  },
+  "per_pair_counts": {
+    "agarwal__dnabert2": 500,
+    "agarwal__enformer": 50,
+    "agarwal__hyenadna": 500,
+    "agarwal__nt": 500,
+    "de_almeida__dnabert2": 500,
+    "de_almeida__enformer": 50,
+    "de_almeida__hyenadna": 500,
+    "de_almeida__nt": 500,
+    "jores__dnabert2": 500,
+    "jores__hyenadna": 500,
+    "jores__nt": 500,
+    "klein__dnabert2": 500,
+    "klein__enformer": 50,
+    "klein__hyenadna": 500,
+    "klein__nt": 500,
+    "vaishnav__dnabert2": 500,
+    "vaishnav__hyenadna": 500,
+    "vaishnav__nt": 500
+  },
+  "per_pair_counts_note": "7650 = 15 language-model pairs x 500 + 3 Enformer pairs x 50. The manuscript's '510 enhancers per (model,dataset) pair' is 7650/15 and does not correspond to any pair's actual size."
+}

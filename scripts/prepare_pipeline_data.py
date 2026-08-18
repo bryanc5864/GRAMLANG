@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-"""
-Prepare processed MPRA data for the full pipeline.
+"""Get the preprocessed MPRA parquets ready for the pipeline.
 
-1. Load preprocessed parquet files
-2. Subsample for pipeline (configurable)
-3. Run motif scanning (FIMO or fallback PWM)
-4. Add n_motifs, motif_density columns
-5. Save as {name}_processed.parquet + {name}_processed_motif_hits.parquet
+subsamples, runs motif scanning (FIMO, or the PWM fallback), adds n_motifs and
+motif_density, and writes {name}_processed.parquet plus
+{name}_processed_motif_hits.parquet.
 """
 
 import os
@@ -25,7 +22,7 @@ DATA_DIR = os.path.join(PROJECT_DIR, 'data')
 PROCESSED_DIR = os.path.join(DATA_DIR, 'processed')
 MOTIF_DIR = os.path.join(DATA_DIR, 'motifs')
 
-# Mapping from source files to pipeline names and motif databases
+# source file and motif db per dataset
 DATASET_CONFIG = {
     'vaishnav': {
         'source_file': 'vaishnav2022.parquet',
@@ -67,7 +64,7 @@ DATASET_CONFIG = {
 
 
 def prepare_dataset(name, config, max_motifs_per_db=200, batch_size=500):
-    """Prepare a single dataset for the pipeline."""
+    """Scan one dataset and write its processed parquet."""
     source = os.path.join(PROCESSED_DIR, config['source_file'])
     if not os.path.exists(source):
         print(f"  [{name}] Source file not found: {source}, skipping")
@@ -77,31 +74,25 @@ def prepare_dataset(name, config, max_motifs_per_db=200, batch_size=500):
     print(f"Preparing: {name}")
     print(f"{'='*60}")
 
-    # Load
     df = pd.read_parquet(source)
     print(f"  Loaded {len(df)} sequences from {config['source_file']}")
 
-    # Subsample
     if config['subsample'] and len(df) > config['subsample']:
         df = df.sample(config['subsample'], random_state=42).reset_index(drop=True)
         print(f"  Subsampled to {len(df)} sequences")
 
-    # Ensure seq_id column
     if 'seq_id' not in df.columns:
         df['seq_id'] = [f"{name}_{i}" for i in range(len(df))]
     df['seq_id'] = df['seq_id'].astype(str)
 
-    # Ensure sequence column
     if 'sequence' not in df.columns:
         raise ValueError(f"No 'sequence' column in {source}")
 
-    # Load motif database
     motif_db_path = os.path.join(MOTIF_DIR, config['motif_db'])
     if not os.path.exists(motif_db_path):
         print(f"  Motif database not found: {motif_db_path}")
         return False
 
-    # Count motifs in database
     n_motifs_in_db = 0
     with open(motif_db_path) as f:
         for line in f:
@@ -109,13 +100,12 @@ def prepare_dataset(name, config, max_motifs_per_db=200, batch_size=500):
                 n_motifs_in_db += 1
     print(f"  Motif database: {config['motif_db']} ({n_motifs_in_db} motifs)")
 
-    # Use a subset of motifs if database is very large
+    # huge databases get truncated, scanning all of JASPAR is too slow
     effective_db = motif_db_path
     if n_motifs_in_db > max_motifs_per_db:
         print(f"  Limiting to first {max_motifs_per_db} motifs for speed")
         effective_db = _subset_meme_file(motif_db_path, max_motifs_per_db)
 
-    # Run motif scanning in batches
     print(f"  Scanning motifs (score_fraction >= 0.65)...")
     scanner = MotifScanner(effective_db, p_threshold=1e-4, score_fraction=0.65)
 
@@ -143,7 +133,6 @@ def prepare_dataset(name, config, max_motifs_per_db=200, batch_size=500):
 
     print(f"  Total motif hits: {len(motif_hits)}")
 
-    # Add n_motifs and motif_density to dataset
     motif_counts = motif_hits.groupby('seq_id').size().reset_index(name='n_motifs')
     df = df.merge(motif_counts, on='seq_id', how='left')
     df['n_motifs'] = df['n_motifs'].fillna(0).astype(int)
@@ -155,7 +144,6 @@ def prepare_dataset(name, config, max_motifs_per_db=200, batch_size=500):
     print(f"    Mean motifs per sequence: {df['n_motifs'].mean():.1f}")
     print(f"    Max motifs per sequence: {df['n_motifs'].max()}")
 
-    # Save
     out_data = os.path.join(PROCESSED_DIR, f'{name}_processed.parquet')
     out_hits = os.path.join(PROCESSED_DIR, f'{name}_processed_motif_hits.parquet')
 
@@ -165,7 +153,7 @@ def prepare_dataset(name, config, max_motifs_per_db=200, batch_size=500):
     print(f"  Saved: {out_data}")
     print(f"  Saved: {out_hits}")
 
-    # Clean up temp file if created
+    # drop the temp meme file
     if effective_db != motif_db_path and os.path.exists(effective_db):
         os.unlink(effective_db)
 
@@ -173,7 +161,7 @@ def prepare_dataset(name, config, max_motifs_per_db=200, batch_size=500):
 
 
 def _subset_meme_file(meme_path, max_motifs):
-    """Create a temporary MEME file with only the first N motifs."""
+    """Temp MEME file holding only the first N motifs."""
     import tempfile
     out_path = tempfile.mktemp(suffix='.meme')
 
@@ -218,7 +206,7 @@ def main():
             prepared.append(name)
 
     print(f"\n{'='*60}")
-    print(f"PREPARATION SUMMARY")
+    print(f"preparation summary")
     print(f"{'='*60}")
     print(f"  Prepared: {prepared}")
     print(f"  Available for pipeline: {prepared}")

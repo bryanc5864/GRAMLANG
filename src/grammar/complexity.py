@@ -1,8 +1,8 @@
 """
-Formal grammar complexity classification on the Chomsky hierarchy.
+Where the regulatory grammar sits on the Chomsky hierarchy.
 
-Classifies regulatory grammar as regular, context-free, or context-sensitive
-based on how the compositionality gap grows with motif count.
+Regular, context-free or context-sensitive, judged by how the compositionality
+gap grows with motif count.
 """
 
 import numpy as np
@@ -16,19 +16,8 @@ def classify_grammar_complexity(
     gap_errors: np.ndarray = None,
 ) -> dict:
     """
-    Classify grammar complexity based on compositionality gap growth.
-
-    Regular (constant): gap = c
-    Context-free (linear): gap = a*k + b
-    Context-sensitive (exponential): gap = a*exp(b*k) + c
-
-    Args:
-        motif_counts: Array of motif counts (3, 4, 5, ...)
-        compositionality_gaps: Mean compositionality gap per count
-        gap_errors: Standard errors (optional)
-
-    Returns:
-        Dict with classification, confidence, fit results
+    Fit three growth laws to the compositionality gap and pick one by BIC:
+    constant (regular), linear (context-free), exponential (context-sensitive).
     """
     k = motif_counts.astype(float)
     g = compositionality_gaps.astype(float)
@@ -43,7 +32,7 @@ def classify_grammar_complexity(
 
     results = {}
 
-    # Constant fit (regular grammar)
+    # constant, regular
     c_mean = np.mean(g)
     ss_res_const = np.sum((g - c_mean) ** 2)
     results['constant'] = {
@@ -52,7 +41,7 @@ def classify_grammar_complexity(
         'n_params': 1
     }
 
-    # Linear fit (context-free)
+    # linear, context-free
     try:
         coeffs = np.polyfit(k, g, 1)
         g_pred = np.polyval(coeffs, k)
@@ -67,7 +56,7 @@ def classify_grammar_complexity(
     except Exception:
         results['linear'] = {'params': [0, 0], 'ss_res': float('inf'), 'n_params': 2}
 
-    # Exponential fit (context-sensitive)
+    # exponential, context-sensitive
     try:
         def exponential(x, a, b, c):
             return a * np.exp(b * x) + c
@@ -83,7 +72,7 @@ def classify_grammar_complexity(
     except Exception:
         results['exponential'] = {'params': [0, 0, 0], 'ss_res': float('inf'), 'n_params': 3}
 
-    # Model selection via BIC
+    # pick a model by BIC
     ss_total = np.sum((g - np.mean(g)) ** 2)
     bic = {}
     r_squared = {}
@@ -106,7 +95,7 @@ def classify_grammar_complexity(
         'exponential': 'context-sensitive'
     }
 
-    # Confidence from BIC difference
+    # confidence from the BIC gap
     bic_sorted = sorted(bic.values())
     if len(bic_sorted) >= 2 and bic_sorted[0] != float('inf'):
         bic_diff = bic_sorted[1] - bic_sorted[0]
@@ -114,12 +103,11 @@ def classify_grammar_complexity(
     else:
         confidence = 0.5
 
-    # Additional checks
-    # If gap is consistently near 0, grammar is minimal (billboard)
+    # gap pinned near 0 means minimal grammar (billboard)
     if np.mean(g) < 0.05:
         classification = 'minimal'
         note = 'Compositionality gap near zero — grammar is minimal'
-    # If gap is consistently near 1, grammar is maximal (no compositionality)
+    # gap pinned near 1 means maximal grammar, no compositionality
     elif np.mean(g) > 0.9:
         classification = 'context-sensitive'
         note = 'Compositionality gap near 1 — strongly non-compositional'

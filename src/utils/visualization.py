@@ -8,7 +8,7 @@ matplotlib.use('Agg')
 import seaborn as sns
 from typing import Optional, List, Dict
 
-# Set publication style
+# publication style
 plt.rcParams.update({
     'font.size': 12,
     'font.family': 'sans-serif',
@@ -42,7 +42,7 @@ def plot_gsi_distribution(gsi_df: pd.DataFrame, output_path: str,
     """Plot distribution of GSI across enhancers."""
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
 
-    # (A) Overall distribution
+    # (A) overall distribution
     ax = axes[0]
     for model in sorted(gsi_df['model'].unique()):
         data = gsi_df[gsi_df['model'] == model]['gsi']

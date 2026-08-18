@@ -10,14 +10,8 @@ def compute_grammar_phase_diagram(
     bins_count: int = 8,
     bins_density: int = 8,
 ) -> dict:
-    """
-    Map the 2D phase diagram of grammar:
-    (motif_count, motif_density) -> mean GSI.
-
-    Returns:
-        Dict with phase grid and critical thresholds
-    """
-    # Use n_motifs/motif_density from GSI results if available, else merge from dataset
+    """(motif_count, motif_density) -> mean GSI, plus critical thresholds."""
+    # prefer n_motifs/motif_density from the GSI results, else merge from dataset
     if 'n_motifs' in gsi_results.columns and 'motif_density' in gsi_results.columns:
         merged = gsi_results
     else:
@@ -26,7 +20,7 @@ def compute_grammar_phase_diagram(
             on='seq_id', how='left'
         )
 
-    # Average GSI across models
+    # average GSI across models
     enhancer_gsi = merged.groupby('seq_id').agg(
         mean_gsi=('gsi', 'mean'),
         n_motifs=('n_motifs', 'first'),
@@ -62,7 +56,7 @@ def compute_grammar_phase_diagram(
                 phase_grid[i, j] = enhancer_gsi.loc[mask, 'mean_gsi'].mean()
                 count_grid[i, j] = mask.sum()
 
-    # Find critical thresholds
+    # critical thresholds
     critical_count = None
     for i in range(bins_count):
         if np.max(phase_grid[i, :]) > 0.1:

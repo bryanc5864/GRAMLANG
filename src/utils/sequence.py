@@ -4,7 +4,7 @@ import numpy as np
 from typing import List, Optional
 
 
-# Complement mapping
+# complement map
 _COMPLEMENT = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N',
                'a': 't', 't': 'a', 'c': 'g', 'g': 'c', 'n': 'n'}
 
@@ -15,15 +15,7 @@ def reverse_complement(seq: str) -> str:
 
 
 def one_hot_encode(seq: str) -> np.ndarray:
-    """
-    One-hot encode DNA sequence.
-
-    Args:
-        seq: DNA string (ACGT/N)
-
-    Returns:
-        np.ndarray of shape (len(seq), 4) with ACGT encoding
-    """
+    """One-hot encode DNA (ACGT/N) to (len(seq), 4)."""
     mapping = {
         'A': [1, 0, 0, 0], 'C': [0, 1, 0, 0],
         'G': [0, 0, 1, 0], 'T': [0, 0, 0, 1],
@@ -59,15 +51,8 @@ def dinucleotide_frequencies(seq: str) -> dict:
 
 def dinucleotide_shuffle(seq: str, rng: Optional[np.random.Generator] = None) -> str:
     """
-    Shuffle sequence preserving dinucleotide frequencies.
-    Uses the Altschul-Erickson algorithm via an Euler path approach.
-
-    Args:
-        seq: DNA sequence to shuffle
-        rng: Optional random number generator
-
-    Returns:
-        Shuffled sequence with same dinucleotide composition
+    Shuffle preserving dinucleotide frequencies, Altschul-Erickson via an
+    Euler path.
     """
     if rng is None:
         rng = np.random.default_rng()
@@ -76,17 +61,17 @@ def dinucleotide_shuffle(seq: str, rng: Optional[np.random.Generator] = None) ->
     if len(seq) <= 2:
         return seq
 
-    # Build the dinucleotide graph
+    # dinucleotide graph
     from collections import defaultdict
     edges = defaultdict(list)
     for i in range(len(seq) - 1):
         edges[seq[i]].append(seq[i + 1])
 
-    # Shuffle edge lists
+    # shuffle the edge lists
     for key in edges:
         rng.shuffle(edges[key])
 
-    # Construct Euler path
+    # euler path
     result = [seq[0]]
     idx = defaultdict(int)
     current = seq[0]
@@ -98,7 +83,7 @@ def dinucleotide_shuffle(seq: str, rng: Optional[np.random.Generator] = None) ->
             result.append(nxt)
             current = nxt
         else:
-            # Fallback
+            # fallback
             result.append(rng.choice(['A', 'C', 'G', 'T']))
             current = result[-1]
 
@@ -123,13 +108,11 @@ def generate_neutral_spacer(length: int, gc: float = 0.5,
 
 def pad_sequence(seq: str, target_len: int, seed: Optional[int] = None) -> str:
     """
-    Pad a short sequence to target length with deterministic flanking DNA.
-
-    Centers the sequence and adds random DNA on both sides.
-    Uses seed based on sequence hash for reproducibility.
+    Pad a short sequence to target length with flanking DNA, centred. The
+    flanks are seeded off the sequence hash so padding is reproducible.
     """
     if len(seq) >= target_len:
-        # Center-crop if too long
+        # center-crop if too long
         start = (len(seq) - target_len) // 2
         return seq[start:start + target_len]
 
@@ -157,7 +140,7 @@ def random_partition(total: int, n_parts: int, min_len: int = 1,
         rng = np.random.default_rng()
 
     if total < n_parts * min_len:
-        # Not enough — distribute evenly
+        # not enough room, distribute evenly
         base = total // n_parts
         parts = [base] * n_parts
         remainder = total - base * n_parts
@@ -165,24 +148,23 @@ def random_partition(total: int, n_parts: int, min_len: int = 1,
             parts[i] += 1
         return parts
 
-    # Stars and bars: place n_parts-1 dividers in total-n_parts*min_len slots
+    # stars and bars: n_parts-1 dividers over total - n_parts*min_len slots
     remainder = total - n_parts * min_len
     if remainder == 0:
         return [min_len] * n_parts
 
-    # Generate random breaks
     breaks = sorted(rng.choice(range(1, remainder + n_parts), size=n_parts - 1, replace=False))
     breaks = [0] + list(breaks) + [remainder + n_parts - 1]
     parts = [breaks[i+1] - breaks[i] for i in range(n_parts)]
 
-    # Add minimum
+    # add the minimum back
     parts = [p + min_len - 1 for p in parts]
 
-    # Fix sum
+    # fix the sum
     diff = total - sum(parts)
     parts[-1] += diff
 
-    # Ensure no negatives
+    # no negatives
     for i in range(len(parts)):
         if parts[i] < min_len:
             deficit = min_len - parts[i]

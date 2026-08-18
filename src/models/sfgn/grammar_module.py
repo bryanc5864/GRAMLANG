@@ -1,11 +1,7 @@
-"""
-Grammar Module: Learn syntactic relationships between motifs.
+"""Syntactic relationships between motifs.
 
-Uses pairwise attention over motif embeddings to capture:
-- Spacing effects (distance between motifs)
-- Ordering effects (which motif comes first)
-- Orientation effects (strand of each motif)
-- Combinatorial effects (which motifs co-occur)
+pairwise attention over motif embeddings, biased by spacing, order and strand,
+so the module can pick up combinatorial effects.
 """
 
 import torch
@@ -16,16 +12,12 @@ from typing import List, Dict, Optional, Tuple
 
 
 class PositionalEncoding(nn.Module):
-    """
-    Learnable positional encoding for motif positions.
-    Encodes both absolute position and relative distances.
-    """
+    """Motif position encoding: fixed sinusoidal plus a learnable embedding."""
 
     def __init__(self, d_model: int, max_len: int = 512, dropout: float = 0.1):
         super().__init__()
         self.dropout = nn.Dropout(p=dropout)
 
-        # Sinusoidal encoding (fixed)
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
         div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
@@ -33,21 +25,12 @@ class PositionalEncoding(nn.Module):
         pe[:, 1::2] = torch.cos(position * div_term)
         self.register_buffer('pe', pe)
 
-        # Learnable position embedding
         self.pos_embed = nn.Embedding(max_len, d_model)
 
     def forward(self, positions: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            positions: (batch, n_motifs) integer positions (0-511)
-
-        Returns:
-            pos_encoding: (batch, n_motifs, d_model)
-        """
-        # Clamp positions
+        """(batch, n_motifs) positions 0-511 -> (batch, n_motifs, d_model)."""
         positions = positions.clamp(0, 511)
 
-        # Combine fixed sinusoidal + learnable
         fixed = self.pe[positions]  # (batch, n_motifs, d_model)
         learned = self.pos_embed(positions)  # (batch, n_motifs, d_model)
 
@@ -55,71 +38,49 @@ class PositionalEncoding(nn.Module):
 
 
 class StrandEncoding(nn.Module):
-    """Encode motif strand orientation."""
+    """Motif strand orientation."""
 
     def __init__(self, d_model: int):
         super().__init__()
         self.strand_embed = nn.Embedding(2, d_model)  # 0 = '+', 1 = '-'
 
     def forward(self, strands: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            strands: (batch, n_motifs) with values 0 or 1
-
-        Returns:
-            strand_encoding: (batch, n_motifs, d_model)
-        """
+        """(batch, n_motifs) of 0/1 -> (batch, n_motifs, d_model)."""
         return self.strand_embed(strands)
 
 
 class PairwiseDistance(nn.Module):
-    """
-    Compute pairwise distance features between motifs.
-    """
+    """Pairwise motif distance features."""
 
     def __init__(self, d_model: int, n_distance_bins: int = 32):
         super().__init__()
         self.n_bins = n_distance_bins
         self.distance_embed = nn.Embedding(n_distance_bins, d_model)
 
-        # Bin edges: log-spaced from 1 to 1000bp
+        # log-spaced bins, 1 to 1000 bp
         self.register_buffer(
             'bin_edges',
-            torch.logspace(0, 3, n_distance_bins - 1)  # 1 to 1000
+            torch.logspace(0, 3, n_distance_bins - 1)
         )
 
     def _discretize_distance(self, distances: torch.Tensor) -> torch.Tensor:
-        """Bin continuous distances into discrete buckets."""
+        """Distances -> bucket indices."""
         bins = torch.bucketize(distances.abs(), self.bin_edges)
         return bins.clamp(0, self.n_bins - 1)
 
     def forward(self, positions: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            positions: (batch, n_motifs) motif start positions
-
-        Returns:
-            distance_features: (batch, n_motifs, n_motifs, d_model)
-        """
-        # Pairwise distances
+        """Motif starts -> (batch, n_motifs, n_motifs, d_model)."""
         pos_i = positions.unsqueeze(-1)  # (batch, n_motifs, 1)
         pos_j = positions.unsqueeze(-2)  # (batch, 1, n_motifs)
         distances = pos_j - pos_i  # (batch, n_motifs, n_motifs)
 
-        # Discretize and embed
         bins = self._discretize_distance(distances)
         return self.distance_embed(bins)
 
 
 class GrammarAttention(nn.Module):
-    """
-    Multi-head attention over motifs with grammar-aware biases.
-
-    Incorporates:
-    - Pairwise distance information
-    - Relative position (before/after)
-    - Strand compatibility
-    """
+    """Multi-head attention over motifs, biased by pairwise distance and by
+    whether one motif comes before or after the other."""
 
     def __init__(
         self,
@@ -133,13 +94,11 @@ class GrammarAttention(nn.Module):
         self.n_heads = n_heads
         self.d_head = d_model // n_heads
 
-        # QKV projections
         self.q_proj = nn.Linear(d_model, d_model)
         self.k_proj = nn.Linear(d_model, d_model)
         self.v_proj = nn.Linear(d_model, d_model)
         self.out_proj = nn.Linear(d_model, d_model)
 
-        # Distance bias
         self.distance_bias = nn.Embedding(n_distance_bins, n_heads)
         self.register_buffer(
             'bin_edges',
@@ -147,7 +106,7 @@ class GrammarAttention(nn.Module):
         )
         self.n_distance_bins = n_distance_bins
 
-        # Order bias (before vs after)
+        # before/after
         self.order_bias = nn.Parameter(torch.zeros(n_heads))
 
         self.dropout = nn.Dropout(dropout)
@@ -159,30 +118,19 @@ class GrammarAttention(nn.Module):
         positions: torch.Tensor,
         mask: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
-        """
-        Args:
-            x: (batch, n_motifs, d_model) motif embeddings
-            positions: (batch, n_motifs) motif positions
-            mask: (batch, n_motifs) attention mask
-
-        Returns:
-            output: (batch, n_motifs, d_model)
-        """
+        """Motif embeddings + positions (+ mask) -> (batch, n_motifs, d_model)."""
         batch_size, n_motifs, _ = x.shape
 
-        # QKV
         q = self.q_proj(x).view(batch_size, n_motifs, self.n_heads, self.d_head)
         k = self.k_proj(x).view(batch_size, n_motifs, self.n_heads, self.d_head)
         v = self.v_proj(x).view(batch_size, n_motifs, self.n_heads, self.d_head)
 
-        # Attention scores
         q = q.transpose(1, 2)  # (batch, heads, n_motifs, d_head)
         k = k.transpose(1, 2)
         v = v.transpose(1, 2)
 
         scores = torch.matmul(q, k.transpose(-2, -1)) / self.scale  # (batch, heads, n_motifs, n_motifs)
 
-        # Add distance bias
         pos_i = positions.unsqueeze(-1)
         pos_j = positions.unsqueeze(-2)
         distances = (pos_j - pos_i).abs()
@@ -191,23 +139,21 @@ class GrammarAttention(nn.Module):
         dist_bias = dist_bias.permute(0, 3, 1, 2)  # (batch, n_heads, n_motifs, n_motifs)
         scores = scores + dist_bias
 
-        # Add order bias (positive if j comes after i)
+        # positive when j comes after i
         order_sign = (pos_j > pos_i).float() - 0.5  # -0.5 or +0.5
         order_bias = order_sign.unsqueeze(1) * self.order_bias.view(1, -1, 1, 1)
         scores = scores + order_bias
 
         # Mask
         if mask is not None:
-            # Create 2D mask: (batch, 1, n_motifs, n_motifs)
-            # mask_2d[b, :, i, j] = 1 if both i and j are valid motifs
+            # 1 only where both i and j are real motifs
             mask_2d = mask.unsqueeze(1).unsqueeze(2) * mask.unsqueeze(1).unsqueeze(3)
-            # Use large negative instead of -inf to avoid NaN in softmax
+            # -1e9 rather than -inf, otherwise softmax gives NaN
             scores = scores.masked_fill(mask_2d == 0, -1e9)
 
-        # Softmax and apply
         attn = F.softmax(scores, dim=-1)
 
-        # Handle NaN from all-masked rows (replace with uniform or zero)
+        # rows that are fully masked still come out NaN
         attn = torch.nan_to_num(attn, nan=0.0)
 
         attn = self.dropout(attn)
@@ -215,7 +161,6 @@ class GrammarAttention(nn.Module):
         out = torch.matmul(attn, v)  # (batch, heads, n_motifs, d_head)
         out = out.transpose(1, 2).contiguous().view(batch_size, n_motifs, self.d_model)
 
-        # Zero out masked positions in output
         if mask is not None:
             out = out * mask.unsqueeze(-1)
 
@@ -223,14 +168,9 @@ class GrammarAttention(nn.Module):
 
 
 class GrammarModule(nn.Module):
-    """
-    Full grammar module: encodes motif arrangement into grammar representation.
-
-    Architecture:
-    1. Add positional and strand encodings to motif embeddings
-    2. Apply multiple layers of grammar attention
-    3. Pool to fixed-size grammar vector
-    """
+    """Motif arrangement -> grammar vector. position and strand encodings on
+    the motif embeddings, a few grammar-attention layers, then attention
+    pooling to a fixed size."""
 
     def __init__(
         self,
@@ -247,14 +187,11 @@ class GrammarModule(nn.Module):
         self.hidden_dim = hidden_dim
         self.output_dim = output_dim
 
-        # Input projection
         self.input_proj = nn.Linear(input_dim, hidden_dim)
 
-        # Positional and strand encodings
         self.pos_encoding = PositionalEncoding(hidden_dim, max_len=512, dropout=dropout)
         self.strand_encoding = StrandEncoding(hidden_dim)
 
-        # Grammar attention layers
         self.layers = nn.ModuleList([
             nn.ModuleDict({
                 'attention': GrammarAttention(hidden_dim, n_heads, dropout),
@@ -271,7 +208,6 @@ class GrammarModule(nn.Module):
             for _ in range(n_layers)
         ])
 
-        # Output projection
         self.output_proj = nn.Sequential(
             nn.Linear(hidden_dim, hidden_dim),
             nn.GELU(),
@@ -279,7 +215,6 @@ class GrammarModule(nn.Module):
             nn.Linear(hidden_dim, output_dim),
         )
 
-        # Pooling: attention-based
         self.pool_query = nn.Parameter(torch.randn(1, 1, hidden_dim))
         self.pool_attn = nn.MultiheadAttention(hidden_dim, n_heads, dropout=dropout, batch_first=True)
 
@@ -290,41 +225,27 @@ class GrammarModule(nn.Module):
         motif_strands: torch.Tensor,
         mask: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
-        """
-        Args:
-            motif_embeddings: (batch, n_motifs, input_dim)
-            motif_positions: (batch, n_motifs) positions in sequence (0-indexed)
-            motif_strands: (batch, n_motifs) strand (0='+', 1='-')
-            mask: (batch, n_motifs) valid motif mask
-
-        Returns:
-            grammar_vector: (batch, output_dim)
-        """
+        """Motif embeddings, 0-indexed positions and strands (0='+', 1='-')
+        -> (batch, output_dim) grammar vector."""
         batch_size, n_motifs, _ = motif_embeddings.shape
         device = motif_embeddings.device
 
-        # Handle edge case: no motifs at all
+        # nothing to attend over
         if n_motifs == 0 or (mask is not None and mask.sum() == 0):
             return torch.zeros(batch_size, self.output_dim, device=device)
 
-        # Project input
         x = self.input_proj(motif_embeddings)
 
-        # Add position and strand encodings
         pos_enc = self.pos_encoding(motif_positions)
         strand_enc = self.strand_encoding(motif_strands)
         x = x + pos_enc + strand_enc
 
-        # Apply grammar attention layers
         for layer in self.layers:
-            # Self-attention with residual
             attn_out = layer['attention'](layer['norm1'](x), motif_positions, mask)
             x = x + attn_out
 
-            # FFN with residual
             x = x + layer['ffn'](layer['norm2'](x))
 
-        # Pool to single vector via attention
         query = self.pool_query.expand(batch_size, -1, -1)
 
         if mask is not None:
@@ -335,10 +256,9 @@ class GrammarModule(nn.Module):
         pooled, _ = self.pool_attn(query, x, x, key_padding_mask=key_padding_mask)
         pooled = pooled.squeeze(1)  # (batch, hidden_dim)
 
-        # Handle potential NaN from all-masked sequences
+        # all-masked sequences pool to NaN
         pooled = torch.nan_to_num(pooled, nan=0.0)
 
-        # Project to output
         grammar_vector = self.output_proj(pooled)
 
         return grammar_vector

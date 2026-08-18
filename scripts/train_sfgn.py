@@ -67,12 +67,11 @@ def load_dataset(dataset_name: str, data_dir: str = 'data/processed'):
     df = pd.read_parquet(data_path)
     print(f"  {len(df)} sequences")
 
-    # Load motif hits
     if motif_path.exists():
         motif_df = pd.read_parquet(motif_path)
         print(f"  {len(motif_df)} motif hits")
 
-        # Group motifs by sequence
+        # group motifs by sequence
         motif_groups = motif_df.groupby('seq_id')
 
         motif_annotations = []
@@ -118,7 +117,6 @@ def evaluate(model, dataloader, device):
     all_preds = np.array(all_preds)
     all_targets = np.array(all_targets)
 
-    # Metrics
     mse = np.mean((all_preds - all_targets) ** 2)
     r, _ = pearsonr(all_preds, all_targets)
     rho, _ = spearmanr(all_preds, all_targets)
@@ -153,7 +151,7 @@ def train_epoch(model, dataloader, optimizer, device, epoch):
         output = model(sequences, motifs)
         loss, metrics = model.compute_loss(output, expressions)
 
-        # Skip NaN losses
+        # skip NaN losses
         if torch.isnan(loss) or torch.isinf(loss):
             nan_batches += 1
             pbar.set_postfix({'loss': 'NaN', 'skipped': nan_batches})
@@ -161,7 +159,7 @@ def train_epoch(model, dataloader, optimizer, device, epoch):
 
         loss.backward()
 
-        # Check for NaN gradients and skip if found
+        # skip the step if any gradient went NaN
         has_nan_grad = False
         for param in model.parameters():
             if param.grad is not None and (torch.isnan(param.grad).any() or torch.isinf(param.grad).any()):
@@ -170,11 +168,11 @@ def train_epoch(model, dataloader, optimizer, device, epoch):
 
         if has_nan_grad:
             nan_batches += 1
-            optimizer.zero_grad()  # Clear the bad gradients
+            optimizer.zero_grad()  # drop the bad gradients
             pbar.set_postfix({'loss': 'NaN grad', 'skipped': nan_batches})
             continue
 
-        # Aggressive gradient clipping
+        # clip hard, this thing loves to blow up
         torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
         optimizer.step()
 
@@ -212,7 +210,6 @@ def main():
     parser.add_argument('--seed', type=int, default=42, help='Random seed')
     args = parser.parse_args()
 
-    # Setup
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
@@ -222,17 +219,15 @@ def main():
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load data
     df, motif_annotations = load_dataset(args.dataset)
 
-    # Subsample if requested
     if args.max_samples and len(df) > args.max_samples:
         indices = np.random.choice(len(df), args.max_samples, replace=False)
         df = df.iloc[indices].reset_index(drop=True)
         motif_annotations = [motif_annotations[i] for i in indices]
         print(f"Subsampled to {len(df)} sequences")
 
-    # Train/val split
+    # train/val split
     indices = list(range(len(df)))
     train_idx, val_idx = train_test_split(indices, test_size=0.2, random_state=args.seed)
 
@@ -258,28 +253,24 @@ def main():
 
     print(f"Train: {len(train_dataset)}, Val: {len(val_dataset)}")
 
-    # Create model
     config = SFGNConfig(
         orthogonality_weight=args.orthogonality_weight,
     )
     model = SFGN(config, device=device)
 
-    # Count parameters
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     total_params = sum(p.numel() for p in model.parameters())
     print(f"Parameters: {trainable_params:,} trainable / {total_params:,} total")
 
-    # Optimizer
     optimizer = optim.AdamW(
         [p for p in model.parameters() if p.requires_grad],
         lr=args.lr,
         weight_decay=0.01
     )
 
-    # Learning rate scheduler
+    # lr schedule
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
 
-    # Training loop
     best_val_r2 = -float('inf')
     history = []
 
@@ -303,7 +294,7 @@ def main():
             'mean_beta': float(val_metrics['mean_beta']),
         })
 
-        # Save best model
+        # keep the best
         if val_metrics['r2'] > best_val_r2:
             best_val_r2 = val_metrics['r2']
             torch.save({
@@ -314,7 +305,7 @@ def main():
             }, output_dir / f'{args.dataset}_sfgn_best.pt')
             print(f"  Saved best model (R²={best_val_r2:.4f})")
 
-    # Save final model and history
+    # final model + history
     torch.save({
         'epoch': args.epochs,
         'model_state_dict': model.state_dict(),
@@ -324,9 +315,8 @@ def main():
     with open(output_dir / f'{args.dataset}_sfgn_history.json', 'w') as f:
         json.dump(history, f, indent=2)
 
-    # Final evaluation
     print("\n" + "=" * 60)
-    print("FINAL RESULTS")
+    print("final results")
     print("=" * 60)
     final_metrics = evaluate(model, val_loader, device)
     print(f"Validation R²: {final_metrics['r2']:.4f}")
@@ -334,7 +324,7 @@ def main():
     print(f"Mean α (grammar weight): {final_metrics['mean_alpha']:.3f}")
     print(f"Mean β (composition weight): {final_metrics['mean_beta']:.3f}")
 
-    # Save final metrics (convert numpy types to Python floats)
+    # json cannot take numpy scalars
     final_metrics_clean = {k: float(v) for k, v in final_metrics.items()}
     with open(output_dir / f'{args.dataset}_sfgn_metrics.json', 'w') as f:
         json.dump({

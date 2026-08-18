@@ -1,11 +1,7 @@
-"""
-Composition Module: Encode sequence composition features.
+"""Sequence composition features: the non-grammar half of SFGN.
 
-Captures non-grammar features that foundation models learn:
-- GC content (global and local)
-- K-mer frequencies (1-mer to 4-mer)
-- Dinucleotide composition
-- DNA shape proxies (via dinucleotide patterns)
+covers GC content (global and windowed), 1- to 4-mer frequencies, and DNA
+shape proxies derived from dinucleotides.
 """
 
 import torch
@@ -17,15 +13,12 @@ from itertools import product
 
 
 class KmerEncoder(nn.Module):
-    """
-    Encode k-mer frequencies as features.
-    """
+    """K-mer frequency features."""
 
     def __init__(self, k_range: tuple = (1, 4)):
         super().__init__()
         self.k_range = k_range
 
-        # Compute total number of k-mer features
         self.n_features = 0
         self.kmer_indices = {}
         idx = 0
@@ -37,15 +30,7 @@ class KmerEncoder(nn.Module):
             self.n_features += 4 ** k
 
     def forward(self, sequences: List[str]) -> torch.Tensor:
-        """
-        Compute k-mer frequency features.
-
-        Args:
-            sequences: List of DNA sequences
-
-        Returns:
-            features: (batch, n_features) k-mer frequencies
-        """
+        """(batch, n_features) k-mer frequencies."""
         batch_size = len(sequences)
         features = torch.zeros(batch_size, self.n_features)
 
@@ -59,7 +44,6 @@ class KmerEncoder(nn.Module):
                     kmer = seq[j:j+k]
                     if kmer in self.kmer_indices:
                         features[i, self.kmer_indices[kmer]] += 1
-                # Normalize by count
                 start_idx = sum(4**kk for kk in range(self.k_range[0], k))
                 end_idx = start_idx + 4**k
                 if n_kmers > 0:
@@ -69,26 +53,16 @@ class KmerEncoder(nn.Module):
 
 
 class GCEncoder(nn.Module):
-    """
-    Encode GC content features (global and windowed).
-    """
+    """Global + windowed GC content."""
 
     def __init__(self, window_sizes: List[int] = [50, 100, 200]):
         super().__init__()
         self.window_sizes = window_sizes
-        # Features: global GC, GC variance, GC per window size (mean, std, max, min)
+        # global GC, GC variance, then mean/std/max/min per window size
         self.n_features = 2 + len(window_sizes) * 4
 
     def forward(self, sequences: List[str]) -> torch.Tensor:
-        """
-        Compute GC content features.
-
-        Args:
-            sequences: List of DNA sequences
-
-        Returns:
-            features: (batch, n_features)
-        """
+        """(batch, n_features) GC statistics."""
         batch_size = len(sequences)
         features = torch.zeros(batch_size, self.n_features)
 
@@ -97,10 +71,8 @@ class GCEncoder(nn.Module):
             gc_count = seq.count('G') + seq.count('C')
             gc_global = gc_count / max(len(seq), 1)
 
-            # Global GC
             features[i, 0] = gc_global
 
-            # Windowed GC statistics
             idx = 1
             for window_size in self.window_sizes:
                 gc_windows = []
@@ -123,26 +95,19 @@ class GCEncoder(nn.Module):
                     features[i, idx + 3] = gc_global
                 idx += 4
 
-            # GC variance (already computed above for first window)
-            features[i, -1] = features[i, 2]  # std of smallest window
+            features[i, -1] = features[i, 2]  # std of the smallest window
 
         return features
 
 
 class DNAShapeEncoder(nn.Module):
-    """
-    Encode DNA shape features via dinucleotide proxies.
-
-    Uses established dinucleotide → shape parameter mappings.
-    """
+    """DNA shape proxies from dinucleotide -> shape parameter tables."""
 
     def __init__(self):
         super().__init__()
 
-        # Dinucleotide shape parameters (simplified from literature)
-        # Values are approximate averages for each shape feature
+        # approximate literature averages, (Roll, Twist, Slide, Rise)
         self.shape_params = {
-            # (Roll, Twist, Slide, Rise) - simplified values
             'AA': (0.0, 35.6, -0.1, 3.3),
             'AC': (4.0, 34.4, -0.5, 3.4),
             'AG': (4.5, 36.0, -0.2, 3.3),
@@ -161,25 +126,17 @@ class DNAShapeEncoder(nn.Module):
             'TT': (0.0, 35.6, -0.1, 3.3),
         }
 
-        # Features: mean and std for each shape parameter (4 params × 2 stats = 8)
+        # mean + std for each of the 4 parameters
         self.n_features = 8
 
     def forward(self, sequences: List[str]) -> torch.Tensor:
-        """
-        Compute DNA shape features.
-
-        Args:
-            sequences: List of DNA sequences
-
-        Returns:
-            features: (batch, n_features)
-        """
+        """(batch, n_features) shape statistics."""
         batch_size = len(sequences)
         features = torch.zeros(batch_size, self.n_features)
 
         for i, seq in enumerate(sequences):
             seq = seq.upper()
-            shape_values = [[], [], [], []]  # Roll, Twist, Slide, Rise
+            shape_values = [[], [], [], []]  # roll, twist, slide, rise
 
             for j in range(len(seq) - 1):
                 dinuc = seq[j:j+2]
@@ -188,7 +145,6 @@ class DNAShapeEncoder(nn.Module):
                     for k, val in enumerate(params):
                         shape_values[k].append(val)
 
-            # Compute mean and std for each shape parameter
             idx = 0
             for k in range(4):
                 if len(shape_values[k]) > 0:
@@ -201,17 +157,8 @@ class DNAShapeEncoder(nn.Module):
 
 
 class CompositionModule(nn.Module):
-    """
-    Full composition module: encodes sequence composition into representation.
-
-    Combines:
-    - K-mer frequencies
-    - GC content features
-    - DNA shape features
-    - Optional: learned embeddings from frozen model
-
-    Projects to output_dim with optional learned refinement.
-    """
+    """K-mer, GC and shape features (optionally plus a frozen-model sequence
+    embedding) projected down to output_dim."""
 
     def __init__(
         self,
@@ -227,12 +174,10 @@ class CompositionModule(nn.Module):
         self.output_dim = output_dim
         self.use_sequence_embedding = use_sequence_embedding
 
-        # Feature encoders
         self.kmer_encoder = KmerEncoder(k_range)
         self.gc_encoder = GCEncoder(window_sizes)
         self.shape_encoder = DNAShapeEncoder()
 
-        # Total input features
         self.n_handcrafted = (
             self.kmer_encoder.n_features +
             self.gc_encoder.n_features +
@@ -243,7 +188,6 @@ class CompositionModule(nn.Module):
         if use_sequence_embedding:
             input_dim += embedding_dim
 
-        # Projection network
         self.projector = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.LayerNorm(hidden_dim),
@@ -261,39 +205,25 @@ class CompositionModule(nn.Module):
         sequences: List[str],
         sequence_embeddings: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
-        """
-        Compute composition features.
-
-        Args:
-            sequences: List of DNA sequences
-            sequence_embeddings: Optional (batch, embedding_dim) from foundation model
-
-        Returns:
-            composition_vector: (batch, output_dim)
-        """
+        """(batch, output_dim). sequence_embeddings is the optional
+        (batch, embedding_dim) tensor from the foundation model."""
         device = next(self.projector.parameters()).device
 
-        # Handcrafted features
         kmer_features = self.kmer_encoder(sequences).to(device)
         gc_features = self.gc_encoder(sequences).to(device)
         shape_features = self.shape_encoder(sequences).to(device)
 
-        # Concatenate
         features = torch.cat([kmer_features, gc_features, shape_features], dim=1)
 
-        # Add sequence embedding if provided
         if self.use_sequence_embedding and sequence_embeddings is not None:
             features = torch.cat([features, sequence_embeddings], dim=1)
 
-        # Project to output dimension
         composition_vector = self.projector(features)
 
         return composition_vector
 
     def get_handcrafted_features(self, sequences: List[str]) -> torch.Tensor:
-        """
-        Get only handcrafted features (for analysis).
-        """
+        """Handcrafted features only, for analysis."""
         device = next(self.projector.parameters()).device
         kmer_features = self.kmer_encoder(sequences).to(device)
         gc_features = self.gc_encoder(sequences).to(device)
